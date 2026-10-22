@@ -1,0 +1,16 @@
+/* Responsive adjustments for shell and authentication panels. */
+
+@media (max-width: 959px) {
+  .topbar { height: 60px; padding: 0 20px; }
+  .page-frame { padding: 0 0 95px; }
+}
+@media (max-width: 600px) {
+  .auth-card { padding: 29px 22px 23px; }
+  .topbar { height: 56px; padding: 0 10px; }
+  .topbar-left { gap: 4px; }
+  .topbar-actions { gap: 0; }
+  .top-profile { width: 29px; height: 29px; margin-left: 1px; }
+  .top-icon { width: 38px !important; height: 38px !important; }
+  .page-frame { padding: 0 0 90px; }
+  .breadcrumbs { font-size: 10px; }
+}

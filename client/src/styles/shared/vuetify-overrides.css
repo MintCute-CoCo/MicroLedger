@@ -1,0 +1,129 @@
+/* Shared Vuetify form, dropdown, table, and toolbar overrides. */
+
+/* ==========================================================================
+   Universal Form Fields & Dropdown Typography Sync
+   Synchronizes theme, sizing, and typography across all panels:
+   Sales, Reports, Products, POS, Customers, Inventory, Users, Warranties
+   ========================================================================== */
+
+/* Universal compact input field styling (readable 13px text) */
+.v-field--density-compact {
+  font-size: 13px !important;
+  min-height: 40px !important;
+  border-radius: 9px !important;
+}
+
+.v-field--density-compact .v-field__input {
+  min-height: 38px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  font-size: 13px !important;
+  color: #354157 !important;
+}
+
+.v-field--density-compact .v-field-label,
+.v-field--density-compact .v-label {
+  font-size: 13px !important;
+  color: #8993a4 !important;
+}
+
+.v-field--density-compact .v-select__selection-text {
+  font-size: 13px !important;
+  color: #354157 !important;
+}
+
+.v-field--density-compact .v-field__append-inner .v-icon,
+.v-field--density-compact .v-field__prepend-inner .v-icon {
+  font-size: 18px !important;
+  color: #8993a4 !important;
+}
+
+/* Universal Dropdown Overlay Menus across all panels */
+.v-overlay__content .v-list {
+  padding: 6px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(25, 42, 78, 0.1) !important;
+}
+
+.v-overlay__content .v-list-item {
+  min-height: 36px !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+}
+
+.v-overlay__content .v-list-item-title {
+  font-size: 13px !important;
+  color: #354157 !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+.v-overlay__content .v-list-item--active {
+  background: #eff2fc !important;
+}
+
+.v-overlay__content .v-list-item--active .v-list-item-title {
+  color: #253d90 !important;
+  font-weight: 700 !important;
+}
+
+/* Universal Data Table Typography across all panels */
+.v-data-table th,
+.v-data-table .v-data-table__th {
+  height: 42px !important;
+  background: #fafbfc !important;
+  color: #7c889b !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.55px !important;
+  text-transform: uppercase !important;
+  border-bottom: 1px solid #f0f2f6 !important;
+}
+
+.v-data-table td,
+.v-data-table .v-data-table__td {
+  height: 52px !important;
+  color: #3e4b61 !important;
+  font-size: 13px !important;
+  border-bottom: 1px solid #f0f2f6 !important;
+}
+
+.v-data-table-footer {
+  min-height: 48px !important;
+  color: #7c889b !important;
+  font-size: 12px !important;
+}
+
+.v-data-table-footer .v-field {
+  min-height: 28px !important;
+}
+
+.v-data-table-footer .v-field__input {
+  min-height: 28px !important;
+  font-size: 12px !important;
+  padding: 2px 6px !important;
+}
+
+.v-data-table-footer .v-select__selection-text {
+  font-size: 12px !important;
+}
+
+.v-data-table-footer .v-data-table-footer__info {
+  font-size: 12px !important;
+}
+
+.v-data-table-footer .v-data-table-footer__items-per-page {
+  font-size: 12px !important;
+}
+
+/* Universal Action Buttons within Toolbars */
+.table-filters .v-btn,
+.action-btn {
+  min-height: 38px !important;
+  height: 38px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 0 16px !important;
+}
+

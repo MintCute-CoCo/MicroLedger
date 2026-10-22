@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+dist/
+
+# Environment configurations
+.env
+.env.*
+!.env.example
+
+# Test & logs
+coverage/
+*.log
+
+# Staged for subsequent backend release (Frontend & Docs push first)
+server/

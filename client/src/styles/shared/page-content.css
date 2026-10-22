@@ -1,0 +1,133 @@
+/* Shared headings, dialogs, summary cards, and table toolbars. */
+
+.dialog-title { padding: 23px 24px 9px; color: #28344a; font: 800 18px 'Manrope', sans-serif; }
+.dialog-copy { margin: 0 0 16px; color: #7f899b; font-size: 12px; line-height: 1.5; }
+
+/* ==========================================================================
+   Universal Page Heading & Section Typography Sync
+   Standardizes header hierarchy across all views: text-overline / .eyebrow + h1 + p
+   ========================================================================== */
+.page-heading {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+  margin-bottom: 20px !important;
+}
+
+.page-heading .eyebrow,
+.page-heading .text-overline,
+.eyebrow {
+  color: #8792a5 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+}
+
+.page-heading h1 {
+  margin: 6px 0 5px !important;
+  color: #202a3d !important;
+  font: 800 26px 'Manrope', sans-serif !important;
+  letter-spacing: -1px !important;
+}
+
+.page-heading p {
+  margin: 0 !important;
+  color: #7c889b !important;
+  font-size: 13px !important;
+}
+
+.page-heading .heading-actions,
+.heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (min-width: 600px) {
+  .page-heading {
+    flex-direction: row !important;
+    align-items: flex-end !important;
+  }
+}
+
+/* ==========================================================================
+   Universal Metric Cards & Table Toolbar Sync (SalesView.vue Parity)
+   ========================================================================== */
+.summary-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 70px;
+  padding: 12px 15px;
+  border: 1px solid #e9edf3;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.summary-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  flex: 0 0 auto;
+}
+
+.icon-blue { background: #edf1ff; color: #5a70ba; }
+.icon-green { background: #e9f7f1; color: #319276; }
+.icon-amber { background: #fdf5e8; color: #c08532; }
+.icon-purple { background: #f2eefa; color: #7a5bb8; }
+.icon-rose { background: #fceeee; color: #bb7070; }
+
+.summary-card > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.summary-card > div span {
+  color: #929dae;
+}
+
+.summary-card > div strong {
+  color: #364258;
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 13px;
+  border-bottom: 1px solid #f0f2f6;
+}
+
+.table-toolbar h2 {
+  margin: 0 0 4px;
+  color: #354157;
+}
+
+.table-toolbar p {
+  margin: 0;
+  color: #7c889b;
+}
+
+@media (max-width: 600px) {
+  .summary-cards-row {
+    grid-template-columns: 1fr;
+  }
+  .table-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

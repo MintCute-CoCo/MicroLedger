@@ -1,0 +1,12 @@
+/* User directory and customer warning panel styles. */
+
+.users-alert { margin-bottom: 18px; }
+.customer-warning { margin-bottom: 14px; }
+.users-card { overflow: hidden; }
+.users-table .v-data-table__td { font-size: 11px; }
+.user-name-cell { display: flex; align-items: center; gap: 9px; color: #354157; }
+.user-name-cell > strong { font-size: 11px; }
+.user-initials { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: #edf0fb; color: #394f9a; font-size: 9px; font-weight: 700; }
+.user-status { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; text-transform: capitalize; }
+.user-status i { width: 6px; height: 6px; border-radius: 50%; background: #37a37d; }
+.user-status.status-inactive i { background: #c87d72; }

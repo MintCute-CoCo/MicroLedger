@@ -1,0 +1,27 @@
+/* Base document styles, shared Vuetify defaults, and layout utilities. */
+
+:root {
+  font-family: 'DM Sans', sans-serif;
+  color: #202a3d;
+  background: #f5f7fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #f5f7fb; }
+button, input { font: inherit; }
+.v-application { background: #f5f7fb !important; color: #202a3d; font-family: 'DM Sans', sans-serif; }
+.v-btn { min-height: 44px; letter-spacing: 0; text-transform: none; font-weight: 600; }
+.v-btn .v-btn__content { text-transform: none !important; }
+.v-btn--icon { width: 44px !important; height: 44px !important; min-width: 44px !important; }
+.v-card {
+  border: 1px solid #d4dce8 !important;
+  box-shadow: 0 1px 3px rgba(32, 42, 61, .05) !important;
+}
+.min-w-0 { min-width: 0; }
+.min-h-0 { min-height: 0; }

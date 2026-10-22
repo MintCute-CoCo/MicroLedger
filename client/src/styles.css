@@ -1,0 +1,10 @@
+/* Import order follows the original cascade. Add new panel styles to their own file. */
+@import './styles/base.css';
+@import './styles/panels/pos.css';
+@import './styles/panels/dashboard.css';
+@import './styles/layout.css';
+@import './styles/auth.css';
+@import './styles/panels/users.css';
+@import './styles/shared/page-content.css';
+@import './styles/shared/vuetify-overrides.css';
+@import './styles/responsive.css';

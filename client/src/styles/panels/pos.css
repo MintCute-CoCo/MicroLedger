@@ -1,0 +1,73 @@
+/* POS catalog, checkout, and independent scrolling layout. */
+
+.pos-product-button .v-btn__content { width: 100%; min-width: 0; white-space: normal; }
+.pos-product-button:hover .v-card { border-color: #8b9bb8 !important; background: #fbfcff; }
+.pos-product-button:focus-visible .v-card { border-color: #5369ae !important; }
+.pos-product-list,
+.pos-cart-items {
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-color: #a8b4c8 #eef2f7;
+  scrollbar-width: thin;
+}
+.pos-quantity-button.v-btn--icon {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+}
+@media (min-width: 1280px) {
+  .pos-page {
+    display: flex;
+    height: calc(100dvh - 68px);
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .pos-page > .pos-workspace {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .v-alert.pos-error-alert {
+    flex: 0 0 auto !important;
+  }
+  .pos-workspace > [class*="v-col"] {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+  }
+  .pos-workspace > [class*="v-col"] > * {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+  .v-card.pos-catalog-panel {
+    display: flex !important;
+    height: 100%;
+    flex-direction: column;
+  }
+  .pos-catalog-panel > .v-input,
+  .pos-catalog-panel > .v-slide-group,
+  .pos-catalog-panel > .d-flex {
+    flex: 0 0 auto;
+  }
+  .v-card.pos-checkout-panel {
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .pos-product-list,
+  .pos-cart-items {
+    max-height: none;
+    min-height: 0;
+  }
+  .pos-product-list {
+    flex: 1 1 0;
+  }
+  .pos-empty-cart {
+    min-height: 0;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
