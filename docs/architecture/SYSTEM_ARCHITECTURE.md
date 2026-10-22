@@ -7,9 +7,9 @@
 ```mermaid
 flowchart LR
   U["Admin / Staff<br/>(Desktop, Tablet, Mobile)"] -->|HTTPS| FE["Web Client (SPA)<br/>Vue 3 + Vuetify 3 on Vite"]
-  FE -->|HTTPS REST/JSON<br/>Bearer Access Token| API["API Server<br/>Node.js 20 + Express 5"]
-  API -->|SQL, Parameterized<br/>Knex / pg pool (app_user)| DB[("PostgreSQL 16 Database<br/>(16 Relational Tables)")]
-  BK["Scheduled Backup Utility<br/>scripts/backup-restore.js"] -->|pg_dump, 7-day retention| DB
+  FE -->|"HTTPS REST/JSON<br/>Bearer Access Token"| API["API Server<br/>Node.js 20 + Express 5"]
+  API -->|"SQL, Parameterized<br/>Knex / pg pool (app_user)"| DB[("PostgreSQL 16 Database<br/>(16 Relational Tables)")]
+  BK["Scheduled Backup Utility<br/>scripts/backup-restore.js"] -->|"pg_dump, 7-day retention"| DB
 ```
 
 | Component | Responsibility |
