@@ -1,5 +1,8 @@
 <script setup>
+import { computed } from 'vue';
 import { useLogin } from '../composables/auth/useLogin.js';
+
+const isDemoMode = computed(() => import.meta.env.VITE_DEMO_MODE === 'true');
 
 /**
  * Login view composable providing authentication sign-in routines,
@@ -13,6 +16,11 @@ const {
   locked,
   submit,
 } = useLogin();
+
+function fillDemoAccount(user, pass) {
+  username.value = user;
+  password.value = pass;
+}
 </script>
 
 <template>
@@ -32,6 +40,35 @@ const {
       <p class="auth-intro">
         Sign in to continue to your store.
       </p>
+
+      <div
+        v-if="isDemoMode"
+        class="auth-alert mb-4"
+        style="background: #eef2ff; color: #3730a3; border-color: #c7d2fe; display: block;"
+        role="status"
+      >
+        <div class="mb-2">
+          <strong>⚡ Standalone Demo Mode Active</strong>
+        </div>
+        <div class="d-flex ga-2">
+          <v-btn
+            size="x-small"
+            color="primary"
+            variant="tonal"
+            @click="fillDemoAccount('admin', 'adminpassword123')"
+          >
+            Admin (Full Access)
+          </v-btn>
+          <v-btn
+            size="x-small"
+            color="secondary"
+            variant="tonal"
+            @click="fillDemoAccount('minhanh', 'staffpassword123')"
+          >
+            Staff (Minh Anh)
+          </v-btn>
+        </div>
+      </div>
 
       <div
         v-if="auth.sessionError"
