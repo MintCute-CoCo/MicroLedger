@@ -55,7 +55,6 @@ const userFirstName = computed(() => {
         </div>
         <h1 class="text-h5 font-weight-bold">
           {{ greeting }}, {{ userFirstName }}
-          <span class="wave">✦</span>
         </h1>
         <p class="text-body-2 text-medium-emphasis">Here’s what’s happening at your store today.</p>
       </div>

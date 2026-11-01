@@ -55,8 +55,9 @@ function fillDemoAccount(user, pass) {
         style="background: #eef2ff; color: #3730a3; border-color: #c7d2fe; display: block;"
         role="status"
       >
-        <div class="mb-2">
-          <strong>⚡ Standalone Demo Mode Active</strong>
+        <div class="mb-2 d-flex align-center ga-1">
+          <v-icon icon="mdi-flash" size="16" />
+          <strong>Standalone Demo Mode Active</strong>
         </div>
         <div class="d-flex ga-2">
           <v-btn
