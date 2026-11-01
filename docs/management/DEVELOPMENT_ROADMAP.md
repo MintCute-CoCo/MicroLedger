@@ -23,8 +23,10 @@
 | S5 | 10–11 | Dashboard, reports, audit log screen, hardening, concurrency and rollback tests, backup restore drill | E7, E8 |
 | S6 | 12–13 | Low-stock alert, suppliers, warranty records, claims create and transitions | E9, E10 (part) |
 | S7 | 14–15 | Return tracking and overdue, serial numbers, advanced filtering, warranty report | E10, E11 |
-| UAT | 16–17 | UAT with at least 1 Admin and 2 Staff, performance tests, fixes | E12 |
-| Final | 18 | Final fixes, documentation, report, demo rehearsal | E12 |
+| S8 (Polish) | 16 | Frontend decomposition, anti-slop audit, demo engine, Vuetify table refactoring | E13 |
+| S9 (Integration) | 17 | Backend Express integration, CI PostgreSQL workflow, load benchmarks | E14 |
+| UAT | 17 | UAT with at least 1 Admin and 2 Staff over 500-item catalog, SUS evaluation | E12 |
+| Final | 18 | Final fixes, living documentation sync, committee demo rehearsal | E12 |
 
 ## 3. Milestones and exit gates
 
