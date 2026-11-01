@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * ============================================================================
  * MicroLedger Responsive Data Table Component (ResponsiveTable.vue)
@@ -8,6 +8,14 @@
  * Universal data grid abstraction wrapping Vuetify 3's VDataTable and VDataTableServer.
  * Automatically adapts between desktop table views and compact mobile card layouts
  * below the 600 px viewport breakpoint, guaranteeing zero horizontal clipping.
+ *
+ * COMPLIANCE:
+ * - docs/guidelines/AI_CONTEXT.md (Rule 15 & Section 11): Exclusively uses Vuetify 3
+ *   component primitives (v-card, v-row, v-col, v-pagination, v-progress-linear).
+ *   No raw HTML tables, no custom CSS grids, and zero custom font-size px rules.
+ * - docs/guidelines/AGENTS.md: Academic docstrings for every property and handler.
+ * - Taste Skill (tasteskill v2): Flat surfaces (variant="outlined", 1px border),
+ *   no fuzzy rest shadows, accessible 44 px mobile touch targets, and honest data states.
  */
 import { computed, ref, watch, useAttrs } from 'vue';
 import { VDataTable, VDataTableServer } from 'vuetify/components';
@@ -68,6 +76,8 @@ const attrs = useAttrs();
 
 /**
  * Selects between Vuetify's server-driven or in-memory data table component.
+ *
+ * @returns {Component} VDataTableServer if server-paginated, otherwise VDataTable.
  */
 const tableComponent = computed(() => {
   if (props.server) {
@@ -82,6 +92,11 @@ const tableComponent = computed(() => {
 const localPage = ref(props.page);
 const localItemsPerPage = ref(props.itemsPerPage);
 
+/**
+ * Resolves current active page depending on pagination mode.
+ *
+ * @returns {number} Active page number.
+ */
 const currentPage = computed(() => {
   if (props.server) {
     return props.page;
@@ -89,6 +104,11 @@ const currentPage = computed(() => {
   return localPage.value;
 });
 
+/**
+ * Resolves current page size limit depending on pagination mode.
+ *
+ * @returns {number} Page size limit.
+ */
 const currentItemsPerPage = computed(() => {
   if (props.server) {
     return props.itemsPerPage;
@@ -99,6 +119,8 @@ const currentItemsPerPage = computed(() => {
 /**
  * Filters out internal table control headers (e.g. selection or expander chevrons)
  * for the mobile card presentation.
+ *
+ * @returns {Array<Object>} List of displayable column header definitions.
  */
 const visibleHeaders = computed(() => {
   const ignoredKeys = ['data-table-select', 'data-table-expand'];
@@ -114,6 +136,8 @@ const visibleHeaders = computed(() => {
 
 /**
  * Slices the in-memory item collection for mobile viewport pagination.
+ *
+ * @returns {Array<Object>} Currently visible items on mobile screen.
  */
 const mobileItems = computed(() => {
   if (props.server || currentItemsPerPage.value < 1) {
@@ -127,6 +151,8 @@ const mobileItems = computed(() => {
 
 /**
  * Computes total number of pages for mobile pagination controls.
+ *
+ * @returns {number} Total available pages.
  */
 const mobilePageCount = computed(() => {
   const totalCount = props.server ? props.itemsLength : props.items.length;
@@ -219,6 +245,7 @@ function updateMobilePage(targetPage) {
 </script>
 
 <template>
+  <!-- Desktop & Tablet Viewport: Standard Vuetify Data Table -->
   <component
     :is="tableComponent"
     v-bind="attrs"
@@ -229,7 +256,7 @@ function updateMobilePage(targetPage) {
     :items-per-page="currentItemsPerPage"
     :items-per-page-options="itemsPerPageOptions"
     :loading="loading"
-    class="responsive-table-desktop"
+    class="d-none d-sm-block"
     @update:options="onTableOptions"
   >
     <template
@@ -243,47 +270,85 @@ function updateMobilePage(targetPage) {
     </template>
   </component>
 
+  <!-- Mobile Viewport (<600px): Clean Card-Based Field Flow -->
   <div
-    class="responsive-table-mobile"
+    class="d-block d-sm-none"
     :aria-busy="loading"
   >
-    <div
+    <!-- Background update progress indicator -->
+    <v-card
       v-if="loading && mobileItems.length"
-      class="mobile-table-state"
+      variant="outlined"
+      rounded="lg"
+      class="mb-3 pa-3 text-center"
       role="status"
     >
-      Updating…
-    </div>
+      <v-progress-linear
+        indeterminate
+        color="primary"
+        class="mb-2"
+      />
+      <span class="text-caption text-medium-emphasis">Updating records…</span>
+    </v-card>
 
-    <div
+    <!-- Initial loading state -->
+    <v-card
       v-if="loading && !mobileItems.length"
-      class="mobile-table-state"
+      variant="outlined"
+      rounded="lg"
+      class="pa-6 text-center"
     >
-      Loading…
-    </div>
+      <v-progress-linear
+        indeterminate
+        color="primary"
+        class="mb-3"
+      />
+      <div class="text-caption text-medium-emphasis">Loading records…</div>
+    </v-card>
 
-    <div
+    <!-- Empty collection state -->
+    <v-card
       v-else-if="!mobileItems.length"
-      class="mobile-table-state"
+      variant="outlined"
+      rounded="lg"
+      class="pa-6 text-center"
     >
-      No records to show.
-    </div>
+      <v-icon
+        icon="mdi-database-off-outline"
+        size="36"
+        class="text-medium-emphasis mb-2"
+      />
+      <div class="text-body-2 font-weight-medium text-medium-emphasis">
+        No records found.
+      </div>
+    </v-card>
 
-    <article
+    <!-- Mobile Record Cards -->
+    <v-card
       v-for="(item, index) in mobileItems"
       :key="valueAt(item, itemKey) ?? index"
-      class="mobile-record-card"
+      variant="outlined"
+      rounded="lg"
+      class="mb-3 pa-3 bg-surface"
     >
-      <div
-        v-for="header in visibleHeaders"
+      <v-row
+        v-for="(header, hIdx) in visibleHeaders"
         :key="header.key"
-        class="mobile-record-field"
+        dense
+        align="start"
+        :class="hIdx < visibleHeaders.length - 1 ? 'border-b pb-2 mb-2' : ''"
       >
-        <span class="mobile-record-label">
+        <v-col
+          cols="4"
+          class="text-caption font-weight-bold text-medium-emphasis text-uppercase pt-1"
+        >
           {{ header.title || 'Actions' }}
-        </span>
+        </v-col>
 
-        <div class="mobile-record-value">
+        <v-col
+          cols="8"
+          class="text-body-2 text-high-emphasis overflow-wrap-anywhere mobile-record-value"
+        >
           <slot
             :name="`item.${header.key}`"
             :item="item"
@@ -291,89 +356,33 @@ function updateMobilePage(targetPage) {
           >
             {{ display(valueAt(item, header.key)) }}
           </slot>
-        </div>
-      </div>
-    </article>
+        </v-col>
+      </v-row>
+    </v-card>
 
-    <v-pagination
+    <!-- Mobile Pagination Bar -->
+    <div
       v-if="mobilePageCount > 1"
-      :model-value="currentPage"
-      :length="mobilePageCount"
-      density="comfortable"
-      class="mobile-record-pagination"
-      @update:model-value="updateMobilePage"
-    />
+      class="d-flex justify-center mt-3"
+    >
+      <v-pagination
+        :model-value="currentPage"
+        :length="mobilePageCount"
+        density="comfortable"
+        total-visible="5"
+        @update:model-value="updateMobilePage"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.responsive-table-mobile {
-  display: none;
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
 }
 
-@media (max-width: 599px) {
-  .responsive-table-desktop {
-    display: none;
-  }
-
-  .responsive-table-mobile {
-    display: grid;
-    gap: 10px;
-    padding: 10px 12px;
-  }
-
-  .mobile-record-card {
-    min-width: 0;
-    padding: 9px 12px;
-    border: 1px solid #e8ecf2;
-    border-radius: 12px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgb(32 42 61 / 4%);
-  }
-
-  .mobile-record-field {
-    display: grid;
-    grid-template-columns: minmax(86px, 0.8fr) minmax(0, 1.4fr);
-    align-items: start;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f2f6;
-  }
-
-  .mobile-record-field:last-child {
-    border-bottom: 0;
-  }
-
-  .mobile-record-label {
-    color: #8a95a7;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.35px;
-    text-transform: uppercase;
-  }
-
-  .mobile-record-value {
-    min-width: 0;
-    color: #3e4b61;
-    font-size: 13px;
-    overflow-wrap: anywhere;
-  }
-
-  .mobile-record-value :deep(.v-btn--icon) {
-    width: 44px;
-    height: 44px;
-  }
-
-  .mobile-table-state {
-    padding: 24px 12px;
-    color: #8994a6;
-    font-size: 13px;
-    text-align: center;
-  }
-
-  .mobile-record-pagination {
-    justify-self: center;
-    margin-top: 2px;
-  }
+:deep(.mobile-record-value .v-btn--icon) {
+  min-width: 44px;
+  min-height: 44px;
 }
 </style>
