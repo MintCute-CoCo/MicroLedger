@@ -31,6 +31,19 @@ const {
           Review recorded changes and account activity.
         </p>
       </div>
+
+      <div class="d-flex flex-wrap ga-2">
+        <v-btn
+          variant="outlined"
+          rounded="lg"
+          class="w-100 w-sm-auto"
+          prepend-icon="mdi-refresh"
+          :loading="busy"
+          @click="load"
+        >
+          Refresh
+        </v-btn>
+      </div>
     </div>
 
     <v-alert

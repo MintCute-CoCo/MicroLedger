@@ -34,65 +34,66 @@ const {
     <v-card
       max-width="620"
       rounded="xl"
+      variant="outlined"
       class="settings-card"
     >
-      <div class="table-toolbar">
-        <div>
-          <h2 class="text-h6 font-weight-bold mb-1">Currency & locale</h2>
-          <p class="text-caption text-medium-emphasis">Configure store currency and decimal precision</p>
-        </div>
-      </div>
+      <v-card-item class="border-b pa-4">
+        <v-card-title class="text-h6 font-weight-bold">Currency & locale</v-card-title>
+        <v-card-subtitle class="text-caption text-medium-emphasis">
+          Configure store currency and decimal precision
+        </v-card-subtitle>
+      </v-card-item>
 
-      <div class="pa-6">
+      <v-card-text class="pa-6">
         <v-alert
-        v-if="message"
-        type="success"
-        variant="tonal"
-        class="mb-4"
-      >
-        {{ message }}
-      </v-alert>
+          v-if="message"
+          type="success"
+          variant="tonal"
+          class="mb-4"
+        >
+          {{ message }}
+        </v-alert>
 
-      <v-alert
-        v-if="error"
-        type="error"
-        variant="tonal"
-        class="mb-4"
-      >
-        {{ error }}
-      </v-alert>
+        <v-alert
+          v-if="error"
+          type="error"
+          variant="tonal"
+          class="mb-4"
+        >
+          {{ error }}
+        </v-alert>
 
-      <v-text-field
-        v-model="form.currency_code"
-        label="Currency code (ISO 4217)"
-        maxlength="3"
-        :error-messages="fieldErrors.currency_code"
-        variant="outlined"
-        density="compact"
-        @update:model-value="fieldErrors.currency_code = undefined"
-      />
+        <v-text-field
+          v-model="form.currency_code"
+          label="Currency code (ISO 4217)"
+          maxlength="3"
+          :error-messages="fieldErrors.currency_code"
+          variant="outlined"
+          density="compact"
+          @update:model-value="fieldErrors.currency_code = undefined"
+        />
 
-      <v-select
-        v-model.number="form.currency_decimals"
-        :items="[0, 1, 2]"
-        label="Currency decimal places"
-        :error-messages="fieldErrors.currency_decimals"
-        variant="outlined"
-        density="compact"
-        @update:model-value="fieldErrors.currency_decimals = undefined"
-      />
+        <v-select
+          v-model.number="form.currency_decimals"
+          :items="[0, 1, 2]"
+          label="Currency decimal places"
+          :error-messages="fieldErrors.currency_decimals"
+          variant="outlined"
+          density="compact"
+          @update:model-value="fieldErrors.currency_decimals = undefined"
+        />
 
-      <v-btn
-        color="primary"
-        rounded="lg"
-        class="w-100 w-sm-auto"
-        :loading="busy"
-        :disabled="busy"
-        @click="save"
-      >
-        Save settings
-      </v-btn>
-      </div>
+        <v-btn
+          color="primary"
+          rounded="lg"
+          class="w-100 w-sm-auto"
+          :loading="busy"
+          :disabled="busy"
+          @click="save"
+        >
+          Save settings
+        </v-btn>
+      </v-card-text>
     </v-card>
   </v-container>
 </template>

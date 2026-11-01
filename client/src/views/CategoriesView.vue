@@ -9,6 +9,7 @@ import { useCategories } from '../composables/categories/useCategories.js';
  */
 const {
   categories,
+  activeCategoryCount,
   loading,
   saving,
   dialog,

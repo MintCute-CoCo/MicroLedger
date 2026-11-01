@@ -72,6 +72,20 @@ export function useSalesTable({ apiMode, filters }) {
   });
 
   /**
+   * Number of completed sales records on the current page.
+   */
+  const completedCount = computed(() => {
+    return apiSales.value.filter((sale) => sale.status === 'Completed').length;
+  });
+
+  /**
+   * Number of voided sales records on the current page.
+   */
+  const voidedCount = computed(() => {
+    return apiSales.value.filter((sale) => sale.status === 'Voided').length;
+  });
+
+  /**
    * Loads paginated sales records matching current filters from the REST API.
    */
   async function loadSales() {
@@ -199,6 +213,8 @@ export function useSalesTable({ apiMode, filters }) {
     apiError,
     visibleSales,
     completedTotal,
+    completedCount,
+    voidedCount,
     headers: SALES_TABLE_HEADERS,
     loadSales,
     onTableOptions,

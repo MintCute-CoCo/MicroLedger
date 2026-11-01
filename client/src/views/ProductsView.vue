@@ -118,47 +118,63 @@ const required = [
     </v-alert>
 
     <!-- Top Metric Summary Strip -->
-    <div class="summary-cards-row">
-      <div class="summary-card">
-        <span class="summary-icon icon-blue">
-          <v-icon icon="mdi-package-variant-closed" size="18" />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Total products</span>
-          <strong class="text-h6 font-weight-bold">{{ productTotal }}</strong>
-        </div>
-      </div>
+    <v-row class="mb-4">
+      <v-col cols="12" sm="6" md="3">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-package-variant-closed" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Total products</div>
+              <div class="text-h6 font-weight-bold">{{ productTotal }}</div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
 
-      <div class="summary-card">
-        <span class="summary-icon icon-purple">
-          <v-icon icon="mdi-shape-outline" size="18" />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Categories</span>
-          <strong class="text-h6 font-weight-bold">{{ apiCategories.length }}</strong>
-        </div>
-      </div>
+      <v-col cols="12" sm="6" md="3">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="secondary" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-shape-outline" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Categories</div>
+              <div class="text-h6 font-weight-bold">{{ apiCategories.length }}</div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
 
-      <div class="summary-card">
-        <span class="summary-icon icon-amber">
-          <v-icon icon="mdi-alert-outline" size="18" />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Low stock</span>
-          <strong class="text-h6 font-weight-bold">{{ lowStockCount }}</strong>
-        </div>
-      </div>
+      <v-col cols="12" sm="6" md="3">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="warning" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-alert-outline" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Low stock</div>
+              <div class="text-h6 font-weight-bold">{{ lowStockCount }}</div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
 
-      <div class="summary-card">
-        <span class="summary-icon icon-blue">
-          <v-icon icon="mdi-information-outline" size="18" />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Stock management</span>
-          <strong class="text-body-2 font-weight-medium">Product stock is adjusted from Inventory.</strong>
-        </div>
-      </div>
-    </div>
+      <v-col cols="12" sm="6" md="3">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-information-outline" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Stock control</div>
+              <div class="text-body-2 font-weight-medium">Adjust via Inventory</div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <ProductCatalogSection
       v-model:search="search"
@@ -170,6 +186,7 @@ const required = [
       v-model:max-stock="maxStock"
       v-model:min-price="minPrice"
       v-model:max-price="maxPrice"
+      :api-mode="true"
       :can-edit="canEdit"
       :categories="categories"
       :statuses="statuses"

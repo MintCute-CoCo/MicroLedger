@@ -100,6 +100,8 @@ export function useSales() {
     apiError: combinedError,
     visibleSales: table.visibleSales,
     completedTotal: table.completedTotal,
+    completedCount: table.completedCount,
+    voidedCount: table.voidedCount,
     headers: table.headers,
     loadSales: table.loadSales,
     onTableOptions: table.onTableOptions,

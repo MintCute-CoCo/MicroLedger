@@ -8,20 +8,32 @@ export const PRODUCT_TONE_COLORS = ['sun', 'rose', 'blue', 'mint', 'lilac', 'san
 
 /**
  * Mapping of lowercase category keywords to Material Design Icons.
+ * Aligned with authentic PC hardware store catalog (CPU, GPU, RAM, SSD, etc.).
  */
 export const PRODUCT_CATEGORY_ICON_MAP = {
-  lighting: 'mdi-lamp-outline',
-  electrical: 'mdi-lightning-bolt-outline',
-  hardware: 'mdi-hammer-wrench',
-  'home & living': 'mdi-home-outline',
-  electronics: 'mdi-cellphone',
-  accessories: 'mdi-watch',
-  tools: 'mdi-tools',
-  furniture: 'mdi-sofa-outline',
-  appliances: 'mdi-fridge-outline',
-  clothing: 'mdi-tshirt-crew-outline',
-  food: 'mdi-food-apple-outline',
-  sports: 'mdi-basketball',
+  processors: 'mdi-cpu-64-bit',
+  cpu: 'mdi-cpu-64-bit',
+  motherboards: 'mdi-developer-board',
+  'graphics cards': 'mdi-expansion-card',
+  'graphics-cards': 'mdi-expansion-card',
+  gpu: 'mdi-expansion-card',
+  memory: 'mdi-memory',
+  ram: 'mdi-memory',
+  storage: 'mdi-harddisk',
+  ssd: 'mdi-harddisk',
+  hdd: 'mdi-harddisk',
+  'power supplies': 'mdi-power-plug',
+  'power-supplies': 'mdi-power-plug',
+  psu: 'mdi-power-plug',
+  cooling: 'mdi-fan',
+  cases: 'mdi-desktop-tower',
+  chassis: 'mdi-desktop-tower',
+  monitors: 'mdi-monitor',
+  displays: 'mdi-monitor',
+  networking: 'mdi-router-wireless',
+  peripherals: 'mdi-keyboard-mouse',
+  accessories: 'mdi-cable-data',
+  hardware: 'mdi-chip',
 };
 
 /**

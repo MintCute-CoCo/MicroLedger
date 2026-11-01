@@ -43,22 +43,56 @@ const {
 } = usePos();
 
 /**
- * Returns a contextual Material Design icon based on product category.
+ * Returns a contextual Material Design icon based on PC hardware product category.
  *
  * @param {string} categoryName - Category title.
  * @returns {string} MDI icon identifier.
  */
 function getCategoryIcon(categoryName) {
-  switch (categoryName) {
-    case 'Lighting':
-      return 'mdi-lamp-outline';
-    case 'Electrical':
-      return 'mdi-power-plug-outline';
-    case 'Hardware':
-      return 'mdi-tools';
-    default:
-      return 'mdi-flower-outline';
+  if (!categoryName) {
+    return 'mdi-chip';
   }
+
+  const key = String(categoryName).toLowerCase().trim();
+
+  if (key.includes('processor') || key.includes('cpu')) {
+    return 'mdi-cpu-64-bit';
+  }
+  if (key.includes('motherboard')) {
+    return 'mdi-developer-board';
+  }
+  if (key.includes('graphic') || key.includes('gpu')) {
+    return 'mdi-expansion-card';
+  }
+  if (key.includes('memory') || key.includes('ram')) {
+    return 'mdi-memory';
+  }
+  if (key.includes('storage') || key.includes('ssd') || key.includes('hdd')) {
+    return 'mdi-harddisk';
+  }
+  if (key.includes('power') || key.includes('psu')) {
+    return 'mdi-power-plug';
+  }
+  if (key.includes('cool') || key.includes('fan')) {
+    return 'mdi-fan';
+  }
+  if (key.includes('case') || key.includes('chassis')) {
+    return 'mdi-desktop-tower';
+  }
+  if (key.includes('display') || key.includes('monitor')) {
+    return 'mdi-monitor';
+  }
+  if (key.includes('network')) {
+    return 'mdi-router-wireless';
+  }
+  if (key.includes('peripheral')) {
+    return 'mdi-keyboard-mouse';
+  }
+  if (key.includes('accessor')) {
+    return 'mdi-cable-data';
+  }
+
+  return 'mdi-chip';
 }
 
 onMounted(() => {

@@ -122,42 +122,53 @@ const movementHeaders = [
     </v-alert>
 
     <!-- Overview Metric Cards -->
-    <div class="summary-cards-row">
-      <div class="summary-card">
-        <span class="summary-icon icon-blue">
-          <v-icon icon="mdi-package-variant-closed" size="18" />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Total units</span>
-          <strong class="text-h6 font-weight-bold">
-            {{ apiMetrics.totalUnits.toLocaleString() }}
-          </strong>
-        </div>
-      </div>
+    <v-row class="mb-4">
+      <v-col cols="12" sm="4">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-package-variant-closed" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Total units</div>
+              <div class="text-h6 font-weight-bold">
+                {{ apiMetrics.totalUnits.toLocaleString() }}
+              </div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
 
-      <div class="summary-card">
-        <span class="summary-icon icon-purple">
-          <v-icon icon="mdi-shape-outline" size="18" />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Active products</span>
-          <strong class="text-h6 font-weight-bold">
-            {{ apiMetrics.total }}
-          </strong>
-        </div>
-      </div>
+      <v-col cols="12" sm="4">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="secondary" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-shape-outline" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Active products</div>
+              <div class="text-h6 font-weight-bold">
+                {{ apiMetrics.total }}
+              </div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
 
-      <div class="summary-card">
-        <span class="summary-icon icon-amber">
-          <v-icon icon="mdi-alert-outline" size="18" />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Below reorder level</span>
-          <strong class="text-h6 font-weight-bold">{{ lowStockCount }}</strong>
-          <span class="text-caption text-medium-emphasis">Needs attention</span>
-        </div>
-      </div>
-    </div>
+      <v-col cols="12" sm="4">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="warning" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-alert-outline" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Below reorder level</div>
+              <div class="text-h6 font-weight-bold">{{ lowStockCount }}</div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <InventoryStockSection
       v-model:search="search"

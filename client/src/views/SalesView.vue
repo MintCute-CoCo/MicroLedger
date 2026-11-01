@@ -23,6 +23,8 @@ const {
   apiSales,
   apiTotal,
   completedTotal,
+  completedCount,
+  voidedCount,
   customerOptions,
   customerSearch,
   detailOpen,
@@ -101,54 +103,49 @@ const headers = [
     </div>
 
     <!-- Summary Metrics -->
-    <div class="summary-cards-row">
-      <div class="summary-card">
-        <span class="summary-icon icon-blue">
-          <v-icon
-            icon="mdi-cash-multiple"
-            size="18"
-          />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Completed sales {{ apiMode ? 'on page' : '' }}</span>
-          <strong class="text-h6 font-weight-bold">
-            {{
-              (apiMode ? apiSales : store.sales).filter((sale) => sale.status === 'Completed').length
-            }}
-          </strong>
-        </div>
-      </div>
+    <v-row class="mb-4">
+      <v-col cols="12" sm="4">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-cash-multiple" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Completed sales</div>
+              <div class="text-h6 font-weight-bold">{{ completedCount }}</div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
 
-      <div class="summary-card">
-        <span class="summary-icon icon-green">
-          <v-icon
-            icon="mdi-finance"
-            size="18"
-          />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Revenue {{ apiMode ? 'on page' : '' }}</span>
-          <strong class="text-h6 font-weight-bold">{{ formatMoney(completedTotal) }}</strong>
-        </div>
-      </div>
+      <v-col cols="12" sm="4">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="success" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-finance" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Revenue (page)</div>
+              <div class="text-h6 font-weight-bold">{{ formatMoney(completedTotal) }}</div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
 
-      <div class="summary-card">
-        <span class="summary-icon icon-rose">
-          <v-icon
-            icon="mdi-cancel"
-            size="18"
-          />
-        </span>
-        <div>
-          <span class="text-caption text-medium-emphasis">Voided {{ apiMode ? 'on page' : '' }}</span>
-          <strong class="text-h6 font-weight-bold">
-            {{
-              (apiMode ? apiSales : store.sales).filter((sale) => sale.status === 'Voided').length
-            }}
-          </strong>
-        </div>
-      </div>
-    </div>
+      <v-col cols="12" sm="4">
+        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+          <div class="d-flex align-center ga-3">
+            <v-avatar color="error" variant="tonal" rounded="lg" size="40">
+              <v-icon icon="mdi-cancel" />
+            </v-avatar>
+            <div>
+              <div class="text-caption text-medium-emphasis">Voided sales</div>
+              <div class="text-h6 font-weight-bold">{{ voidedCount }}</div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <SalesRegisterCard
       v-model:search="search"

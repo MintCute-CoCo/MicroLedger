@@ -9,6 +9,7 @@ import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatMoney } from '../../utils/format.js';
 
 const props = defineProps({
+  apiMode: Boolean,
   canEdit: Boolean,
   categories: {
     type: Array,
