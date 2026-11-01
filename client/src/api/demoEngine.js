@@ -985,3 +985,4 @@ export async function handleDemoDownload(path, filename) {
   anchor.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+

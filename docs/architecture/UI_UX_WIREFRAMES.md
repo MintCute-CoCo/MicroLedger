@@ -43,7 +43,99 @@ To guarantee 1:1 visual parity across all panels, the application adheres strict
 
 ---
 
-## 2. Navigation Architecture
+## 2. Brand Identity & Strict Color System
+
+### 2.1 Brand Personality & Design Philosophy
+MicroLedger adopts a clean, high-density, modern FinTech & Enterprise ERP aesthetic. The interface is optimized for speed, clarity, and prolonged use under point-of-sale lighting:
+- **Visual Tone**: Professional, dependable, crisp, and high-contrast.
+- **Color Philosophy**: A dominant royal navy anchor balanced by glacier-tinted neutral surfaces, high-contrast dark navy typography, and muted status accents (teal, amber, crimson) to prevent visual fatigue while keeping critical warnings prominent.
+- **Font Stack**:
+  - **Body & Data**: `'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif` (clean, highly legible geometric sans for rapid scanning of tabular data and barcodes).
+  - **Brand & Headings**: `'Manrope', sans-serif` (modern, authoritative display font used for page titles, modal headers, brand marks, and store avatars).
+
+### 2.2 Core Vuetify Theme Palette
+Defined centrally in [`client/src/main.js`](file:///c:/StudyAlot/WORKFOLDER/FYP/MicroLedger/client/src/main.js), the Vuetify 3 theme establishes the immutable base tokens used throughout all UI components:
+
+| Token Name | Hex Code | RGB | Role & Application | Contrast on Light Surface |
+|---|---|---|---|---|
+| **`primary`** | `#253d90` | `rgb(37, 61, 144)` | Deep Royal Navy. Primary brand anchor, primary buttons, active navigation states, key metric highlights. | $\approx 9.8:1$ (WCAG AAA) |
+| **`secondary`** | `#64748b` | `rgb(100, 116, 139)` | Slate Gray. Secondary actions, neutral metadata tags, unselected controls. | $\approx 4.6:1$ (WCAG AA) |
+| **`success`** | `#17866d` | `rgb(23, 134, 109)` | Emerald Teal. Positive cash flow, completed sales, in-stock badges, active user/product status. | $\approx 4.8:1$ (WCAG AA) |
+| **`warning`** | `#c4832d` | `rgb(196, 131, 45)` | Amber Ochre. Low stock alerts ($\le \text{reorder}$), warranty claims with supplier, pending returns. | $\approx 3.2:1$ (Large text / Chip) |
+| **`error`** | `#c64c4c` | `rgb(198, 76, 76)` | Crimson Red. Voided transactions, out-of-stock items ($0\text{ pcs}$), overdue claims, destructive actions. | $\approx 4.7:1$ (WCAG AA) |
+| **`background`** | `#f5f7fb` | `rgb(245, 247, 251)` | Glacier Canvas. Off-white soft cool-gray canvas reducing eye strain under store lighting. | Canvas Base |
+| **`surface`** | `#ffffff` | `rgb(255, 255, 255)` | Pure White. Card containers, data tables, dialog modals, application drawer. | Surface Layer |
+
+### 2.3 Neutral Canvas, Surface Hierarchy & Borders
+The system enforces strict surface separation through subtle tone shifts and borders rather than heavy drop shadows:
+
+| Surface Layer | Hex / CSS Value | Location / Usage | Visual Purpose |
+|---|---|---|---|
+| **Global Canvas** | `#f5f7fb` | `body`, `.v-application`, `.app-main` | Unified base layer across all viewports. |
+| **Card & Container Surface** | `#ffffff` | `.v-card`, `.summary-card`, `.auth-card`, `.app-drawer` | Elevated content planes for tables and forms. |
+| **Table Header Surface** | `#fafbfc` | `.v-data-table th` | Subtle top boundary for data grids; separates column headers from rows. |
+| **Subtle Inset / Switcher** | `#f8f9fc` | `.store-switcher` | Micro-container grouping store name and status. |
+| **Active Selection Tint** | `#eff2fc` | `.nav-list .v-list-item--active`, `.v-list-item--active` | Soft royal tint confirming user selection without jarring contrast. |
+| **Card & Container Border** | `1px solid #d4dce8` | `.v-card`, form inputs | Crisp border definition ensuring crisp separation on `#f5f7fb`. |
+| **Divider & Shell Border** | `1px solid #edf0f5` | `.app-drawer`, `.topbar`, `.help-card` | Low-contrast structural boundaries for fixed app chrome. |
+| **Table Row Border** | `1px solid #f0f2f6` | `.v-data-table td`, `.table-toolbar` | Clean row dividers preventing dense data bleeding. |
+
+### 2.4 Typography Color Hierarchy & Contrast Ratios
+To maintain visual clarity, text colors are stratified into four distinct contrast levels:
+
+| Tier | Hex Code | Vuetify / CSS Class | Intended Use & Contrast Ratio |
+|---|---|---|---|
+| **Tier 1: Primary Navy-Charcoal** | `#202a3d` | `h1`, `.brand-name`, `.dialog-title`, default text | Primary headers, modal titles, high-priority numbers. ($12.8:1$ on `#ffffff`, WCAG AAA) |
+| **Tier 2: Body & Form Data** | `#354157` / `#3e4b61` | `.v-data-table td`, `.v-field__input`, `.table-toolbar h2` | Table cell text, active input text, category headers. ($8.5:1$ on `#ffffff`, WCAG AAA) |
+| **Tier 3: Muted Metadata & Labels** | `#7c889b` / `#8792a5` | `.eyebrow`, `.text-overline`, `th`, `.table-toolbar p` | Column headers, category eyebrows, helper subtitles. ($4.6:1$ on `#ffffff`, WCAG AA) |
+| **Tier 4: Disabled & Captions** | `#9aa3b4` / `#a0a9b8` | `.text-caption`, `.nav-label`, placeholders | Input placeholders, navigation section labels, timestamps. ($3.2:1$, decorative/subtext) |
+
+### 2.5 Semantic Status & Chip Color Matrix
+All status indicators across panels use Vuetify's `v-chip` with `variant="tonal"` to render soft pastel backgrounds with high-contrast text:
+
+| Domain | Value / State | Vuetify Color | Chip Appearance | UI Component Location |
+|---|---|---|---|---|
+| **Product / Category** | Active | `success` | Emerald text on pale teal | `ProductCatalogSection.vue`, `CategoryManagementSection.vue` |
+| **Product / Category** | Inactive | `error` | Crimson text on pale red | `ProductCatalogSection.vue`, `CategoryManagementSection.vue` |
+| **Stock Level** | In Stock ($> \text{reorder}$) | `success` | Emerald text on pale teal | `InventoryStockSection.vue`, `PosProductCatalog.vue` |
+| **Stock Level** | Low Stock ($\le \text{reorder}$) | `warning` | Amber text on pale amber | `InventoryStockSection.vue`, `PosProductCatalog.vue` |
+| **Stock Level** | Out of Stock ($0\text{ pcs}$) | `error` | Crimson text on pale red | `PosProductCatalog.vue` |
+| **Sales Lifecycle** | Completed | `success` | Emerald text on pale teal | `SalesRegisterCard.vue`, `SaleDetailDialog.vue` |
+| **Sales Lifecycle** | Voided | `error` | Crimson text on pale red | `SalesRegisterCard.vue`, `SaleDetailDialog.vue` |
+| **User Role** | Admin | `primary` | Royal navy on soft blue | `UserManagementSection.vue` |
+| **User Role** | Staff | `default` | Slate gray on neutral | `UserManagementSection.vue` |
+| **User Status** | Active | `success` | Emerald text on pale teal | `UserManagementSection.vue` |
+| **User Status** | Inactive | `error` | Crimson text on pale red | `UserManagementSection.vue` |
+| **Warranty Claim** | Overdue | `error` | Crimson text on pale red | `ClaimRegisterSection.vue` |
+| **Warranty Claim** | With Supplier | `warning` | Amber text on pale amber | `ClaimRegisterSection.vue` |
+| **Entity Counters** | Total Counts (Pills) | `primary` | Royal navy on soft blue | Header counter chips (Claims, Events, Records) |
+
+### 2.6 Pastel Metric Icon Tokens (Summary Cards)
+Metric cards (`.summary-card`) use standardized $36 \times 36\text{ px}$ pastel rounded-square icon containers:
+
+| Token Class | Background Hex | Icon / Text Hex | Typical Metric Usage |
+|---|---|---|---|
+| `.icon-blue` | `#edf1ff` | `#5a70ba` | Gross Revenue, Today's Sales, POS Transaction Volume |
+| `.icon-green` | `#e9f7f1` | `#319276` | Total Profit, Completed Invoices, Restocked Units |
+| `.icon-amber` | `#fdf5e8` | `#c08532` | Low Stock Items, Active RMA Claims, Pending Voids |
+| `.icon-purple` | `#f2eefa` | `#7a5bb8` | Unique Customers, VIP Accounts, Store Credit |
+| `.icon-rose` | `#fceeee` | `#bb7070` | Out of Stock Items, Overdue Claims, Voided Revenue |
+
+### 2.7 Interactive States & Elevation Standards
+- **Buttons (`.v-btn`)**:
+  - Primary button: Background `#253d90`, text `#ffffff`. Minimum height $44\text{ px}$.
+  - Outlined button: Border `1px solid #d4dce8`, text `#354157`, hover background `#f5f7fb`.
+  - Icon action buttons (`.v-btn--icon`): Fixed $44 \times 44\text{ px}$ touch target for touch screens and mobile tablets.
+- **Card Elevation**:
+  - Default card: `box-shadow: 0 1px 3px rgba(32, 42, 61, 0.05); border: 1px solid #d4dce8;`
+  - POS interactive product card hover: `border-color: #8b9bb8; background: #fbfcff;`
+  - POS product card focus-visible: `border-color: #5369ae;`
+  - Dialog modal shadow: `box-shadow: 0 20px 65px rgba(32, 50, 97, 0.09); border: 1px solid #edf0f5;`
+  - Dropdown menu shadow: `box-shadow: 0 4px 16px rgba(25, 42, 78, 0.1);`
+
+---
+
+## 3. Navigation Architecture
 
 ```mermaid
 flowchart TD
@@ -69,9 +161,9 @@ flowchart TD
 
 ---
 
-## 3. Screen Wireframes
+## 4. Screen Wireframes
 
-### 3.1 Authentication & Login
+### 4.1 Authentication & Login
 ```text
 +-------------------------------------------------------------+
 |                         MicroLedger                         |
@@ -89,7 +181,7 @@ flowchart TD
 
 ---
 
-### 3.2 Operational Dashboard (Desktop)
+### 4.2 Operational Dashboard (Desktop)
 ```text
 +---------------------------------------------------------------------------------------------------+
 | DASHBOARD                                                                                         |
@@ -108,7 +200,7 @@ flowchart TD
 
 ---
 
-### 3.3 Point of Sale Terminal (8:4 Desktop Split)
+### 4.3 Point of Sale Terminal (8:4 Desktop Split)
 ```text
 +---------------------------------------------------+-----------------------------------------------+
 | CATALOG (Cols: 8, Independent Scroll)             | CHECKOUT (Cols: 4, Independent Scroll)        |
@@ -132,7 +224,7 @@ flowchart TD
 
 ---
 
-### 3.4 Point of Sale (Mobile 360 px Viewport)
+### 4.4 Point of Sale (Mobile 360 px Viewport)
 ```text
 +-------------------------------------------+
 | ☰ MicroLedger POS                Cart (3) |
@@ -156,7 +248,7 @@ flowchart TD
 
 ---
 
-### 3.5 Inventory Movement History & Invariant Ledger
+### 4.5 Inventory Movement History & Invariant Ledger
 ```text
 +---------------------------------------------------------------------------------------------------+
 | INVENTORY LEDGER                                                                                  |
@@ -177,7 +269,7 @@ flowchart TD
 
 ---
 
-### 3.6 Spreadsheet Import with Live Preview
+### 4.6 Spreadsheet Import with Live Preview
 ```text
 +---------------------------------------------------------------------------------------------------+
 | BULK PRODUCT IMPORT                                                                               |
@@ -201,7 +293,7 @@ flowchart TD
 
 ---
 
-### 3.7 Warranty Claims Lifecycle (7-Stage State Machine)
+### 4.7 Warranty Claims Lifecycle (7-Stage State Machine)
 ```text
 +---------------------------------------------------------------------------------------------------+
 | WARRANTY CLAIM DETAIL: C-000042                                                                   |
@@ -223,7 +315,7 @@ flowchart TD
 
 ---
 
-## 4. UI Component Library
+## 5. UI Component Library
 
 All views leverage standard, encapsulated components located in `client/src/components/`:
 

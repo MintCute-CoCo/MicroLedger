@@ -60,7 +60,7 @@ System blueprints, database schemas, and interface wireframes:
 |---|---|
 | [**System Architecture**](architecture/SYSTEM_ARCHITECTURE.md) | Multi-tier architecture, request flows, Knex query parameterization, and database isolation. |
 | [**Database Design**](architecture/DATABASE_DESIGN.md) | Complete 16-table PostgreSQL 16 relational schema, Knex migrations, sequences, and SQL invariants. |
-| [**UI/UX Design & Wireframes**](architecture/UI_UX_WIREFRAMES.md) | Vuetify 3 design system, universal typography scale, 8:4 desktop POS split, and responsive wireframes. |
+| [**UI/UX Design & Wireframes**](architecture/UI_UX_WIREFRAMES.md) | Vuetify 3 design system, strict tokenized color palette, universal typography scale, 8:4 desktop POS split, and responsive wireframes. |
 
 ---
 
