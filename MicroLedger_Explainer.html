@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MicroLedger — Interactive System Architecture & Code Explainer</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --purple: #8b5cf6;
+      --purple-light: #f5f3ff;
+      --code-bg: #1e293b;
+      --code-text: #f8fafc;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --primary: #3b82f6;
+      --primary-light: #1e3a8a;
+      --success: #10b981;
+      --success-light: #064e3b;
+      --warning: #f59e0b;
+      --warning-light: #78350f;
+      --danger: #ef4444;
+      --danger-light: #7f1d1d;
+      --purple: #a855f7;
+      --purple-light: #581c87;
+      --code-bg: #090d16;
+      --code-text: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 60px; transition: background 0.2s, color 0.2s; }
+
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-badge {
+      font-size: 0.75rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-input {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.875rem;
+      width: 220px;
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--primary); }
+
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 0 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    h2 { font-size: 1.5rem; margin-bottom: 8px; letter-spacing: -0.5px; }
+    h3 { font-size: 1.15rem; margin-bottom: 8px; }
+    p { margin-bottom: 12px; color: var(--text); font-size: 0.95rem; }
+    .muted { color: var(--text-muted); }
+
+    /* Type badge pills */
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-ui { background: #dbeafe; color: #1e40af; }
+    .badge-logic { background: #fef3c7; color: #92400e; }
+    .badge-data { background: #d1fae5; color: #065f46; }
+    .badge-security { background: #f3e8ff; color: #6b21a8; }
+
+    [data-theme="dark"] .badge-ui { background: #1e3a8a; color: #93c5fd; }
+    [data-theme="dark"] .badge-logic { background: #78350f; color: #fde68a; }
+    [data-theme="dark"] .badge-data { background: #064e3b; color: #6ee7b7; }
+    [data-theme="dark"] .badge-security { background: #581c87; color: #d8b4fe; }
+
+    /* Big Picture interactive architecture */
+    .architecture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .arch-box {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      background: var(--card-bg);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .arch-box:hover, .arch-box.selected {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .arch-box.selected {
+      background: var(--primary-light);
+    }
+    .arch-inspector {
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    /* Trace Request Animation */
+    .tracer-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: var(--bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn:hover { filter: brightness(0.95); }
+
+    .pipeline-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 20px 0;
+      margin-bottom: 24px;
+    }
+    .pipe-step {
+      flex: 0 0 160px;
+      padding: 12px;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .pipe-step.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+    }
+    .pipe-step.passed {
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .pipe-arrow {
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .tracer-payloads {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .tracer-payloads { grid-template-columns: 1fr; }
+    }
+    .code-box {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+      max-height: 280px;
+    }
+
+    /* Code Explorer */
+    .code-explorer-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 860px) {
+      .code-explorer-layout { grid-template-columns: 1fr; }
+    }
+    .file-tree {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--bg);
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .file-tree-item {
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .file-tree-item:hover, .file-tree-item.active {
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+    }
+    .file-tree-item.active {
+      border-left: 3px solid var(--primary);
+      font-weight: 700;
+    }
+
+    /* Quiz */
+    .quiz-question {
+      margin-bottom: 24px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .quiz-options {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .quiz-opt {
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--card-bg);
+      text-align: left;
+      font-size: 0.9rem;
+      transition: all 0.15s;
+    }
+    .quiz-opt:hover { background: var(--bg); }
+    .quiz-opt.correct {
+      background: var(--success-light);
+      border-color: var(--success);
+      color: var(--success);
+      font-weight: bold;
+    }
+    .quiz-opt.wrong {
+      background: var(--danger-light);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    .quiz-feedback {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="brand">
+      <span>⚡ MicroLedger</span>
+      <span class="brand-badge">Architecture & Code Explainer</span>
+    </div>
+    <div class="header-actions">
+      <input type="text" id="globalSearch" class="search-input" placeholder="Search files, functions, errors..." oninput="handleSearch(this.value)">
+      <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">Dark Mode</span>
+      </button>
+    </div>
+  </div>
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('big-picture')">1. Big Picture Map</button>
+    <button class="tab-btn" onclick="switchTab('user-journey')">2. User Journeys</button>
+    <button class="tab-btn" onclick="switchTab('trace-request')">3. Trace a Request (Live)</button>
+    <button class="tab-btn" onclick="switchTab('data-flow')">4. Data Lifecycle</button>
+    <button class="tab-btn" onclick="switchTab('code-explorer')">5. Code Deep-Dive</button>
+    <button class="tab-btn" onclick="switchTab('errors-edge-cases')">6. Errors & Edge Cases</button>
+    <button class="tab-btn" onclick="switchTab('glossary-quiz')">7. Glossary & Quiz</button>
+  </nav>
+</header>
+
+<main>
+  <!-- TAB 1: BIG PICTURE -->
+  <section id="big-picture" class="tab-pane active">
+    <div class="card">
+      <h2>MicroLedger System Map</h2>
+      <p class="muted">MicroLedger is a Point-of-Sale (POS), Transactional Inventory Ledger, and Hardware Warranty Tracking System designed for computer retail stores. Tap any component box below to inspect its real files, inputs, outputs, and design rationale.</p>
+      
+      <div class="architecture-grid">
+        <div class="arch-box selected" onclick="selectComponent('fe')">
+          <span class="badge badge-ui">Presentation Layer</span>
+          <h3 style="margin-top: 8px;">Single Page App (Vue 3)</h3>
+          <p class="muted" style="font-size: 0.85rem;">Vuetify 3 component primitives, Pinia auth store, in-browser offline demo engine.</p>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);">client/src/views/ & composables/</div>
+        </div>
+
+        <div class="arch-box" onclick="selectComponent('api')">
+          <span class="badge badge-logic">HTTP Transport Layer</span>
+          <h3 style="margin-top: 8px;">Express 5 API Server</h3>
+          <p class="muted" style="font-size: 0.85rem;">Token verification, RBAC role guard (Admin vs Staff), rate limiter, centralized 404/500 error sanitization.</p>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);">server/src/app.js & middleware/</div>
+        </div>
+
+        <div class="arch-box" onclick="selectComponent('domain')">
+          <span class="badge badge-logic">Business Logic Layer</span>
+          <h3 style="margin-top: 8px;">15 Modular Services</h3>
+          <p class="muted" style="font-size: 0.85rem;">Atomic stock deduction, idempotency locking, serial number enforcement, audit writing.</p>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);">server/src/modules/*/service.js</div>
+        </div>
+
+        <div class="arch-box" onclick="selectComponent('db')">
+          <span class="badge badge-data">Database Layer</span>
+          <h3 style="margin-top: 8px;">PostgreSQL 16 & Knex</h3>
+          <p class="muted" style="font-size: 0.85rem;">16 Relational tables, transaction-level advisory locks, append-only invariants, CHECK constraints.</p>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);">server/src/db/migrations/ & knex.js</div>
+        </div>
+      </div>
+
+      <div id="componentInspector" class="arch-inspector">
+        <h3 id="inspectTitle" style="color: var(--primary);">Vue 3 Frontend Client (SPA)</h3>
+        <p id="inspectDesc">Delivers a desktop and mobile responsive Point of Sale and inventory management interface. Built with Vue 3 and Vuetify 3 component primitives.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px;">
+          <div>
+            <strong>Key Files:</strong>
+            <div id="inspectFiles" style="font-family: var(--font-mono); font-size: 0.8rem; margin-top: 4px;">client/src/views/PosView.vue<br>client/src/composables/pos/usePosCheckout.js</div>
+          </div>
+          <div>
+            <strong>Inputs & Triggers:</strong>
+            <div id="inspectInputs" style="font-size: 0.85rem; margin-top: 4px;">User clicks, barcode scanner events, form inputs</div>
+          </div>
+          <div>
+            <strong>Outputs & Results:</strong>
+            <div id="inspectOutputs" style="font-size: 0.85rem; margin-top: 4px;">Bearer token authenticated JSON HTTP requests, printable receipts</div>
+          </div>
+          <div>
+            <strong>Why It Exists:</strong>
+            <div id="inspectRationale" style="font-size: 0.85rem; margin-top: 4px;">Enables cashiers to ring up sales in under 3 seconds with immediate SKU feedback and zero layout jumps.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: USER JOURNEY -->
+  <section id="user-journey" class="tab-pane">
+    <div class="card">
+      <h2>End-to-End User Journeys</h2>
+      <p class="muted">Follow real user paths step-by-step through the application and see exactly which code modules handle every action.</p>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+        <button class="btn btn-primary" onclick="showJourney('pos-sale')">Retail POS Sale (Cashier)</button>
+        <button class="btn" onclick="showJourney('stock-in')">Stock-In Movement (Warehouse)</button>
+        <button class="btn" onclick="showJourney('warranty-claim')">Warranty Claim (Support)</button>
+      </div>
+
+      <div id="journeyContainer">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: TRACE A REQUEST -->
+  <section id="trace-request" class="tab-pane">
+    <div class="card">
+      <h2>Animated Request Tracer</h2>
+      <p class="muted">Watch an action travel through the exact functions and files in sequence. Step forward or pause to inspect the exact JSON state before and after each transformation.</p>
+
+      <div class="tracer-controls">
+        <label><strong>Action Scenario:</strong></label>
+        <select id="tracerScenario" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);" onchange="loadScenario(this.value)">
+          <option value="pos_checkout">POS Complete Sale (Happy Path)</option>
+          <option value="insufficient_stock">POS Concurrent Conflict (Stock = 0)</option>
+          <option value="idempotent_replay">Network Drop Retry (Idempotent Replay)</option>
+        </select>
+
+        <button class="btn btn-primary" id="btnPlay" onclick="tracerTogglePlay()">▶ Play</button>
+        <button class="btn" onclick="tracerStep(-1)">⏮ Back</button>
+        <button class="btn" onclick="tracerStep(1)">⏭ Step</button>
+        <button class="btn" onclick="tracerReset()">↺ Reset</button>
+
+        <label style="margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 0.85rem;">
+          Speed:
+          <input type="range" id="speedSlider" min="500" max="3000" value="1500" step="250">
+        </label>
+      </div>
+
+      <div class="pipeline-container" id="pipelineSteps">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="card" style="background: var(--bg); border: 1px solid var(--border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 id="stepHeader">Current Stage: Frontend Dispatch</h3>
+          <span class="badge badge-logic" id="stepFile">usePosCheckout.js</span>
+        </div>
+        <p id="stepExplanation" style="font-size: 0.95rem; margin-bottom: 16px;">Cashier taps "Complete Sale". The composable validates the cart and assigns a UUID v4 Idempotency-Key header.</p>
+
+        <div class="tracer-payloads">
+          <div>
+            <strong>Input Data (Before This Step):</strong>
+            <pre class="code-box" id="stepBeforePayload">// Loading...</pre>
+          </div>
+          <div>
+            <strong>Output / State Change (After This Step):</strong>
+            <pre class="code-box" id="stepAfterPayload">// Loading...</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: DATA FLOW -->
+  <section id="data-flow" class="tab-pane">
+    <div class="card">
+      <h2>Core Data Lifecycle & Invariants</h2>
+      <p class="muted">MicroLedger uses strict relational invariants in PostgreSQL. See how key business entities are created, transformed, and maintained append-only.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+        <div class="card" style="margin: 0;">
+          <span class="badge badge-data">The Invariant Ledger</span>
+          <h3 style="margin-top: 8px;">Inventory Movements</h3>
+          <p style="font-size: 0.85rem;" class="muted">MicroLedger eliminates "stock drift" by forbidding unrecorded stock quantity edits.</p>
+          <ul style="font-size: 0.85rem; padding-left: 20px; margin-bottom: 12px;">
+            <li><strong>Creation:</strong> Triggered whenever sales occur, PO stock arrives, or physical counts are adjusted.</li>
+            <li><strong>Constraint:</strong> <code>SUM(quantity_change)</code> across all movement rows strictly matches <code>products.stock_qty</code>.</li>
+            <li><strong>Immutability:</strong> The PostgreSQL <code>app_user</code> role has <code>REVOKE UPDATE, DELETE ON inventory_movements</code>.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin: 0;">
+          <span class="badge badge-logic">Transaction Snapshot</span>
+          <h3 style="margin-top: 8px;">Sales & Line Item Snapshots</h3>
+          <p style="font-size: 0.85rem;" class="muted">Historical receipts must never mutate even if a product is subsequently renamed or repriced.</p>
+          <ul style="font-size: 0.85rem; padding-left: 20px; margin-bottom: 12px;">
+            <li><strong>Snapshots:</strong> <code>sku_snapshot</code> and <code>name_snapshot</code> copy exact product details into <code>sale_items</code> at purchase time.</li>
+            <li><strong>Idempotency:</strong> <code>idempotency_key</code> column prevents double-charges during WiFi reconnections.</li>
+            <li><strong>Void Policy:</strong> Voiding a sale does not delete it; status becomes <code>'voided'</code>, restoring stock via compensating movement.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin: 0;">
+          <span class="badge badge-security">Audit & Accountability</span>
+          <h3 style="margin-top: 8px;">Audit Logs & PII Redaction</h3>
+          <p style="font-size: 0.85rem;" class="muted">Forensic tracking of every administrative action.</p>
+          <ul style="font-size: 0.85rem; padding-left: 20px; margin-bottom: 12px;">
+            <li><strong>Written In-Transaction:</strong> An audit record is committed inside the exact same database transaction as the business event.</li>
+            <li><strong>Redaction:</strong> Passwords, JWT tokens, and sensitive customer PII are strictly redacted before writing to <code>audit_logs</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: CODE EXPLORER -->
+  <section id="code-explorer" class="tab-pane">
+    <div class="card">
+      <h2>Interactive Code Deep-Dive</h2>
+      <p class="muted">Select any key file below to inspect real excerpts, plain-language line-by-line explanations, and cross-module caller dependencies.</p>
+
+      <div class="code-explorer-layout">
+        <div class="file-tree" id="codeFileTree">
+          <!-- File list injected via JS -->
+        </div>
+        <div class="card" style="margin: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h3 id="codeViewerTitle">server/src/modules/sales/service.js</h3>
+            <span class="badge badge-logic" id="codeViewerBadge">Service Layer</span>
+          </div>
+          <p id="codeViewerSummary" class="muted" style="font-size: 0.9rem;">Atomic POS sale execution with row locking and idempotency protection.</p>
+          
+          <div style="display: flex; gap: 16px; margin: 12px 0; font-size: 0.85rem;">
+            <div><strong>Called By:</strong> <span id="codeCalledBy" style="font-family: var(--font-mono); color: var(--primary);">controller.js (createSale)</span></div>
+            <div><strong>Calls:</strong> <span id="codeCalls" style="font-family: var(--font-mono); color: var(--primary);">deductStock, lockSaleProducts</span></div>
+          </div>
+
+          <pre class="code-box" id="codeViewerContent" style="max-height: 400px; font-size: 0.85rem; line-height: 1.6;"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 6: ERRORS & EDGE CASES -->
+  <section id="errors-edge-cases" class="tab-pane">
+    <div class="card">
+      <h2>Edge Cases & Failure Handling</h2>
+      <p class="muted">Enterprise POS systems face tough real-world conditions: hardware contention, flaky network drops, and unauthorized actions. Here is how MicroLedger guarantees safety.</p>
+
+      <div style="display: grid; gap: 16px; margin-top: 16px;">
+        <div class="card" style="margin: 0; border-left: 4px solid var(--danger);">
+          <h3>1. Race Condition: Two Cashiers Ring Up the Last Single Item</h3>
+          <p><strong>Scenario:</strong> Product stock is 1. Cashier A and Cashier B tap "Complete Sale" at the exact same millisecond.</p>
+          <p><strong>How MicroLedger Solves It:</strong>
+            <code>lockSaleProducts(trx, ids)</code> executes <code>SELECT ... FOR UPDATE ORDER BY id ASC</code>. PostgreSQL puts a row lock on the product for Cashier A's transaction. Cashier B's transaction is paused in queue. Cashier A deducts stock to 0 and commits. Cashier B unblocks, reads stock = 0, and receives <code>HTTP 409 Conflict: INSUFFICIENT_STOCK</code>. Stock never drops below zero.
+          </p>
+        </div>
+
+        <div class="card" style="margin: 0; border-left: 4px solid var(--warning);">
+          <h3>2. Flaky WiFi / Double-Submit</h3>
+          <p><strong>Scenario:</strong> Cashier taps checkout. The backend creates the sale, but before the HTTP 201 response returns to the browser, the store WiFi drops.</p>
+          <p><strong>How MicroLedger Solves It:</strong>
+            The frontend generates a unique UUID v4 <code>Idempotency-Key</code> for the cart. When the connection re-establishes and the request retries, the backend detects the duplicate key via <code>findSaleByIdempotencyKey</code> and immediately returns the completed sale receipt without deducting stock again or creating a duplicate invoice.
+          </p>
+        </div>
+
+        <div class="card" style="margin: 0; border-left: 4px solid var(--purple);">
+          <h3>3. Brute-Force Password Guessing</h3>
+          <p><strong>Scenario:</strong> An attacker tries multiple password guesses on the admin login screen.</p>
+          <p><strong>How MicroLedger Solves It:</strong>
+            The authentication service tracks failed attempts per user account. Upon the 5th consecutive failed password attempt, the user record is locked for 15 minutes, returning <code>HTTP 423 Locked</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 7: GLOSSARY & QUIZ -->
+  <section id="glossary-quiz" class="tab-pane">
+    <div class="card">
+      <h2>Technical Glossary & Understanding Quiz</h2>
+      <p class="muted">Master the core concepts behind MicroLedger and test your knowledge.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+        <div class="card" style="margin: 0;">
+          <h3>Key Terms Made Simple</h3>
+          <dl style="font-size: 0.9rem; display: grid; gap: 12px; margin-top: 12px;">
+            <div>
+              <dt><strong>Idempotency</strong></dt>
+              <dd class="muted">An operation that produces the exact same outcome no matter how many times it is repeated with the same key (prevents double-charges).</dd>
+            </div>
+            <div>
+              <dt><strong>Row-Level Locking (FOR UPDATE)</strong></dt>
+              <dd class="muted">Telling the database: "I am working on this specific row. Make all other transactions wait until I am finished."</dd>
+            </div>
+            <div>
+              <dt><strong>Append-Only Ledger</strong></dt>
+              <dd class="muted">A ledger where records are only inserted, never updated or deleted. Corrections are made via new compensating entries.</dd>
+            </div>
+            <div>
+              <dt><strong>RBAC (Role-Based Access Control)</strong></dt>
+              <dd class="muted">Restricting features based on user job role (e.g. Staff cannot view supplier wholesale costs or void sales; Admins can).</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="card" style="margin: 0;">
+          <h3>Interactive Quick Quiz (6 Questions)</h3>
+          <div id="quizContainer">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  // State
+  let currentTheme = 'light';
+  let tracerStepIndex = 0;
+  let tracerTimer = null;
+
+  // Component Inspector Data
+  const componentsData = {
+    fe: {
+      title: "Vue 3 Frontend Client (SPA)",
+      desc: "Delivers a desktop and mobile responsive Point of Sale and inventory management interface. Built with Vue 3 and Vuetify 3 component primitives.",
+      files: "client/src/views/PosView.vue<br>client/src/composables/pos/usePosCheckout.js",
+      inputs: "Cashier clicks, barcode scanner inputs, customer search queries",
+      outputs: "JWT-authenticated JSON REST requests, printed thermal receipts",
+      rationale: "Provides a zero-jump, responsive UI that lets cashiers build carts in under 3 seconds with offline demo fallback."
+    },
+    api: {
+      title: "Express 5 API Server & Routing Chrome",
+      desc: "Handles network transport, CORS, cookie parsing, Bearer JWT validation, rate limiting, and centralized error sanitization.",
+      files: "server/src/app.js<br>server/src/middleware/authenticate.js<br>server/src/middleware/error-handler.js",
+      inputs: "Inbound HTTP requests over port 3000 with Authorization headers",
+      outputs: "Sanitized JSON responses ({ data, error, code }) or HTTP error status codes",
+      rationale: "Prevents internal database crashes or secret keys from leaking to client browsers."
+    },
+    domain: {
+      title: "15 Modular Domain Services",
+      desc: "Orchestrates transactional business logic, atomic stock reductions, serial number tracking, and audit log generation.",
+      files: "server/src/modules/sales/service.js<br>server/src/modules/inventory/service.js",
+      inputs: "Validated Zod request payloads and authenticated user session claims",
+      outputs: "Committed database transactions, generated receipt models, audit entries",
+      rationale: "Enforces 100% of business constraints on the server so malicious client edits cannot corrupt store records."
+    },
+    db: {
+      title: "PostgreSQL 16 Relational Database & Knex Pool",
+      desc: "Provides strict relational integrity across 16 tables with foreign keys, column CHECK constraints, and row locks.",
+      files: "server/src/db/migrations/202610120001_core_schema.js<br>server/src/db/knex.js",
+      inputs: "Parameterized SQL queries with bind parameters ($1, $2)",
+      outputs: "Relational table rows, transaction locks, sequence IDs",
+      rationale: "Guarantees that stock quantity can never drop below zero at the physical disk storage level."
+    }
+  };
+
+  function selectComponent(key) {
+    document.querySelectorAll('.arch-box').forEach(b => b.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+    const d = componentsData[key];
+    document.getElementById('inspectTitle').textContent = d.title;
+    document.getElementById('inspectDesc').textContent = d.desc;
+    document.getElementById('inspectFiles').innerHTML = d.files;
+    document.getElementById('inspectInputs').textContent = d.inputs;
+    document.getElementById('inspectOutputs').textContent = d.outputs;
+    document.getElementById('inspectRationale').textContent = d.rationale;
+  }
+
+  // Journeys Data
+  const journeys = {
+    'pos-sale': [
+      { step: 1, title: "Cashier adds Intel i5 CPU to cart", file: "usePosCart.js", desc: "Checks that requested quantity does not exceed available stock in catalog." },
+      { step: 2, title: "Cashier inputs Serial Number", file: "usePosCart.js", desc: "Validates format against SN regex requirements since product.tracks_serial is true." },
+      { step: 3, title: "Cashier taps 'Complete Sale'", file: "usePosCheckout.js", desc: "Generates UUID Idempotency-Key header and dispatches POST /api/v1/sales." },
+      { step: 4, title: "JWT & Role Verification", file: "authenticate.js", desc: "Verifies token signature using 'jose' and asserts user status is active." },
+      { step: 5, title: "Atomic Transaction Execution", file: "sales/service.js", desc: "Locks product row, atomically deducts stock, creates sale record, logs inventory movement." },
+      { step: 6, title: "Receipt Rendered & Cart Reset", file: "PosCheckoutPanel.vue", desc: "Frontend receives 201 Created with saleNo, clears cart, and opens thermal receipt dialog." }
+    ],
+    'stock-in': [
+      { step: 1, title: "Warehouse manager opens Stock-In dialog", file: "InventoryStockSection.vue", desc: "Selects product and enters quantity received from supplier." },
+      { step: 2, title: "Frontend validates quantity >= 1", file: "InventoryView.vue", desc: "Ensures positive integer input before submitting." },
+      { step: 3, title: "API authorizes Admin or Staff role", file: "authenticate.js", desc: "Both roles are permitted to record inbound supplier stock." },
+      { step: 4, title: "Stock Incremented & Movement Appended", file: "inventory/service.js", desc: "UPDATE products SET stock_qty = stock_qty + Qty; INSERT INTO inventory_movements (type: 'stock_in')." },
+      { step: 5, title: "Real-time stock refreshed", file: "ResponsiveTable.vue", desc: "Table re-renders showing new stock count and positive movement." }
+    ],
+    'warranty-claim': [
+      { step: 1, title: "Customer returns defective GPU", file: "ClaimsView.vue", desc: "Staff looks up serial number SN-MSI-4060-0412." },
+      { step: 2, title: "System verifies warranty active", file: "warranties/service.js", desc: "Verifies end_date > now(). Confirms 36-month warranty is valid." },
+      { step: 3, title: "Create Claim in 7-Stage State Machine", file: "claims/service.js", desc: "Inserts claim with status 'Submitted'. Sends to supplier with tracking RMA." }
+    ]
+  };
+
+  function showJourney(key) {
+    const list = journeys[key];
+    const container = document.getElementById('journeyContainer');
+    container.innerHTML = list.map(item => `
+      <div style="display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start;">
+        <div style="background: var(--primary); color: white; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; font-weight: bold; flex-shrink: 0;">${item.step}</div>
+        <div style="flex: 1; border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong>${item.title}</strong>
+            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);">${item.file}</span>
+          </div>
+          <p style="font-size: 0.85rem; margin-top: 4px; margin-bottom: 0;" class="muted">${item.desc}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Tracer Scenarios
+  const tracerScenarios = {
+    pos_checkout: {
+      steps: [
+        { name: "1. Cart Validation", file: "usePosCart.js", before: { cart: [{ sku: "CPU-INT-12400F", qty: 1 }], availableStock: 14 }, after: { valid: true, error: null }, desc: "Ensures requested quantity is at least 1 and within available catalog limits." },
+        { name: "2. Idempotency Key", file: "usePosCheckout.js", before: { requestFingerprint: "sha256(cart_items)" }, after: { idempotencyKey: "uuid-v4-550e8400-e29b-41d4-a716-446655440000" }, desc: "Generates or retrieves unique UUID v4 to protect against network retry duplicate charges." },
+        { name: "3. JWT Authentication", file: "authenticate.js", before: { header: "Bearer eyJhbGciOiJIUzI1NiIs..." }, after: { userId: 2, role: "staff", status: "active" }, desc: "Verifies token signature using HMAC-SHA256 and asserts user is active in DB." },
+        { name: "4. Pessimistic Row Lock", file: "sales/repository.js", before: { sql: "SELECT * FROM products WHERE id IN (101) ORDER BY id ASC FOR UPDATE" }, after: { lockAcquired: true, waitQueue: 0 }, desc: "Locks the database row so concurrent cashiers cannot manipulate this item during checkout." },
+        { name: "5. Conditional Stock Deduct", file: "sales/service.js", before: { stock_qty: 14, deduct: 1 }, after: { stock_qty: 13, rowsUpdated: 1 }, desc: "Atomically reduces stock via UPDATE products SET stock_qty = stock_qty - 1 WHERE stock_qty >= 1." },
+        { name: "6. Ledger & Receipt Commit", file: "sales/service.js", before: { transaction: "in-progress" }, after: { saleNo: "S-000189", status: "completed", receiptReady: true }, desc: "Inserts sale record, copies product snapshot into sale_items, writes inventory_movements, and commits transaction." }
+      ]
+    },
+    insufficient_stock: {
+      steps: [
+        { name: "1. Cashier Requests Item", file: "usePosCheckout.js", before: { sku: "GPU-MSI-4060", qty: 1 }, after: { idempotencyKey: "uuid-v4-9988..." }, desc: "Cashier clicks checkout on product with stock = 1 simultaneously with another terminal." },
+        { name: "2. Row Lock Wait", file: "sales/repository.js", before: { lock: "waiting" }, after: { lock: "acquired_after_terminal_A_commit" }, desc: "Terminal B waits in queue for Terminal A's transaction to commit." },
+        { name: "3. Fresh Stock Re-Read", file: "sales/service.js", before: { expectedStock: 1 }, after: { actualStock: 0 }, desc: "Terminal B reads current committed row: stock_qty is now 0." },
+        { name: "4. Guard Rejection (409)", file: "sales/service.js", before: { stock_qty: 0, requested: 1 }, after: { httpStatus: 409, code: "INSUFFICIENT_STOCK" }, desc: "Guard detects insufficient stock: transaction automatically rolled back; zero changes to database." }
+      ]
+    },
+    idempotent_replay: {
+      steps: [
+        { name: "1. Network Drops", file: "usePosCheckout.js", before: { initialSaleId: "S-000189", network: "TIMEOUT" }, after: { keyPreserved: "uuid-v4-550e8400..." }, desc: "Sale committed on server, but WiFi drops before browser receives HTTP 201." },
+        { name: "2. Retry With Same Key", file: "usePosCheckout.js", before: { retryAttempt: 2 }, after: { header: "Idempotency-Key: uuid-v4-550e8400..." }, desc: "Frontend re-sends identical Idempotency-Key with same cart fingerprint." },
+        { name: "3. Replay Cache Hit", file: "sales/service.js", before: { query: "findSaleByIdempotencyKey" }, after: { existingSaleFound: true, saleId: "S-000189" }, desc: "Backend finds existing completed sale for this key. Bypasses stock reduction entirely." },
+        { name: "4. Safe Receipt Return", file: "sales/controller.js", before: { duplicateDeduction: false }, after: { httpStatus: 201, saleNo: "S-000189", replayed: true }, desc: "Returns original receipt; customer is not billed twice, and stock count is untouched." }
+      ]
+    }
+  };
+
+  let currentScenario = tracerScenarios.pos_checkout;
+
+  function loadScenario(key) {
+    currentScenario = tracerScenarios[key];
+    tracerStepIndex = 0;
+    renderTracer();
+  }
+
+  function renderTracer() {
+    const pipeline = document.getElementById('pipelineSteps');
+    pipeline.innerHTML = currentScenario.steps.map((st, i) => `
+      <div class="pipe-step ${i === tracerStepIndex ? 'active' : ''} ${i < tracerStepIndex ? 'passed' : ''}">
+        <div style="font-size: 0.75rem; font-weight: bold;">Step ${i + 1}</div>
+        <div style="font-size: 0.8rem; margin-top: 4px;">${st.name}</div>
+      </div>
+      ${i < currentScenario.steps.length - 1 ? '<div class="pipe-arrow">→</div>' : ''}
+    `).join('');
+
+    const step = currentScenario.steps[tracerStepIndex];
+    document.getElementById('stepHeader').textContent = `Stage ${tracerStepIndex + 1}: ${step.name}`;
+    document.getElementById('stepFile').textContent = step.file;
+    document.getElementById('stepExplanation').textContent = step.desc;
+    document.getElementById('stepBeforePayload').textContent = JSON.stringify(step.before, null, 2);
+    document.getElementById('stepAfterPayload').textContent = JSON.stringify(step.after, null, 2);
+  }
+
+  function tracerStep(delta) {
+    tracerStepIndex = Math.max(0, Math.min(currentScenario.steps.length - 1, tracerStepIndex + delta));
+    renderTracer();
+  }
+
+  function tracerReset() {
+    tracerStepIndex = 0;
+    if (tracerTimer) { clearInterval(tracerTimer); tracerTimer = null; document.getElementById('btnPlay').textContent = '▶ Play'; }
+    renderTracer();
+  }
+
+  function tracerTogglePlay() {
+    const btn = document.getElementById('btnPlay');
+    if (tracerTimer) {
+      clearInterval(tracerTimer);
+      tracerTimer = null;
+      btn.textContent = '▶ Play';
+    } else {
+      btn.textContent = '⏸ Pause';
+      const speed = Number(document.getElementById('speedSlider').value);
+      tracerTimer = setInterval(() => {
+        if (tracerStepIndex < currentScenario.steps.length - 1) {
+          tracerStep(1);
+        } else {
+          clearInterval(tracerTimer);
+          tracerTimer = null;
+          btn.textContent = '▶ Play';
+        }
+      }, speed);
+    }
+  }
+
+  // Code Explorer Data
+  const codeFiles = [
+    {
+      id: "sales_service",
+      name: "server/src/modules/sales/service.js",
+      badge: "Service",
+      summary: "Atomic sale execution with row locks, idempotency check, and invariant ledger writing.",
+      calledBy: "controller.js (createSale)",
+      calls: "lockIdempotencyKey, lockSaleProducts, deductStock, insertInventoryMovement",
+      code: `// Atomically complete POS sale with full deadlock and race condition protection
+export async function completeSale(user, input, idempotencyKey) {
+  return await runInTransaction(async (trx) => {
+    // 1. Acquire transaction-scoped advisory lock on idempotency key
+    await lockIdempotencyKey(trx, idempotencyKey);
+
+    // 2. Return existing sale if replayed (AC-021)
+    const existing = await findSaleByIdempotencyKey(trx, idempotencyKey);
+    if (existing) return await saleWithItems(trx, existing.id);
+
+    // 3. Lock products in ascending order to prevent deadlocks
+    const lockedProducts = await lockSaleProducts(trx, productIds);
+
+    // 4. In-memory check against stock overselling
+    if (product.stock_qty < line.quantity) {
+      throw new HttpError(409, 'INSUFFICIENT_STOCK', 'Not enough stock');
+    }
+
+    // 5. Conditional SQL stock update
+    await deductStock(trx, line.productId, line.quantity);
+  });
+}`
+    },
+    {
+      id: "auth_middleware",
+      name: "server/src/middleware/authenticate.js",
+      badge: "Middleware",
+      summary: "JWT verification using jose, real-time user active check, and RBAC role gating.",
+      calledBy: "server/src/app.js & module routes",
+      calls: "jwtVerify, findUserById, requireRole",
+      code: `export async function authenticate(req, _res, next) {
+  const match = /^Bearer\\s+(.+)$/i.exec(req.get('authorization') || '');
+  if (!match) throw new HttpError(401, 'AUTH_REQUIRED', 'Authentication is required.');
+
+  const { payload } = await jwtVerify(match[1], jwtKey(), {
+    algorithms: ['HS256'], issuer: 'microledger', audience: 'microledger-api',
+  });
+
+  const user = await findUserById(db, payload.sub);
+  if (!user || user.status !== 'active') {
+    throw new HttpError(401, 'AUTH_DEACTIVATED', 'Account is deactivated.');
+  }
+  req.user = user;
+  next();
+}`
+    },
+    {
+      id: "pos_checkout_fe",
+      name: "client/src/composables/pos/usePosCheckout.js",
+      badge: "Frontend Composable",
+      summary: "Manages cart submission, request fingerprinting, and UUID idempotency caching.",
+      calledBy: "PosView.vue",
+      calls: "apiRequest('/sales')",
+      code: `// In-flight locking and idempotency key caching
+const requestFingerprint = JSON.stringify(requestBody);
+if (pendingCheckout?.fingerprint !== requestFingerprint) {
+  pendingCheckout = {
+    fingerprint: requestFingerprint,
+    key: createIdempotencyKey(), // UUID v4
+  };
+}
+
+await apiRequest('/sales', {
+  method: 'POST',
+  headers: { 'Idempotency-Key': pendingCheckout.key },
+  body: requestBody,
+});
+pendingCheckout = null;`
+    }
+  ];
+
+  function selectCodeFile(id) {
+    document.querySelectorAll('.file-tree-item').forEach(el => el.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    const f = codeFiles.find(x => x.id === id);
+    document.getElementById('codeViewerTitle').textContent = f.name;
+    document.getElementById('codeViewerBadge').textContent = f.badge;
+    document.getElementById('codeViewerSummary').textContent = f.summary;
+    document.getElementById('codeCalledBy').textContent = f.calledBy;
+    document.getElementById('codeCalls').textContent = f.calls;
+    document.getElementById('codeViewerContent').textContent = f.code;
+  }
+
+  // Quiz Data
+  const quizData = [
+    {
+      q: "Why does MicroLedger lock products in ascending ID order before a sale?",
+      options: [
+        "To make the sorting faster on screen",
+        "To prevent database deadlocks when multiple cashiers buy overlapping items",
+        "Because PostgreSQL requires numeric ordering for primary keys",
+        "To hide cost prices from staff members"
+      ],
+      correct: 1,
+      explain: "Correct! If Cashier A locks Product 1 then 2, while Cashier B locks Product 2 then 1, a deadlock occurs. Ordering locks by ID ensures all transactions lock rows in the exact same sequence."
+    },
+    {
+      q: "What happens if a cashier's internet drops immediately after clicking 'Complete Sale'?",
+      options: [
+        "The customer is charged twice on retry",
+        "The database rolls back automatically after 2 minutes",
+        "The frontend re-sends the same Idempotency-Key; the backend returns the existing sale without re-deducting stock",
+        "Stock quantity goes negative"
+      ],
+      correct: 2,
+      explain: "Correct! Idempotency protection ensures that replaying an identical request returns the original receipt without double-deducting stock."
+    },
+    {
+      q: "Can the physical stock count in PostgreSQL ever drop below 0 in MicroLedger?",
+      options: [
+        "Yes, if two cashiers buy simultaneously",
+        "No, because the column has a database CHECK (stock_qty >= 0) constraint",
+        "Yes, during an administrative inventory audit",
+        "Only when voiding a sale"
+      ],
+      correct: 1,
+      explain: "Correct! PostgreSQL enforces CHECK (stock_qty >= 0) at the disk storage level, rejecting any negative stock."
+    },
+    {
+      q: "Which database permission protects the inventory ledger from tampering?",
+      options: [
+        "GRANT ALL ON DATABASE",
+        "REVOKE UPDATE, DELETE ON inventory_movements FROM app_user",
+        "DROP TABLE inventory_movements",
+        "ENCRYPT DATABASE"
+      ],
+      correct: 1,
+      explain: "Correct! The app_user role can only INSERT into inventory_movements, making the audit ledger append-only."
+    },
+    {
+      q: "Why are product names and SKUs copied into the sale_items table during checkout?",
+      options: [
+        "To make queries simpler",
+        "Because products can later be renamed or repriced without corrupting past receipts",
+        "To save space in the products table",
+        "Because foreign keys are not supported"
+      ],
+      correct: 1,
+      explain: "Correct! Snapshotting guarantees historical receipt fidelity: if a price changes tomorrow, last year's invoices remain 100% accurate."
+    }
+  ];
+
+  function renderQuiz() {
+    const container = document.getElementById('quizContainer');
+    container.innerHTML = quizData.map((item, idx) => `
+      <div class="quiz-question">
+        <strong>Question ${idx + 1}: ${item.q}</strong>
+        <div class="quiz-options">
+          ${item.options.map((opt, optIdx) => `
+            <button class="quiz-opt" onclick="checkQuizAnswer(this, ${idx}, ${optIdx})">${opt}</button>
+          `).join('')}
+        </div>
+        <div class="quiz-feedback" id="quizFeedback_${idx}"></div>
+      </div>
+    `).join('');
+  }
+
+  function checkQuizAnswer(btn, qIdx, optIdx) {
+    const q = quizData[qIdx];
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+    const feedback = document.getElementById(`quizFeedback_${qIdx}`);
+    feedback.style.display = 'block';
+
+    if (optIdx === q.correct) {
+      btn.classList.add('correct');
+      feedback.textContent = `✓ ${q.explain}`;
+      feedback.style.color = 'var(--success)';
+    } else {
+      btn.classList.add('wrong');
+      parent.querySelectorAll('.quiz-opt')[q.correct].classList.add('correct');
+      feedback.textContent = `✗ Incorrect. ${q.explain}`;
+      feedback.style.color = 'var(--danger)';
+    }
+  }
+
+  // Navigation
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+  }
+
+  // Theme
+  function toggleTheme() {
+    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    document.getElementById('themeIcon').textContent = currentTheme === 'light' ? '🌙' : '☀️';
+    document.getElementById('themeLabel').textContent = currentTheme === 'light' ? 'Dark Mode' : 'Light Mode';
+  }
+
+  // Search
+  function handleSearch(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) return;
+    const tabs = ['big-picture', 'user-journey', 'trace-request', 'data-flow', 'code-explorer', 'errors-edge-cases', 'glossary-quiz'];
+    for (const tab of tabs) {
+      const el = document.getElementById(tab);
+      if (el && el.innerText.toLowerCase().includes(q)) {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          if (b.getAttribute('onclick').includes(tab)) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+        break;
+      }
+    }
+  }
+
+  // Init
+  window.addEventListener('DOMContentLoaded', () => {
+    showJourney('pos-sale');
+    loadScenario('pos_checkout');
+    
+    // Render file tree
+    const tree = document.getElementById('codeFileTree');
+    tree.innerHTML = codeFiles.map((f, i) => `
+      <div class="file-tree-item ${i === 0 ? 'active' : ''}" onclick="selectCodeFile('${f.id}')">
+        <span>${f.name.split('/').pop()}</span>
+        <span class="badge badge-logic">${f.badge}</span>
+      </div>
+    `).join('');
+    selectCodeFile(codeFiles[0].id);
+
+    renderQuiz();
+  });
+</script>
+</body>
+</html>
+
