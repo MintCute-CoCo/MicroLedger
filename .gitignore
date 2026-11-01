@@ -11,12 +11,4 @@ dist/
 coverage/
 *.log
 
-# Staged backend domain modules, migrations, seeds, tests, and scripts (staged for subsequent backend release)
-server/src/modules/**/*.js
-server/src/db/migrations/*.js
-server/src/db/seeds/*.js
-server/src/db/*.js
-server/tests/*.js
-server/scripts/*.js
-server/src/utils/*.js
-server/src/middleware/authenticate.js
+
