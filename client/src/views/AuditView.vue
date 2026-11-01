@@ -1,4 +1,12 @@
 <script setup>
+/**
+ * Audit Log Viewer View (Admin Role Only)
+ *
+ * PURPOSE:
+ * Provides forensic traceability over system operations, displaying chronological
+ * logs of sensitive actions (e.g. user logins, stock adjustments, price edits, voids).
+ * Enforces server-side PII masking and immutable audit integrity.
+ */
 import AuditRegisterSection from '../components/audit/AuditRegisterSection.vue';
 import { useAudit } from '../composables/audit/useAudit.js';
 

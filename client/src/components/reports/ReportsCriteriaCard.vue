@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * ReportsCriteriaCard.vue
+ *
+ * Query criteria selector for management reports, binding date ranges,
+ * target report types (sales, inventory, warranties), and time aggregation intervals.
+ */
 const props = defineProps({
   isAdmin: Boolean,
   reportType: {

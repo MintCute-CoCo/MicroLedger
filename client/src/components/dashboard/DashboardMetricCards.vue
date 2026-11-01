@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Dashboard Executive Metric Overview Cards
+ *
+ * PURPOSE:
+ * Displays key retail performance indicators: Today's Sales Volume, Completed
+ * Transactions, Total Physical Units, Low Stock Item Count, and Admin Stock Valuation.
+ */
 import { formatMoney } from '../../utils/format.js';
 
 const props = defineProps({

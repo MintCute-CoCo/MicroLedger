@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * WarrantyDialogs.vue
+ *
+ * Modal dialogs for manual warranty record provisioning (custom serial registration)
+ * and retroactively attaching customer records to existing anonymous warranty tokens.
+ */
 const props = defineProps({
   manualOpen: Boolean,
   attachOpen: Boolean,

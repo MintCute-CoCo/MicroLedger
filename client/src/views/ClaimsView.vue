@@ -1,4 +1,13 @@
 <script setup>
+/**
+ * Warranty Claims Management View (Phase 2)
+ *
+ * PURPOSE:
+ * Implements the 7-stage warranty claim lifecycle state machine:
+ * Submitted -> With Supplier -> Returned -> Ready for Customer -> Completed
+ * (with Admin-only terminal states: Rejected, Cancelled).
+ * Features dynamic overdue tracking relative to the store operating time.
+ */
 import ClaimCreateDialog from '../components/claims/ClaimCreateDialog.vue';
 import ClaimDetailDialog from '../components/claims/ClaimDetailDialog.vue';
 import ClaimFinalConfirmDialog from '../components/claims/ClaimFinalConfirmDialog.vue';

@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * SupplierFormDialog.vue
+ *
+ * Modal dialog for registering and editing vendor/supplier entities,
+ * validating company name, contact person, email, phone, and lead times.
+ */
 const props = defineProps({
   open: Boolean,
   busy: Boolean,

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { computed } from 'vue';
 import { formatDate, formatDateTime, formatMoney } from '../../utils/format.js';
 import ResponsiveTable from '../ResponsiveTable.vue';

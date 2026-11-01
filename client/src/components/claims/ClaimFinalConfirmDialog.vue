@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Claim Terminal State Confirmation Modal Dialog
+ *
+ * PURPOSE:
+ * Requires explicit confirmation before committing terminal state transitions
+ * (Completed, Rejected, Cancelled), warning staff that terminal states are immutable.
+ */
 const props = defineProps({
   open: Boolean,
   busy: Boolean,

@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Spreadsheet Import Upload & Template Staging Section
+ *
+ * PURPOSE:
+ * Provides template downloads (.xlsx and .csv) and the drag-and-drop file upload
+ * zone for staging bulk product inventories (capped at 5 MB / 5,000 rows).
+ */
 const props = defineProps({
   file: { type: [File, Array, null], default: null },
   busy: Boolean,

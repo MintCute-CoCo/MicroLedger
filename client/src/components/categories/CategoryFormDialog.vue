@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Category Creation & Modification Modal Dialog
+ *
+ * PURPOSE:
+ * Provides an accessible form dialog for creating new product taxonomy categories
+ * or renaming existing categories with field validation error reporting.
+ */
 const props = defineProps({
   open: Boolean,
   editing: Boolean,

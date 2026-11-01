@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * New Warranty Claim Registration Modal Dialog
+ *
+ * PURPOSE:
+ * Provides the submission interface for customer RMA claims: links to product warranty,
+ * validates customer phone records, and captures defective symptom descriptions.
+ */
 const props = defineProps({
   open: Boolean,
   busy: Boolean,

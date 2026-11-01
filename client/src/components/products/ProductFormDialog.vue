@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * ProductFormDialog.vue
+ *
+ * Modal dialog for creating and editing SKU catalog items, handling product name,
+ * barcode, SKU, category linkage, cost/retail price, warranty policy, and reorder levels.
+ */
 import { ref } from 'vue';
 
 const props = defineProps({

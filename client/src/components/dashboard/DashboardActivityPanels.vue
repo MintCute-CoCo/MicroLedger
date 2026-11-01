@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Dashboard Recent Sales Activity & Store Feed Panel
+ *
+ * PURPOSE:
+ * Streams recent invoices, customer payment badges, and transaction timestamps
+ * for real-time operational awareness.
+ */
 import { formatDateTime, formatMoney } from '../../utils/format.js';
 
 const props = defineProps({

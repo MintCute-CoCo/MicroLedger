@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Spreadsheet Import Validation Preview & Commit Section
+ *
+ * PURPOSE:
+ * Renders the parsed preview results with row-level validation status badges,
+ * error summaries, error report download options, and transaction commit mode selection.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 
 const props = defineProps({

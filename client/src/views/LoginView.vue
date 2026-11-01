@@ -1,4 +1,12 @@
 <script setup>
+/**
+ * User Authentication & Sign-In View (/login)
+ *
+ * PURPOSE:
+ * Serves as the primary security gateway for MicroLedger retail store staff.
+ * Validates credentials, handles account lockout states (5 failed attempts -> 15 min lock),
+ * and provides one-click account loading for local evaluation/demo modes.
+ */
 import { computed } from 'vue';
 import { useLogin } from '../composables/auth/useLogin.js';
 

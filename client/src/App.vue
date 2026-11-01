@@ -1,4 +1,11 @@
 <script setup>
+/**
+ * App.vue
+ *
+ * Root Single Page Application shell for MicroLedger.
+ * Provides the Vuetify v-app container, responsive drawer navigation, top app bar,
+ * active route headers, user profile dropdown, and global notification toast snackbars.
+ */
 import { useAppNavigation } from './composables/layout/useAppNavigation.js';
 
 /**

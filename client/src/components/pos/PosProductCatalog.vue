@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * PosProductCatalog.vue
+ *
+ * Product catalog browsing grid for the Point of Sale terminal, allowing cashiers
+ * to filter by category chips, search by SKU/name, and tap to append products into the active cart.
+ */
 import { formatMoney } from '../../utils/format.js';
 
 const props = defineProps({

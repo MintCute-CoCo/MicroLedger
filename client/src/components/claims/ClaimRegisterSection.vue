@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Warranty Claim Registry Data Table & Filter Panel
+ *
+ * PURPOSE:
+ * Displays active and historical warranty claims, highlighting overdue status
+ * with color-coded warning chips, supplier tracking links, and workflow action buttons.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDate } from '../../utils/format.js';
 

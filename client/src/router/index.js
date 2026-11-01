@@ -1,3 +1,20 @@
+/**
+ * ============================================================================
+ * MicroLedger Client Route Definitions & Navigation Guards
+ * ============================================================================
+ *
+ * PURPOSE:
+ * Configures Vue Router routes and navigation guards across all 16 authenticated
+ * screens and the authentication entrypoint.
+ *
+ * RBAC & ROUTE GUARDS:
+ * - `requiresAuth`: Redirects unauthenticated sessions to `/login`.
+ * - `roles: ['admin']`: Blocks Staff roles from accessing Admin panels (Users,
+ *   Categories, Audit logs, Settings, Product Imports, Sales Report).
+ * - `mustChangePassword`: Intercepts first-time users or administratively reset
+ *   passwords and forces redirection to `/change-password` before granting panel access.
+ */
+
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/auth.js';
 
@@ -33,6 +50,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('microledger:auth-expired', () => router.replace({ name: 'login' }));
 }
 
+/**
+ * Global navigation interceptor enforcing authentication, session restoration,
+ * role authorization, and mandatory password change rules.
+ */
 router.beforeEach(async (to) => {
   const auth = useAuthStore();
   await auth.restoreSession();

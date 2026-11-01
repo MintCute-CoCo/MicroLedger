@@ -1,4 +1,12 @@
 <script setup>
+/**
+ * Sales History & Invoicing Register View (/sales)
+ *
+ * PURPOSE:
+ * Displays historical sales transactions with comprehensive customer, cashier,
+ * payment method, and date filters. Supports sale details inspection, printable receipts,
+ * and Admin-only transactional void operations with inventory rollbacks.
+ */
 import SaleDetailDialog from '../components/sales/SaleDetailDialog.vue';
 import SalesRegisterCard from '../components/sales/SalesRegisterCard.vue';
 import { formatMoney } from '../utils/format.js';

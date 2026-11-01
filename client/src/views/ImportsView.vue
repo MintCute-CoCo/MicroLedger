@@ -1,4 +1,13 @@
 <script setup>
+/**
+ * Bulk Product Spreadsheet Import View (Admin Role Only)
+ *
+ * PURPOSE:
+ * Facilitates bulk product catalog staging via Excel (.xlsx) and CSV uploads.
+ * Implements a strict two-phase workflow:
+ * 1. Server-side validation preview (captures errors, warnings, and new categories).
+ * 2. Atomic database transaction commit mode ("Valid Rows Only" vs "All Rows").
+ */
 import ImportPreviewSection from '../components/imports/ImportPreviewSection.vue';
 import ImportSetupSection from '../components/imports/ImportSetupSection.vue';
 import { useImports } from '../composables/imports/useImports.js';

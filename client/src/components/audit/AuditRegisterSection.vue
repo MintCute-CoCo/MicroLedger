@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * AuditRegisterSection.vue
+ *
+ * Visual audit trail register table displaying system action logs, timestamps,
+ * actor user details, mutated entity types, and raw payload diffs.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime } from '../../utils/format.js';
 

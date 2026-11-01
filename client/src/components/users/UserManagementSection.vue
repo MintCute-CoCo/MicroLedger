@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * UserManagementSection.vue
+ *
+ * User directory table displaying staff avatars, roles, account activation toggles,
+ * role upgrades/downgrades, and administrative password management.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime } from '../../utils/format.js';
 

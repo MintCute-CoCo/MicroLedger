@@ -1,4 +1,12 @@
 <script setup>
+/**
+ * Inventory Management & Movement Ledger View (/inventory)
+ *
+ * PURPOSE:
+ * Tracks physical stock balances, low-stock warnings, inbound supplier stock-ins,
+ * and immutable inventory transaction ledgers.
+ * Supports Admin-only stock adjustments with mandatory reason documentation.
+ */
 import InventoryStockSection from '../components/inventory/InventoryStockSection.vue';
 import InventoryMovementSection from '../components/inventory/InventoryMovementSection.vue';
 import InventoryMovementDialog from '../components/inventory/InventoryMovementDialog.vue';

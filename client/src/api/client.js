@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * MicroLedger HTTP API Client & Session Transport Layer
+ * ============================================================================
+ *
+ * PURPOSE:
+ * Provides a resilient, centralized fetch wrapper for all client-to-server HTTP
+ * interactions. Manages JSON request serialization, timeout cancellation via
+ * AbortController, Bearer token injection, automatic token refresh rotation on
+ * HTTP 401 Unauthorized, and transparent fallback to the in-browser Demo Engine.
+ *
+ * ACADEMIC / ARCHITECTURAL NOTES (FYP):
+ * - Implements silent JWT renewal: when an access token expires (15 min TTL),
+ *   this client queues in-flight requests, calls /auth/refresh with the httpOnly
+ *   cookie, and replays the original request seamlessly.
+ * - Respects the local on-premise single-store network topology (VITE_API_BASE_URL).
+ */
+
 import { handleDemoRequest, handleDemoDownload } from './demoEngine.js';
 
 const baseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1').replace(/\/$/, '');
@@ -9,6 +27,13 @@ let refreshHandler = () => {};
 let expiredHandler = () => {};
 let refreshPromise = null;
 
+/**
+ * Creates an AbortController linked with a timeout deadline and parent signal.
+ *
+ * @param {AbortSignal} [parentSignal] - Optional caller-provided abort signal.
+ * @param {number} timeoutMs - Timeout duration in milliseconds.
+ * @returns {{ signal: AbortSignal, didTimeout: () => boolean, dispose: () => void }}
+ */
 function createRequestTimeout(parentSignal, timeoutMs) {
   const controller = new AbortController();
   let timedOut = false;
@@ -38,18 +63,39 @@ function createRequestTimeout(parentSignal, timeoutMs) {
   };
 }
 
+/**
+ * Constructs a standardized HTTP request timeout error.
+ *
+ * @returns {Error} Error instance with code REQUEST_TIMEOUT.
+ */
 function requestTimeoutError() {
   const error = new Error('The request timed out. Check your connection and try again.');
   error.code = 'REQUEST_TIMEOUT';
   return error;
 }
 
+/**
+ * Registers session state callbacks from the Pinia authentication store.
+ *
+ * @param {Object} options - Session hook configuration.
+ * @param {() => string|null} options.getAccessToken - Function returning current access token.
+ * @param {(session: Object) => void} options.onRefresh - Callback invoked when token is refreshed.
+ * @param {() => void} options.onExpired - Callback invoked when refresh token is rejected.
+ */
 export function configureApiSession({ getAccessToken, onRefresh, onExpired }) {
   tokenProvider = getAccessToken;
   refreshHandler = onRefresh;
   expiredHandler = onExpired;
 }
 
+/**
+ * Low-level HTTP transport wrapper executing the native window.fetch request.
+ *
+ * @param {string} path - Target URL path relative to API base.
+ * @param {Object} options - Fetch options (method, body, headers, signal).
+ * @param {string|null} accessToken - Optional JWT access token string.
+ * @returns {Promise<Response>} Native fetch Response object.
+ */
 async function send(path, options, accessToken) {
   const { method = 'GET', body, headers = {}, signal } = options;
   const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
@@ -67,6 +113,12 @@ async function send(path, options, accessToken) {
   });
 }
 
+/**
+ * Safely parses the JSON response payload or returns null for empty responses (e.g. 204 No Content).
+ *
+ * @param {Response} response - Fetch response.
+ * @returns {Promise<any>} Parsed JSON payload or null.
+ */
 async function readPayload(response) {
   if (response.status === 204) {
     return null;
@@ -83,6 +135,13 @@ async function readPayload(response) {
   }
 }
 
+/**
+ * Serializes an unsuccessful HTTP response into a structured Application Error.
+ *
+ * @param {Response} response - Fetch response.
+ * @param {Object} [payload] - Decoded error response body.
+ * @returns {Error} Formatted error with status, code, and details.
+ */
 function responseError(response, payload) {
   const error = new Error(payload?.message || 'The request could not be completed.');
   error.code = payload?.code || 'REQUEST_FAILED';
@@ -91,6 +150,20 @@ function responseError(response, payload) {
   return error;
 }
 
+/**
+ * Primary API request dispatcher with timeout management, authentication handling,
+ * automatic token rotation, and in-browser demo engine delegation.
+ *
+ * @param {string} path - Endpoint path (e.g., '/products', '/sales').
+ * @param {Object} [options={}] - Request configuration options.
+ * @param {string} [options.method='GET'] - HTTP method.
+ * @param {any} [options.body] - Request payload object or FormData.
+ * @param {Record<string, string>} [options.headers={}] - Additional headers.
+ * @param {AbortSignal} [options.signal] - External abort signal.
+ * @param {number} [options.timeoutMs=35000] - Timeout threshold in ms.
+ * @returns {Promise<any>} Decoded response data.
+ * @throws {Error} If request fails, times out, or receives HTTP 4xx/5xx.
+ */
 export async function apiRequest(path, {
   method = 'GET',
   body,
@@ -146,6 +219,15 @@ export async function apiRequest(path, {
   }
 }
 
+/**
+ * Dispatches a streaming binary file download (e.g., CSV sales reports, Excel import templates),
+ * triggering a browser file download save prompt.
+ *
+ * @param {string} path - Target download endpoint path.
+ * @param {string} filename - Target file name for the downloaded artifact.
+ * @param {Object} [options={}] - Options (signal, timeoutMs).
+ * @returns {Promise<void>} Resolves when download initiates.
+ */
 export async function apiDownload(path, filename, { signal, timeoutMs = DOWNLOAD_TIMEOUT_MS } = {}) {
   if (isDemoMode) {
     return handleDemoDownload(path, filename);

@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Detailed Claim & Timeline History Modal Dialog
+ *
+ * PURPOSE:
+ * Displays full claim diagnostic metadata, tracking numbers, customer info,
+ * and immutable status audit logs.
+ */
 import { formatDate, formatDateTime } from '../../utils/format.js';
 
 const props = defineProps({

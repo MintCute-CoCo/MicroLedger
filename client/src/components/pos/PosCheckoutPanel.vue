@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * PosCheckoutPanel.vue
+ *
+ * Point of Sale checkout sidebar managing customer assignment, current order cart
+ * line items, item serial entry, discounts, payment method selection, and transaction submission.
+ */
 import { formatMoney } from '../../utils/format.js';
 
 const props = defineProps({

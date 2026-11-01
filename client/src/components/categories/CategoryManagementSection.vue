@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Category Management Data Table & Toolbar Section
+ *
+ * PURPOSE:
+ * Displays the list of product categories with live status pills (active vs inactive),
+ * edit modal triggers, and status toggle action buttons.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 
 const props = defineProps({

@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Inventory Stock-In & Stock Adjustment Modal Dialog
+ *
+ * PURPOSE:
+ * Captures inbound supplier shipments (Stock-In) or physical inventory write-downs
+ * (Adjustment with mandatory reason documentation).
+ */
 import { ref } from 'vue';
 
 const props = defineProps({

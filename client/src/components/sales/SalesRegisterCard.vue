@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * SalesRegisterCard.vue
+ *
+ * Sales history log table featuring server-side search, filtering by cashier/customer/date,
+ * pagination, export triggers, and item-level receipt drilldowns.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime, formatMoney } from '../../utils/format.js';
 

@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * ProductCatalogSection.vue
+ *
+ * Master inventory catalog data table featuring server-side pagination, search,
+ * category filtering, stock health badges, pricing columns, and product modification triggers.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatMoney } from '../../utils/format.js';
 

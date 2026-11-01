@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * ReportExportPanel.vue
+ *
+ * Dedicated export control panel supporting CSV and Excel data extraction across
+ * multiple report datasets (sales aggregates, inventory valuation, warranty claims).
+ */
 const props = defineProps({
   type: {
     type: String,

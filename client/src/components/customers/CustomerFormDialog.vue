@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Customer Creation & Editing Modal Dialog
+ *
+ * PURPOSE:
+ * Captures customer contact information (name, mobile phone, address, notes)
+ * with inline validation against duplicate telephone numbers.
+ */
 import { ref } from 'vue';
 
 const props = defineProps({

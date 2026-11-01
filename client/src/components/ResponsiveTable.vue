@@ -1,4 +1,14 @@
-<script setup>
+﻿<script setup>
+/**
+ * ============================================================================
+ * MicroLedger Responsive Data Table Component (ResponsiveTable.vue)
+ * ============================================================================
+ *
+ * PURPOSE:
+ * Universal data grid abstraction wrapping Vuetify 3's VDataTable and VDataTableServer.
+ * Automatically adapts between desktop table views and compact mobile card layouts
+ * below the 600 px viewport breakpoint, guaranteeing zero horizontal clipping.
+ */
 import { computed, ref, watch, useAttrs } from 'vue';
 import { VDataTable, VDataTableServer } from 'vuetify/components';
 

@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * MicroLedger API Field Error Normalizer Utility
+ * ============================================================================
+ *
+ * PURPOSE:
+ * Normalizes backend error responses (such as Zod validation issues, unique
+ * constraint codes like SKU_DUPLICATE, or HTTP 400/409/422 payloads) into
+ * component field error maps suitable for Vuetify form inputs (:error-messages).
+ */
+
+/**
+ * Extracts per-field validation error messages from an API error response.
+ *
+ * @param {Error|Object} error - Caught API error object.
+ * @param {Record<string, string>} [fieldMap={}] - Mapping from backend keys to form fields.
+ * @returns {{ fields: Record<string, string[]>, globalMessage: string }} Normalized errors.
+ */
 export function fieldErrorsFrom(error, fieldMap = {}) {
   const details = Array.isArray(error?.details)
     ? error.details

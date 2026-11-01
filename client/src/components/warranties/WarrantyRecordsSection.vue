@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * WarrantyRecordsSection.vue
+ *
+ * Master warranty records data table displaying serial numbers, product names,
+ * customer linkages, start/end validity dates, active status badges, and claim triggers.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDate } from '../../utils/format.js';
 

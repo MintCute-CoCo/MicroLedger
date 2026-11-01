@@ -1,3 +1,9 @@
+/**
+ * format.js
+ *
+ * Global localization formatting utilities for monetary currency, standard calendar
+ * dates, ISO timestamps, and system display configurations.
+ */
 import { reactive } from 'vue';
 
 export const displaySettings = reactive({
@@ -5,6 +11,12 @@ export const displaySettings = reactive({
   currency_decimals: 2,
 });
 
+/**
+ * Updates global reactive display settings (currency code and decimal precision).
+ *
+ * @param {Object} settings - Configuration payload containing currency_code and currency_decimals.
+ * @returns {void}
+ */
 export function applyDisplaySettings(settings = {}) {
   displaySettings.currency_code = settings.currency_code || 'USD';
   displaySettings.currency_decimals = Number.isInteger(settings.currency_decimals)
@@ -12,6 +24,13 @@ export function applyDisplaySettings(settings = {}) {
     : 2;
 }
 
+/**
+ * Formats an integer cent amount into a localized currency string.
+ *
+ * @param {number} cents - Monetary value represented in lowest integer denomination (cents).
+ * @param {string|null} [currency=null] - Optional override ISO 4217 currency code.
+ * @returns {string} Formatted currency representation (e.g., "$1,250.00").
+ */
 export function formatMoney(cents, currency = null) {
   const code = currency || displaySettings.currency_code;
   const decimals = displaySettings.currency_decimals;

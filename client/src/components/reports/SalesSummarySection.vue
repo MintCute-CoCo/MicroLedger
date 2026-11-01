@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * SalesSummarySection.vue
+ *
+ * Visual summary of sales performance grouping revenue, tax, discounts,
+ * item counts, and segregated voided transactions for audit compliance.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime, formatMoney } from '../../utils/format.js';
 

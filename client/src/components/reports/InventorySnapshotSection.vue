@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * InventorySnapshotSection.vue
+ *
+ * Inventory analytics report section detailing current stock valuation, reorder thresholds,
+ * and historical stock movements (inbound receipts, sales decrements, adjustments).
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime, formatMoney } from '../../utils/format.js';
 

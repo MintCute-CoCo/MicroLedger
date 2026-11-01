@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Inventory Stock Levels & Low-Stock Alerts Section
+ *
+ * PURPOSE:
+ * Displays active product quantities on hand, highlights items breaching reorder
+ * thresholds with warning chips, and provides modal action triggers.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 
 const props = defineProps({

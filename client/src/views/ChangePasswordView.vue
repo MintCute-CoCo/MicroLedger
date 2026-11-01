@@ -1,4 +1,11 @@
 <script setup>
+/**
+ * Mandatory Password Change View (/change-password)
+ *
+ * PURPOSE:
+ * Enforces the first-time login security protocol: intercepts users marked with
+ * mustChangePassword = true and prevents dashboard navigation until updated.
+ */
 import { useChangePassword } from '../composables/auth/useChangePassword.js';
 
 /**

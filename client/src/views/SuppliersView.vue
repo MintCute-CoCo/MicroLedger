@@ -1,4 +1,11 @@
 <script setup>
+/**
+ * Supplier Directory & Service Center View (Phase 2)
+ *
+ * PURPOSE:
+ * Maintains vendor and manufacturer authorized service center profiles
+ * for hardware warranty dispatching and RMA tracking.
+ */
 import ResponsiveTable from '../components/ResponsiveTable.vue';
 import SupplierFormDialog from '../components/suppliers/SupplierFormDialog.vue';
 import { useSuppliers } from '../composables/suppliers/useSuppliers.js';

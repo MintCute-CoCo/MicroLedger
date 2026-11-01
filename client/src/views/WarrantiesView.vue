@@ -1,4 +1,12 @@
 <script setup>
+/**
+ * Product Warranty Records Directory View (Phase 2)
+ *
+ * PURPOSE:
+ * Tracks activated hardware warranties generated upon POS checkout.
+ * Enables searching active coverage by product serial number and attaching
+ * walk-in customer profiles to existing warranty cards.
+ */
 import WarrantyDialogs from '../components/warranties/WarrantyDialogs.vue';
 import WarrantyRecordsSection from '../components/warranties/WarrantyRecordsSection.vue';
 import { useWarranties } from '../composables/warranties/useWarranties.js';

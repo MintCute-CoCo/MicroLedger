@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * UserAccessDialogs.vue
+ *
+ * Administrative user management dialogs for creating staff accounts (cashier, manager, admin)
+ * and triggering password resets with strength and confirmation validation.
+ */
 const props = defineProps({
   createOpen: Boolean,
   resetOpen: Boolean,

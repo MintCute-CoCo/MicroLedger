@@ -1,4 +1,16 @@
-﻿<script setup>
+<script setup>
+/**
+ * Analytical Sales Report View (/reports/sales)
+ *
+ * PURPOSE:
+ * Provides multidimensional analytical sales reporting for store managers.
+ * Supports dynamic date-range queries, grouping presets (day, product, category,
+ * staff, payment method), and net revenue calculations with void breakdowns.
+ *
+ * SCOPE NOTE:
+ * Decoupled from the Operational Dashboard. Profit and margin tracking are in
+ * the "Could Have" scope; this report focuses on revenue, discounts, and volume.
+ */
 import ReportDataGrid from '../components/reports/ReportDataGrid.vue';
 import ReportFilterBar from '../components/reports/ReportFilterBar.vue';
 import { useSalesReportPage } from '../composables/reports/useSalesReportPage.js';

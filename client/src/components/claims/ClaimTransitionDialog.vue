@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Claim Lifecycle Transition Modal Dialog
+ *
+ * PURPOSE:
+ * Enforces valid state machine moves (e.g., dispatching to supplier, recording
+ * actual return dates, logging transition notes) with dynamic form requirements.
+ */
 const props = defineProps({
   open: Boolean,
   busy: Boolean,

@@ -1,3 +1,10 @@
+/**
+ * demoEngine.js
+ *
+ * Client-side mock backend engine that intercepts API calls when the application
+ * runs in standalone demo/preview mode or when the backend server is unreachable.
+ * Emulates relational persistence, ACID-like stock checks, and auth tokens via localStorage.
+ */
 import { createInitialDemoState } from './demoData.js';
 
 const STORAGE_KEY = 'microledger_demo_state_v1';

@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Customer Directory Data Table & Search Toolbar Section
+ *
+ * PURPOSE:
+ * Displays client contact profiles with instant telephone searching, visit count
+ * indicators, and total lifetime spend summaries.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatMoney } from '../../utils/format.js';
 

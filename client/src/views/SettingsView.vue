@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * Store Configuration & Currency Settings View (Admin Role Only)
+ *
+ * PURPOSE:
+ * Manages store-wide parameters such as default currency code and decimal display rules.
+ */
 import { useSettings } from '../composables/settings/useSettings.js';
 
 /**

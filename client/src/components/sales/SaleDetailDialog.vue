@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * SaleDetailDialog.vue
+ *
+ * Detailed receipt breakdown modal displaying customer info, line items with individual
+ * serial numbers, payment breakdown, warranty coverage periods, receipt printing, and admin void controls.
+ */
 import { formatDateTime, formatMoney } from '../../utils/format.js';
 
 const props = defineProps({

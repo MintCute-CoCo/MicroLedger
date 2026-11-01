@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Inventory Transaction Ledger Historical Records Section
+ *
+ * PURPOSE:
+ * Displays the immutable, append-only history of physical stock changes
+ * (sales, stock-ins, initial opening seeds, void reversals, and adjustments).
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime } from '../../utils/format.js';
 

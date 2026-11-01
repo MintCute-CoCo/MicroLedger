@@ -1,4 +1,11 @@
-<script setup>
+﻿<script setup>
+/**
+ * Dashboard 7-Day Trend Chart & Fast-Moving Hardware Panel
+ *
+ * PURPOSE:
+ * Visualizes the 7-day sales velocity bar graph alongside the top 5 fastest moving
+ * retail hardware products in the store.
+ */
 import { formatMoney } from '../../utils/format.js';
 
 const props = defineProps({

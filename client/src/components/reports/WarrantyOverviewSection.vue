@@ -1,4 +1,10 @@
 <script setup>
+/**
+ * WarrantyOverviewSection.vue
+ *
+ * Warranty analytical section displaying claim lifecycle breakdown by status,
+ * overdue supplier RMAs requiring follow-up, and vendor turnaround statistics.
+ */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime } from '../../utils/format.js';
 
