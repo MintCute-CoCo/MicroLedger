@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "MicroLedger System Architecture & Tiers",
+    "subtitle": "Single-store POS & inventory ledger system components, security boundaries, and relational persistence",
+    "output": "architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "clients", "type": "external", "label": "Store Devices", "sublabel": "Desktop / Tablet POS", "pos": [40, 260], "size": [130, 60], "tag": "LAN Terminals" },
+    { "id": "spa", "type": "frontend", "label": "Web Client (SPA)", "sublabel": "Vue 3 + Vuetify 3 + Vite", "pos": [230, 260], "size": [150, 60], "tag": "client/src" },
+    { "id": "demo_engine", "type": "frontend", "label": "Demo Engine", "sublabel": "In-Memory Simulation", "pos": [230, 110], "size": [150, 60], "tag": "Offline Fallback" },
+    { "id": "gateway", "type": "backend", "label": "Express 5 Gateway", "sublabel": "REST API :3000", "pos": [450, 260], "size": [150, 60], "tag": "server/src/app.js" },
+    { "id": "security_guard", "type": "security", "label": "Auth Guard & RBAC", "sublabel": "JWT / Cookie / Roles", "pos": [450, 110], "size": [150, 60], "tag": "middleware/auth.js" },
+    { "id": "domain_services", "type": "backend", "label": "Domain Services", "sublabel": "ACID Transactions", "pos": [670, 260], "size": [150, 60], "tag": "server/src/modules" },
+    { "id": "stream_worker", "type": "backend", "label": "ExcelJS Streamer", "sublabel": "In-Memory Spreadsheet", "pos": [670, 410], "size": [150, 60], "tag": "No Disk Footprint" },
+    { "id": "knex_pool", "type": "database", "label": "Knex.js Connection", "sublabel": "Parameterized pg Pool", "pos": [890, 260], "size": [150, 60], "tag": "db/knex.js" },
+    { "id": "postgres", "type": "database", "label": "PostgreSQL 16", "sublabel": "16 Relational Tables", "pos": [1110, 260], "size": [150, 60], "tag": "microledger :5432" },
+    { "id": "backup_util", "type": "backend", "label": "Backup Utility", "sublabel": "pg_dump 7-Day Cycle", "pos": [1110, 410], "size": [150, 60], "tag": "scripts/backup.js" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Retail Store Local Network (LAN)", "wraps": ["clients", "spa", "demo_engine"] },
+    { "kind": "region", "label": "Node.js 20 Backend Runtime Environment", "wraps": ["gateway", "security_guard", "domain_services", "stream_worker", "knex_pool"] },
+    { "kind": "security-group", "label": "PostgreSQL ACID Persistence Tier", "wraps": ["postgres", "backup_util"] }
+  ],
+  "connections": [
+    { "id": "terminal-spa", "from": "clients", "to": "spa", "label": "Local UI", "variant": "emphasis" },
+    { "id": "spa-demo", "from": "spa", "to": "demo_engine", "label": "fallback", "variant": "dashed", "fromSide": "top", "toSide": "bottom" },
+    { "id": "spa-gateway", "from": "spa", "to": "gateway", "label": "HTTPS REST", "variant": "emphasis" },
+    { "id": "gateway-security", "from": "gateway", "to": "security_guard", "label": "verify auth", "variant": "security", "fromSide": "top", "toSide": "bottom" },
+    { "id": "gateway-services", "from": "gateway", "to": "domain_services", "label": "dispatch action" },
+    { "id": "services-excel", "from": "domain_services", "to": "stream_worker", "label": "import/export", "variant": "dashed", "fromSide": "bottom", "toSide": "top" },
+    { "id": "services-knex", "from": "domain_services", "to": "knex_pool", "label": "knex.transaction()" },
+    { "id": "knex-postgres", "from": "knex_pool", "to": "postgres", "label": "SQL pool", "variant": "emphasis" },
+    { "id": "backup-dump", "from": "backup_util", "to": "postgres", "label": "pg_dump", "variant": "dashed", "fromSide": "top", "toSide": "bottom" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Presentation Tier",
+      "items": [
+        "Vue 3 Single Page Application with strict Vuetify 3 UI primitives",
+        "Reactive Pinia store managing token rotation and cashier session",
+        "Client-side demo engine provides full offline exploration without backend"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Business Logic & Transport Tier",
+      "items": [
+        "Express 5 REST API secured with rate limiting and Helmet",
+        "Role-based authorization enforces Staff cost-redaction rules",
+        "Zod middleware strictly validates payloads before domain execution",
+        "Transactional domain services manage atomic inventory movements"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Data Persistence & Protection",
+      "items": [
+        "PostgreSQL 16 relational database with 16 normalized tables",
+        "Conditional stock update (UPDATE ... WHERE stock_qty >= qty) guarantees zero overselling",
+        "Strict BIGINT identity keys, foreign constraints, and trigram text search",
+        "Automated backup runner with 7-day retention and integrity verification"
+      ]
+    }
+  ]
+}

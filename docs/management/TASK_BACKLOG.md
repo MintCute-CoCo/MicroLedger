@@ -177,17 +177,22 @@ These enhancements decomposed monolithic views into encapsulated subcomponents a
 | T-109 | Fix the dashboard 7-day sales chart so bars render visibly with dynamic labels | S | Should | T-092 | Dashboard snapshot | Done |
 | T-110 | Keep product, customer, and inventory movement form validation in dialog components | M | Must | T-092 | SRS-PRD-01, SRS-CUS-01, SRS-INV-03, SRS-INV-04 | Done |
 | T-111 | Surface claims list request failures and load independent dashboard and inventory sections | M | Should | T-092 | NFR-03, NFR-04 | Done |
+| T-112 | Standalone In-Browser Demo Mode Engine (`demoEngine.js`, `demoData.js`) allowing 100% offline demonstration without database setup | M | Should | T-004 | — (offline evaluation) | Done |
+| T-113 | Design-Taste-Frontend Anti-Slop Audit (`tasteskill v2`): flat surfaces, removal of resting drop shadows, radial gradients, and decorative UI emojis | M | Should | T-093 | — (design quality) | Done |
+| T-114 | Refactor `ResponsiveTable.vue` into pure Vuetify 3 primitives (`v-card`, `v-row`, `v-col`), removing custom CSS layout grids and custom `font-size: XXpx;` rules | M | Should | T-093 | Rule 15, §11 | Done |
+| T-115 | Full-Stack GitHub Actions CI Pipeline with automated PostgreSQL 16 container, schema migrations, app role creation, and automated test execution | M | Must | T-009 | NFR-13 | Done |
+| T-116 | Interactive Architecture & Code Explainer (`MicroLedger_Explainer.html`) for oral FYP defense walkthrough | M | Should | T-004 | — (academic evaluation) | Done |
 
-## E14 — Backend Integration & Deployment Staging (Subsequent Phase)
+## E14 — Backend Integration & Deployment Staging
 
-These items govern the subsequent backend repository release and full-stack hosting deployment.
+These items govern the backend integration release and full-stack hosting deployment.
 
 | ID | Task | Size | Pri | Depends | Req | Status |
 |---|---|---|---|---|---|---|
 | T-096 | Configure server environment variables and automated benchmark verification | M | Must | T-009 | NFR-02, NFR-13 | Done |
 | T-097 | Enforce rate limiting in production mode while maintaining isolated test mocks | S | Must | T-018 | SRS-AUTH-03, NFR-06 | Done |
-| T-098 | Browser smoke validation across mobile, tablet, and desktop viewports | L | Should | T-092–T-095 | NFR-04 | Staged |
+| T-098 | Browser smoke validation across mobile, tablet, and desktop viewports | L | Should | T-092–T-095 | NFR-04 | Done |
 | T-099 | Production deployment verification: HTTPS, CORS origin whitelist, and secure cookie transport | M | Must | T-065, T-096 | NFR-10, NFR-13 | Staged |
-| T-100 | Full-stack CI execution and final defense release sign-off | M | Must | T-096–T-099 | M4 | Staged |
-| T-107 | Automated regression coverage verifying rate-limiting headers in production mode | M | Must | T-097 | SRS-AUTH-03, NFR-06 | Staged |
-| T-108 | Final CSS deduplication and Vuetify override optimization review | M | Should | T-102 | — (maintainability) | Staged |
+| T-100 | Full-stack CI execution and final defense release sign-off | M | Must | T-096–T-099 | M4 | Done |
+| T-107 | Automated regression coverage verifying rate-limiting headers in production mode | M | Must | T-097 | SRS-AUTH-03, NFR-06 | Done |
+| T-108 | Final CSS deduplication and Vuetify override optimization review | M | Should | T-102 | — (maintainability) | Done |

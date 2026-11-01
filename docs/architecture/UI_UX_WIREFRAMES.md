@@ -319,8 +319,8 @@ flowchart TD
 
 All views leverage standard, encapsulated components located in `client/src/components/`:
 
-- **`ResponsiveTable.vue`**: Universal data table wrapper that renders desktop tables with sortable columns and switches to mobile card representations below 600 px.
-- **`SummaryCard.vue`**: Metric display box featuring $36\text{ px}$ pastel rounded-square icons, formatted numeric values, and percentage trend indicators.
+- **`ResponsiveTable.vue`**: Universal data table wrapper that renders desktop tables with sortable columns and switches to mobile card representations below 600 px using pure Vuetify 3 primitives (`v-card`, `v-row`, `v-col`), with flat outlines and 44 px touch targets.
+- **`SummaryCard.vue`**: Metric display card featuring clean Vuetify avatars, formatted numeric values, and operational trend indicators adhering to the flat achromatic ledger palette.
 - **`BarcodeScannerModal.vue`**: Quick SKU/barcode modal input with immediate catalog debounce querying.
 - **`ReceiptDialog.vue`**: Formatted printable receipt dialog with print CSS styles.
 - **`ConfirmDialog.vue`**: Modal for destructive actions (sale void, user deactivation, stock adjustment).

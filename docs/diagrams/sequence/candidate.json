@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "MicroLedger POS Sale Execution & Lock Sequence",
+    "subtitle": "End-to-end request lifecycle: JWT authorization, idempotency verification, atomic stock locking, and receipt serialization",
+    "output": "sequence.html",
+    "viewBox": [1080, 680],
+    "column_fit": "spread",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "participants": [
+    { "id": "cashier", "type": "external", "label": "Cashier", "sublabel": "Counter Terminal" },
+    { "id": "fe", "type": "frontend", "label": "Web Client", "sublabel": "Vue 3 + Pinia" },
+    { "id": "mw", "type": "security", "label": "API Middleware", "sublabel": "JWT / Zod Guard" },
+    { "id": "svc", "type": "backend", "label": "Sales Service", "sublabel": "Transactional Domain" },
+    { "id": "db", "type": "database", "label": "PostgreSQL 16", "sublabel": "Relational Engine" }
+  ],
+  "segments": [
+    { "from": 145, "to": 250, "label": "Dispatch & Auth Guard" },
+    { "from": 255, "to": 440, "label": "Idempotency & Atomic Decrement" },
+    { "from": 445, "to": 575, "label": "Ledger Commit & Receipt Return" }
+  ],
+  "messages": [
+    { "id": "tap-checkout", "from": "cashier", "to": "fe", "y": 160, "label": "Tap [Pay & Complete]", "variant": "default" },
+    { "id": "post-sale", "from": "fe", "to": "mw", "y": 190, "label": "POST /sales (Idempotency-Key)", "variant": "emphasis" },
+    { "id": "forward-svc", "from": "mw", "to": "svc", "y": 225, "label": "validate JWT & createSale(userId, body)", "variant": "security" },
+    { "id": "begin-tx", "from": "svc", "to": "db", "y": 265, "label": "BEGIN Transaction", "variant": "emphasis" },
+    { "id": "check-idempotency", "from": "svc", "to": "db", "y": 298, "label": "SELECT FROM sales WHERE idempotency_key = ?", "variant": "default" },
+    { "id": "idempotency-clean", "from": "db", "to": "svc", "y": 330, "label": "No prior sale found", "variant": "return" },
+    { "id": "conditional-update", "from": "svc", "to": "db", "y": 362, "label": "UPDATE products WHERE stock_qty >= qty", "variant": "emphasis" },
+    { "id": "update-confirmed", "from": "db", "to": "svc", "y": 395, "label": "rows_affected = 1 (Stock Reserved)", "variant": "return" },
+    { "id": "insert-records", "from": "svc", "to": "db", "y": 428, "label": "INSERT sales, items, warranties, audit_logs", "variant": "default" },
+    { "id": "commit-tx", "from": "svc", "to": "db", "y": 460, "label": "COMMIT Transaction", "variant": "emphasis" },
+    { "id": "commit-ok", "from": "db", "to": "svc", "y": 492, "label": "Transaction committed", "variant": "return" },
+    { "id": "json-receipt", "from": "svc", "to": "fe", "y": 525, "label": "201 Created (Sale Receipt JSON)", "variant": "return" },
+    { "id": "render-modal", "from": "fe", "to": "cashier", "y": 555, "label": "Display Receipt & Thermal Print", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "fe", "from": 160, "to": 565, "type": "frontend" },
+    { "participant": "mw", "from": 190, "to": 230, "type": "security" },
+    { "participant": "svc", "from": 225, "to": 530, "type": "backend" },
+    { "participant": "db", "from": 265, "to": 500, "type": "database" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Idempotent Gateway",
+      "items": [
+        "Clients generate a unique UUIDv4 per checkout submission",
+        "If a network glitch prompts the cashier to click twice, the existing receipt is returned immediately without double charging"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "ACID Stock Guard",
+      "items": [
+        "Inventory reduction uses an atomic SQL UPDATE with stock_qty >= qty filter",
+        "Eliminates dirty reads and race conditions between competing POS terminals",
+        "All line items, warranty tokens, and audit entries commit together in a single transaction"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Failure Paths & Rollback",
+      "items": [
+        "If rows_affected = 0 during stock decrement, the transaction instantly rolls back with 409 Conflict",
+        "Client displays an actionable 'Insufficient stock' alert and restores checkout state"
+      ]
+    }
+  ]
+}

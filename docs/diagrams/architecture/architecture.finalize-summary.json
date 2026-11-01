@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\architecture\\candidate.json",
+    "sha256": "5faee4217af04fd43bf5e3575cf5d5262878f84cb39024ccbb24d6c3ee431595",
+    "bytes": 4906
+  },
+  "artifact": {
+    "path": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\architecture\\architecture.html",
+    "sha256": "68d75d40362ab77aa582c859e4143e1509416a7f090b07f55b1e515b92774f07",
+    "bytes": 852154
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\architecture\\architecture.finalize.json",
+    "summaryReceipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\architecture\\architecture.finalize-summary.json",
+    "browserCheckReceipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\architecture\\architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-01T11:52:22.588Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 2928,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

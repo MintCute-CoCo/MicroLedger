@@ -67,6 +67,7 @@ MicroLedger: a responsive web POS, inventory and warranty-tracking app for **one
 4. Implement service → repository → controller → route → client.
 5. Check against `DEFINITION_OF_DONE.md`.
 6. Update `STATUS.md` (task status, decisions, open items).
+7. **Mandatory Management Synchronization:** Update `docs/management/STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, and `DEFINITION_OF_DONE.md` immediately upon completing or refining any task. Management documentation must never lag behind code reality.
 
 ## 7. When unsure
 
@@ -118,6 +119,7 @@ The frontend codebase must follow strict readability rules for academic evaluati
   - **Table Headers & Eyebrows:** `text-overline`.
   - **Standard Data & Body Text:** `text-body-2` (compact and readable).
   - **Helper Text & Validation:** `text-caption`.
+- **Anti-Slop & Taste Skill Compliance (`tasteskill v2`):** Adhere strictly to the flat achromatic ledger design language. All cards and panels use flat `variant="outlined"` with 1px border (`#d4dce8`) and zero fuzzy resting drop shadows. Decorative emojis (such as `✦` or `⚡`) as UI text are strictly banned; use `@mdi/font` icons exclusively. Background gradients are forbidden in favor of clean neutral surfaces (`#f5f7fb`, `#ffffff`). All interactive touch targets on mobile must maintain at least 44px height/width.
 
 ## 12. Test Data & Database Seeding
 

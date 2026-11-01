@@ -2,7 +2,7 @@
 
 > **Responsive Web POS, Transactional Inventory Ledger & Warranty Tracking System**  
 > Comprehensive documentation suite organized by domain for academic reviewers, developers, and system evaluators.  
-> **Release (v1.0-frontend):** Complete Frontend Web Application (`client/`) and System Documentation (`docs/`). Backend services staged for subsequent release. See [`management/STATUS.md`](management/STATUS.md).
+> **Release (v1.0-fullstack):** Complete Full-Stack Retail Operations System featuring Vue 3 Client (`client/`), Modular Express 5 API (`server/`), In-Browser Standalone Demo Engine, and Living Documentation (`docs/`). See [`management/STATUS.md`](management/STATUS.md).
 
 ---
 

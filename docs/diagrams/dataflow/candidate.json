@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "MicroLedger Data Pipeline & Mutation Lifecycle",
+    "subtitle": "Data progression from counter capture and streaming intake through ACID persistence to analytical reports",
+    "output": "dataflow.html",
+    "viewBox": [1080, 540],
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    { "label": "Capture" },
+    { "label": "Ingest & Validate" },
+    { "label": "ACID Mutation" },
+    { "label": "Relational Ledger" },
+    { "label": "Consume & Export" }
+  ],
+  "nodes": [
+    { "id": "pos_cart", "type": "frontend", "label": "POS Counter Cart", "sublabel": "Vue 3 reactive state", "stage": 0, "row": 0, "tag": "cart items" },
+    { "id": "excel_file", "type": "frontend", "label": "Spreadsheet Upload", "sublabel": "xlsx / csv files", "stage": 0, "row": 2, "tag": "batch input" },
+    { "id": "zod_validator", "type": "security", "label": "Zod Schema Guard", "sublabel": "role & body sanitizer", "stage": 1, "row": 0, "tag": "schema check" },
+    { "id": "excel_stream", "type": "backend", "label": "In-Memory Stream", "sublabel": "ExcelJS row parser", "stage": 1, "row": 2, "tag": "zero disk I/O" },
+    { "id": "tx_manager", "type": "backend", "label": "Transaction Core", "sublabel": "knex.transaction()", "stage": 2, "row": 0, "tag": "atomic" },
+    { "id": "stock_lock", "type": "database", "label": "Stock Guard", "sublabel": "stock_qty >= qty", "stage": 2, "row": 2, "tag": "anti-oversell" },
+    { "id": "audit_table", "type": "database", "label": "Audit Logs", "sublabel": "immutable change log", "stage": 3, "row": 0, "tag": "security" },
+    { "id": "sales_table", "type": "database", "label": "Sales & Items", "sublabel": "financial line items", "stage": 3, "row": 1, "tag": "revenue truth" },
+    { "id": "warranty_table", "type": "database", "label": "Warranty Vault", "sublabel": "claim tokens & coverage", "stage": 3, "row": 2, "tag": "lifecycle" },
+    { "id": "reports_view", "type": "backend", "label": "Financial Reports", "sublabel": "aggregates & margins", "stage": 4, "row": 0, "tag": "filtered SQL" },
+    { "id": "export_worker", "type": "backend", "label": "Export Generator", "sublabel": "streamed CSV / Excel", "stage": 4, "row": 2, "tag": "download" }
+  ],
+  "flows": [
+    { "id": "cart-to-validator", "from": "pos_cart", "to": "zod_validator", "label": "checkout payload", "classification": "validated JSON", "variant": "emphasis", "route": "straight" },
+    { "id": "file-to-stream", "from": "excel_file", "to": "excel_stream", "label": "multipart binary", "classification": "memory stream", "variant": "default", "route": "straight" },
+    { "id": "stream-to-tx", "from": "excel_stream", "to": "tx_manager", "label": "verified rows", "classification": "batch inserts", "variant": "dashed" },
+    { "id": "validator-to-tx", "from": "zod_validator", "to": "tx_manager", "label": "sanitized order", "classification": "domain action", "variant": "emphasis", "route": "straight" },
+    { "id": "tx-to-stock", "from": "tx_manager", "to": "stock_lock", "label": "conditional UPDATE", "classification": "atomic lock", "variant": "emphasis" },
+    { "id": "tx-to-audit", "from": "tx_manager", "to": "audit_table", "label": "record action", "classification": "immutable", "variant": "security", "route": "straight" },
+    { "id": "tx-to-sales", "from": "tx_manager", "to": "sales_table", "label": "commit sale", "classification": "financial record", "variant": "emphasis" },
+    { "id": "stock-to-warranty", "from": "stock_lock", "to": "warranty_table", "label": "bind serials", "classification": "token provision", "variant": "default", "route": "straight" },
+    { "id": "sales-to-reports", "from": "sales_table", "to": "reports_view", "label": "SQL aggregation", "classification": "analytical read", "variant": "emphasis" },
+    { "id": "sales-to-export", "from": "sales_table", "to": "export_worker", "label": "stream records", "classification": "bulk extraction", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Ephemeral Ingestion",
+      "items": [
+        "Spreadsheet uploads are decoded via ExcelJS memory streams directly into structured buffers",
+        "No temporary files or raw files are ever written to disk, preventing filesystem pollution"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Transactional Lineage",
+      "items": [
+        "Stock locking, financial entry, warranty generation, and audit logging share one ACID transaction",
+        "Guarantees that an inventory decrement never exists without an associated audit trail and sale"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Segregated Analytics",
+      "items": [
+        "Reporting pipelines cleanly segregate completed revenue from voided and returned transactions",
+        "Role-based SQL filtering ensures cost price data remains strictly concealed from non-admin users"
+      ]
+    }
+  ]
+}

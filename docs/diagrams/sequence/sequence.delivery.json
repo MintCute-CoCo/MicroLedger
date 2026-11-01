@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "931e86dc-2091-4711-8ba5-a128a5ff191c",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\sequence\\candidate.json",
+  "output": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\sequence\\sequence.html",
+  "specification": {
+    "sha256": "ab57ed8046b5aa1f304a26204ca4900710013f5604df9fd5caea986ac78e9ba0",
+    "bytes": 4226
+  },
+  "artifact": {
+    "sha256": "afd1b6ddb169885ea022073fe4510a78301637aeca6e8bbb6fc36f43e417fddb",
+    "bytes": 839192
+  }
+}

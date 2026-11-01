@@ -28,13 +28,13 @@
 
 ## 3. Milestones and exit gates
 
-| Milestone | Week | Gate |
-|---|---|---|
-| M0 Setup done | 1 | CI runs; app starts; migrations apply to an empty database |
-| M1 Phase 1 complete | 11 | AC-001 to AC-033 pass; concurrent-sale and rollback tests pass; backup restore tested |
-| M2 Phase 2 complete | 15 | AC-034 to AC-043 pass; claim tracked from creation to collection |
-| M3 UAT complete | 17 | 100% Must and at least 90% Should cases pass; no open critical/high defects; SUS 68 or higher |
-| M4 Final delivery | 18 | Documents, code, deployed system and demo ready |
+| Milestone | Week | Gate | Status |
+|---|---|---|:---:|
+| **M0 Setup done** | 1 | CI runs; app starts; migrations apply to an empty database | **ACHIEVED** |
+| **M1 Phase 1 complete** | 11 | AC-001 to AC-033 pass; concurrent-sale and rollback tests pass; backup restore tested | **ACHIEVED** |
+| **M2 Phase 2 complete** | 15 | AC-034 to AC-043 pass; claim tracked from creation to collection | **ACHIEVED** |
+| **M3 Backend Release & UAT** | 17 | 100% Must and at least 90% Should cases pass; no open critical/high defects; SUS 68 or higher; full-stack CI passing on PostgreSQL 16 | **ACHIEVED** |
+| **M4 Final delivery** | 18 | Documents, code, deployed system and demo ready; committee defense rehearsal | **IN PROGRESS** |
 
 ## 4. Dependencies (Resolved)
 
@@ -42,6 +42,7 @@
 - Hosting plan and database architecture (O-04, O-05) verified with containerized deployment and PostgreSQL 16 append-only security.
 - Currency (VND) and time zone (`Asia/Ho_Chi_Minh` via container `TZ`) (O-01, O-02) resolved for receipts and reports.
 - UAT participants (1 Admin, 2 Staff) (O-06) verified with SUS 90/100 score.
+- In-browser Standalone Demo Mode Engine (`demoEngine.js`, `demoData.js`) verified for offline committee evaluation.
 
 ## 5. Risk buffer rules
 
@@ -54,3 +55,4 @@
 - Start each sprint by choosing backlog tasks (`TASK_BACKLOG.md`); end it with a demo and a `STATUS.md` update.
 - Each task follows `DEFINITION_OF_DONE.md`.
 - Run the full test suite before merging to the main branch.
+- **Mandatory Management Synchronization:** Update all records in `docs/management/` immediately whenever code changes are committed. Management documentation must never lag behind the codebase.

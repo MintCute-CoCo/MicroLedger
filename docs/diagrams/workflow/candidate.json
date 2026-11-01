@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "MicroLedger POS Checkout & Inventory Workflow",
+    "subtitle": "Step-by-step cashier transaction lifecycle from cart intake to atomic inventory deduction and warranty issuance",
+    "output": "workflow.html",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    { "id": "cashier", "label": "Cashier / Counter Staff" },
+    { "id": "pos_app", "label": "Web POS Terminal (Vue 3)" },
+    { "id": "backend", "label": "Backend Domain Services" },
+    { "id": "database", "label": "PostgreSQL 16 Engine" }
+  ],
+  "phases": [
+    { "id": "cart_intake", "label": "Order Intake & Customer", "fromCol": 0, "toCol": 2 },
+    { "id": "pricing_tender", "label": "Pricing & Tender", "fromCol": 3, "toCol": 4, "variant": "emphasis" },
+    { "id": "settlement_ledger", "label": "ACID Settlement & Ledger", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": [
+    "cashier_login",
+    "customer_select",
+    "cart_selection",
+    "serial_prompt",
+    "pricing_subtotal",
+    "tender_payment",
+    "submit_sale",
+    "validate_payload",
+    "atomic_transaction",
+    "stock_guard",
+    "complete_receipt"
+  ],
+  "nodes": [
+    { "id": "cashier_login", "lane": "cashier", "col": 0, "type": "external", "label": "Cashier Session", "sublabel": "scan badge / PIN", "width": 140 },
+    { "id": "customer_select", "lane": "pos_app", "col": 0, "type": "frontend", "label": "Select Customer", "sublabel": "walk-in or directory", "width": 140 },
+    { "id": "cart_selection", "lane": "pos_app", "col": 1, "type": "frontend", "label": "Add SKU to Cart", "sublabel": "barcode or search", "width": 140 },
+    { "id": "serial_prompt", "lane": "pos_app", "col": 2, "type": "security", "label": "Input Serial Numbers", "sublabel": "mandatory for hardware", "tag": "warranty tracked", "width": 140 },
+    { "id": "pricing_subtotal", "lane": "pos_app", "col": 3, "type": "frontend", "label": "Compute Discounts", "sublabel": "order-level cap check", "width": 140 },
+    { "id": "tender_payment", "lane": "cashier", "col": 3, "type": "external", "label": "Tender Payment", "sublabel": "Cash, Card, Transfer", "width": 140 },
+    { "id": "submit_sale", "lane": "pos_app", "col": 4, "type": "frontend", "label": "Submit Sale Payload", "sublabel": "generate UUID key", "tag": "Idempotency-Key", "width": 140 },
+    { "id": "validate_payload", "lane": "backend", "col": 4, "type": "backend", "label": "Validate Request", "sublabel": "Zod schema & role check", "width": 140 },
+    { "id": "atomic_transaction", "lane": "backend", "col": 5, "type": "backend", "label": "Atomic knex.tx()", "sublabel": "rollback on conflict", "tag": "ACID boundary", "width": 140 },
+    { "id": "stock_guard", "lane": "database", "col": 5, "type": "database", "label": "Conditional Decrement", "sublabel": "WHERE stock_qty >= qty", "tag": "zero oversell", "width": 140 },
+    { "id": "complete_receipt", "lane": "cashier", "col": 5, "type": "frontend", "label": "Receipt & Token", "sublabel": "print thermal receipt", "tag": "warranty active", "width": 140 }
+  ],
+  "edges": [
+    { "id": "login-to-cust", "from": "cashier_login", "to": "customer_select", "variant": "default" },
+    { "id": "cust-to-cart", "from": "customer_select", "to": "cart_selection", "variant": "default" },
+    { "id": "cart-to-serial", "from": "cart_selection", "to": "serial_prompt", "label": "if serialized", "variant": "dashed" },
+    { "id": "serial-to-price", "from": "serial_prompt", "to": "pricing_subtotal", "variant": "default" },
+    { "id": "price-to-tender", "from": "pricing_subtotal", "to": "tender_payment", "variant": "emphasis" },
+    { "id": "tender-to-submit", "from": "tender_payment", "to": "submit_sale", "variant": "default" },
+    { "id": "submit-to-valid", "from": "submit_sale", "to": "validate_payload", "label": "POST /sales", "variant": "emphasis" },
+    { "id": "valid-to-tx", "from": "validate_payload", "to": "atomic_transaction", "variant": "default" },
+    { "id": "tx-to-stock", "from": "atomic_transaction", "to": "stock_guard", "label": "conditional SQL", "variant": "emphasis" },
+    { "id": "stock-to-receipt", "from": "stock_guard", "to": "complete_receipt", "label": "201 Created", "variant": "emphasis", "role": "return", "fromSide": "right", "toSide": "right", "route": "outside-right", "labelSegment": 1 }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Front-Counter Cart Building",
+      "items": [
+        "Cashier authenticates and links an existing customer or defaults to anonymous walk-in",
+        "Hardware items automatically flag mandatory serial number collection",
+        "Reactive total calculation enforces promotional rules and order-level discount ceilings"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Network Idempotency",
+      "items": [
+        "Checkout requests attach a cryptographically unique client UUID in the Idempotency-Key header",
+        "If network drops occur and the cashier retries, the server returns the existing completed receipt",
+        "Duplicate debit charges and accidental double stock decrements are strictly prevented"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Stock Race Condition Protection",
+      "items": [
+        "Concurrent cashiers buying the last stock item are serialized via PostgreSQL transactions",
+        "Atomic UPDATE products SET stock_qty = stock_qty - qty WHERE stock_qty >= qty guarantees zero negative stock",
+        "Failed checks trigger immediate transaction abort and return 409 Conflict to the terminal"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "2918091e-8ce6-440e-a3de-1a0398b3af70",
+  "status": "current",
+  "command": "deliver",
+  "type": "dataflow",
+  "input": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\dataflow\\candidate.json",
+  "output": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\dataflow\\dataflow.html",
+  "specification": {
+    "sha256": "3f2ae2e67665b4267b6b1d32d562b5ad4a7408fd5ffe07fde12c909b89639b50",
+    "bytes": 4976
+  },
+  "artifact": {
+    "sha256": "ffae9e92af2cfb9c632f752a8fb72d414e02cd2ca894df86c0a64729f47c4790",
+    "bytes": 846603
+  }
+}

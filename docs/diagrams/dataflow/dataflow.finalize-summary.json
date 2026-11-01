@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "dataflow",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\dataflow\\candidate.json",
+    "sha256": "3f2ae2e67665b4267b6b1d32d562b5ad4a7408fd5ffe07fde12c909b89639b50",
+    "bytes": 4976
+  },
+  "artifact": {
+    "path": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\dataflow\\dataflow.html",
+    "sha256": "ffae9e92af2cfb9c632f752a8fb72d414e02cd2ca894df86c0a64729f47c4790",
+    "bytes": 846603
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\dataflow\\dataflow.finalize.json",
+    "summaryReceipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\dataflow\\dataflow.finalize-summary.json",
+    "browserCheckReceipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\dataflow\\dataflow.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-01T11:52:22.588Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 2275,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

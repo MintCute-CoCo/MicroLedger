@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "7aa6c3ea-d096-4b19-ae34-46d4535c9753",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\architecture\\candidate.json",
+  "output": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\architecture\\architecture.html",
+  "specification": {
+    "sha256": "5faee4217af04fd43bf5e3575cf5d5262878f84cb39024ccbb24d6c3ee431595",
+    "bytes": 4906
+  },
+  "artifact": {
+    "sha256": "68d75d40362ab77aa582c859e4143e1509416a7f090b07f55b1e515b92774f07",
+    "bytes": 852154
+  }
+}

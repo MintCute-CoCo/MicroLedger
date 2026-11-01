@@ -1,0 +1,1333 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "browser-check",
+  "evidenceKind": "automated-browser",
+  "status": "pass",
+  "visualReview": "not-requested",
+  "provenance": "current",
+  "deliveryReceiptId": "3776056d-326d-437c-8eba-96fde1d0e339",
+  "artifact": {
+    "path": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\workflow\\workflow.html",
+    "sha256": "702bd5541f77f7952b9e1cb2dd9044297bad1a46240a8d13ed0cff154dc808e5",
+    "bytes": 849917
+  },
+  "state": {
+    "detail": "read",
+    "motion": "still"
+  },
+  "chrome": {
+    "status": "available",
+    "executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+  },
+  "diagnostics": [],
+  "containment": {
+    "status": "pass",
+    "policy": "fit-or-reader-declared-readable-vertical-scroll",
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "scrollWidth": 1440,
+        "scrollHeight": 900,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1301,
+        "diagramWidth": 1271,
+        "pageComposition": {
+          "bodyPaddingPx": 12,
+          "headerPx": 78,
+          "diagramChromePx": 78,
+          "svgPx": 720,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 116,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 116,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 116,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 116,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 1600,
+        "height": 1000,
+        "theme": "light",
+        "innerWidth": 1600,
+        "innerHeight": 1000,
+        "scrollWidth": 1600,
+        "scrollHeight": 1000,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1361,
+        "diagramWidth": 1331,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 86,
+          "diagramChromePx": 84,
+          "svgPx": 754,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 121,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 121,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 121,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 121,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "theme": "light",
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "scrollWidth": 1920,
+        "scrollHeight": 1080,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1503,
+        "diagramWidth": 1473,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 86,
+          "diagramChromePx": 84,
+          "svgPx": 834,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 134,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 134,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 134,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 134,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 2048,
+        "height": 1320,
+        "theme": "light",
+        "innerWidth": 2048,
+        "innerHeight": 1320,
+        "scrollWidth": 2048,
+        "scrollHeight": 1320,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1915,
+        "diagramWidth": 1865,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 94,
+          "diagramChromePx": 94,
+          "svgPx": 1057,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 170,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 170,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 170,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 170,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 44,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      }
+    ]
+  },
+  "themeStates": {
+    "status": "pass",
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 900,
+        "requestedTheme": "light",
+        "resolvedTheme": "light",
+        "ok": true
+      },
+      {
+        "width": 1600,
+        "height": 1000,
+        "requestedTheme": "light",
+        "resolvedTheme": "light",
+        "ok": true
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "requestedTheme": "light",
+        "resolvedTheme": "light",
+        "ok": true
+      },
+      {
+        "width": 2048,
+        "height": 1320,
+        "requestedTheme": "light",
+        "resolvedTheme": "light",
+        "ok": true
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "requestedTheme": "dark",
+        "resolvedTheme": "dark",
+        "ok": true
+      },
+      {
+        "width": 2048,
+        "height": 1320,
+        "requestedTheme": "dark",
+        "resolvedTheme": "dark",
+        "ok": true
+      }
+    ]
+  },
+  "readability": {
+    "status": "pass",
+    "minimumProjectedNodeTextPx": 6,
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "scrollWidth": 1440,
+        "scrollHeight": 900,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1301,
+        "diagramWidth": 1271,
+        "pageComposition": {
+          "bodyPaddingPx": 12,
+          "headerPx": 78,
+          "diagramChromePx": 78,
+          "svgPx": 720,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 116,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 116,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 116,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 116,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 1600,
+        "height": 1000,
+        "theme": "light",
+        "innerWidth": 1600,
+        "innerHeight": 1000,
+        "scrollWidth": 1600,
+        "scrollHeight": 1000,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1361,
+        "diagramWidth": 1331,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 86,
+          "diagramChromePx": 84,
+          "svgPx": 754,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 121,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 121,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 121,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 121,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "theme": "light",
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "scrollWidth": 1920,
+        "scrollHeight": 1080,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1503,
+        "diagramWidth": 1473,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 86,
+          "diagramChromePx": 84,
+          "svgPx": 834,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 134,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 134,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 134,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 134,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 2048,
+        "height": 1320,
+        "theme": "light",
+        "innerWidth": 2048,
+        "innerHeight": 1320,
+        "scrollWidth": 2048,
+        "scrollHeight": 1320,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1915,
+        "diagramWidth": 1865,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 94,
+          "diagramChromePx": 94,
+          "svgPx": 1057,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 170,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 170,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 170,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 170,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 44,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      }
+    ]
+  },
+  "viewerChrome": {
+    "status": "pass",
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "scrollWidth": 1440,
+        "scrollHeight": 900,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1301,
+        "diagramWidth": 1271,
+        "pageComposition": {
+          "bodyPaddingPx": 12,
+          "headerPx": 78,
+          "diagramChromePx": 78,
+          "svgPx": 720,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 116,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 116,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 116,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 116,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 74,
+            "spaceAboveNodesPx": 37,
+            "spaceBelowNodesPx": 4
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 1600,
+        "height": 1000,
+        "theme": "light",
+        "innerWidth": 1600,
+        "innerHeight": 1000,
+        "scrollWidth": 1600,
+        "scrollHeight": 1000,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1361,
+        "diagramWidth": 1331,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 86,
+          "diagramChromePx": 84,
+          "svgPx": 754,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 121,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 121,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 121,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 121,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 78,
+            "spaceAboveNodesPx": 39,
+            "spaceBelowNodesPx": 5
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "theme": "light",
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "scrollWidth": 1920,
+        "scrollHeight": 1080,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1503,
+        "diagramWidth": 1473,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 86,
+          "diagramChromePx": 84,
+          "svgPx": 834,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 134,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 134,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 134,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 134,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 86,
+            "spaceAboveNodesPx": 43,
+            "spaceBelowNodesPx": 5
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 54,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      },
+      {
+        "width": 2048,
+        "height": 1320,
+        "theme": "light",
+        "innerWidth": 2048,
+        "innerHeight": 1320,
+        "scrollWidth": 2048,
+        "scrollHeight": 1320,
+        "overflowX": false,
+        "overflowY": false,
+        "verticalScrollAccepted": false,
+        "overflowDisposition": "contained",
+        "readerLayout": "adaptive",
+        "readerOverflow": null,
+        "readerFit": null,
+        "ok": true,
+        "readerWidth": 1915,
+        "diagramWidth": 1865,
+        "pageComposition": {
+          "bodyPaddingPx": 64,
+          "headerPx": 94,
+          "diagramChromePx": 94,
+          "svgPx": 1057,
+          "cardsPx": 0,
+          "viewBoxHeight": 660
+        },
+        "viewBoxWidth": 1165,
+        "workflowLanes": [
+          {
+            "frameId": "lane-0",
+            "heightPx": 170,
+            "nodeCount": 3,
+            "nodeIds": [
+              "cashier_login",
+              "tender_payment",
+              "complete_receipt"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-1",
+            "heightPx": 170,
+            "nodeCount": 5,
+            "nodeIds": [
+              "customer_select",
+              "cart_selection",
+              "serial_prompt",
+              "pricing_subtotal",
+              "submit_sale"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-2",
+            "heightPx": 170,
+            "nodeCount": 2,
+            "nodeIds": [
+              "validate_payload",
+              "atomic_transaction"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          },
+          {
+            "frameId": "lane-3",
+            "heightPx": 170,
+            "nodeCount": 1,
+            "nodeIds": [
+              "stock_guard"
+            ],
+            "nodeSpanPx": 109,
+            "spaceAboveNodesPx": 54,
+            "spaceBelowNodesPx": 6
+          }
+        ],
+        "minimumProjectedNodeTextPx": 8,
+        "minimumProjectedNonEdgeTextPx": 8,
+        "minimumProjectedEdgeTextPx": 8,
+        "minimumProjectedNodeText": "scan badge / PIN",
+        "minimumProjectedNodeTextDetail": "context",
+        "minimumProjectedNodeTextOwner": {
+          "kind": "node",
+          "id": "cashier_login"
+        },
+        "minimumRequiredNodeTextPx": 6,
+        "readabilityOk": true,
+        "hasLegend": true,
+        "hasNavigationDock": true,
+        "legendDockIntersectionArea": 0,
+        "dockStageIntersectionArea": 0,
+        "dockStageGap": 10,
+        "requiredDockStageGap": 10,
+        "viewerChromeStageOk": true,
+        "viewerChromeReserve": 44,
+        "viewerChromeActive": true,
+        "viewerChromeOk": true,
+        "resolvedTheme": "light"
+      }
+    ]
+  },
+  "captures": {
+    "status": "not-requested",
+    "screenshots": [],
+    "contactSheet": null
+  },
+  "sidecars": {
+    "receipt": "workflow.browser-check.json",
+    "files": []
+  }
+}

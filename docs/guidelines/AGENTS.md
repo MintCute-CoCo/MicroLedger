@@ -58,6 +58,7 @@ Use the following categorized documents according to the task:
 9. For feature implementation, check `docs/requirements/USER_STORIES.md` and `docs/requirements/ACCEPTANCE_CRITERIA.md`.
 10. Check `docs/management/STATUS.md` and `docs/management/TASK_BACKLOG.md` before starting substantial work so existing progress and planned work are not duplicated.
 11. Follow `docs/management/DEFINITION_OF_DONE.md` when completing implementation work.
+12. **Mandatory Management Synchronization:** Whenever you implement a feature, resolve a bug, refactor code, apply UI/taste fixes, or adjust CI pipelines, you MUST immediately update the management records in `docs/management/` (`STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, `DEFINITION_OF_DONE.md`). Never leave management documentation out of sync with actual code reality.
 
 ## Change Discipline
 
@@ -69,6 +70,7 @@ Before implementing a significant feature:
 4. Implement the smallest change that satisfies the documented requirements.
 5. Validate the implementation against the relevant acceptance criteria.
 6. Update documentation when the implementation changes an established project decision, requirement, architecture, or status.
+7. Synchronize `docs/management/` files immediately to reflect the completed work.
 
 ## Conflict Handling
 
@@ -93,3 +95,4 @@ Prioritize:
 - **Frontend Separation of Concerns:** Keep `.vue` files clean and readable. If a view or component has complex business logic, large state objects, or heavy API interactions, extract that logic into a Vue Composable (`.js` file). For simple UI components, keeping logic inline is fine, but always maintain strict vertical formatting.
 - **Strict Formatting:** Do not generate squashed, minified-looking code. Every HTML tag, component attribute, and JavaScript statement must have proper vertical spacing and indentation across the entire frontend.
 - **UI Consistency & Alignment:** Ensure pixel-perfect layout alignment across all panels. Do not use custom CSS or arbitrary margins/paddings that cause UI elements or headers to shift between pages. Rely exclusively on consistent Vuetify 3 spacing, typography, and responsive grid classes to maintain a smooth, cross-device experience.
+- **Anti-Slop & Design Taste (`tasteskill v2`):** Adhere to the achromatic ledger design language. Surfaces must be flat (`variant="outlined"`, 1px border `#d4dce8`) with zero fuzzy drop shadows on resting elements. No decorative emojis as UI labels, no radial gradients, and no fake placeholder generators. All tables and list representations must maintain strict alignment and honest data states.

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "sequence",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\sequence\\candidate.json",
+    "sha256": "ab57ed8046b5aa1f304a26204ca4900710013f5604df9fd5caea986ac78e9ba0",
+    "bytes": 4226
+  },
+  "artifact": {
+    "path": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\sequence\\sequence.html",
+    "sha256": "afd1b6ddb169885ea022073fe4510a78301637aeca6e8bbb6fc36f43e417fddb",
+    "bytes": 839192
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\sequence\\sequence.finalize.json",
+    "summaryReceipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\sequence\\sequence.finalize-summary.json",
+    "browserCheckReceipt": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\sequence\\sequence.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-01T11:52:22.588Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 2593,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}
