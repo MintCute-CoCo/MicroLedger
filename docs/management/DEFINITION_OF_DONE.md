@@ -20,8 +20,7 @@ The **Frontend Single-Page Application (`client/`)** is considered **Done** and 
       - gradients
       - hex colors outside the documented palette tokens
       - .vue files missing <script setup>
-- [ ] Views are containers only; sections are in components/ subfolders.
-- [ ] .vue files hold presentation only. Calculation, formatting and state live in composables.
+- [ ] Strict Domain Decoupling: Views are thin assembly containers; every distinct function (card, table, form dialog, slip) is separated into its own component in a domain folder (client/src/components/<domain>/); calculation, formatting and state live in composables.
 - [ ] Money is never calculated with JS floats; the client never computes or sends prices; Staff never see cost data (AI_CONTEXT rules 6, 8, 10).
 - [ ] Every function has a block comment; no one-liners or chained array methods; one statement per line (AI_CONTEXT §10-11).
 - [ ] Typography uses only text-h5, text-h6, text-overline, text-body-2, text-caption; fonts per UI_UX §2.1 (DM Sans, Manrope).

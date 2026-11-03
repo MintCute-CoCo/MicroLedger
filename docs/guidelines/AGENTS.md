@@ -98,8 +98,11 @@ Prioritize:
 - Consistency with documented requirements
 - Testability
 - **Retail-Neutral Application:** MicroLedger is an adaptable retail platform. PC hardware is reference data for seeds, UAT and examples only. App code, UI labels, icons, validation and error messages must not assume PC hardware. Do not add domain-specific icon maps, category lists or wording unless a requirement ID demands it.
-- Consistency with documented requirements
-- Testability
+- **Strict Separation of Concerns & Feature Decoupling (Maintainability & Extensibility):** Every functional capability must be strictly separated across both frontend and backend to guarantee easy maintainability and isolated future feature extension:
+  - **Backend Modular Decoupling:** Every business domain lives in its own dedicated module under `server/src/modules/<feature>/` strictly separated into `routes.js`, `controller.js`, `service.js`, `repository.js`, and `schema.js`. Business rules live exclusively in services; controllers handle HTTP only; repositories handle SQL only.
+  - **Frontend View Containers:** Page views (`client/src/views/`) are thin layout containers whose sole responsibility is route framing and composing child components. Views must never contain dense inline sub-templates, direct business math, or monolithic state objects.
+  - **Frontend Component Modularization:** Every distinct application feature or functional section (cards, filters, tables, modals, slips) must be decoupled into its own focused component file under a domain-dedicated directory in `client/src/components/<feature>/`. Never lump multiple distinct UI responsibilities into an all-in-one component.
+  - **Frontend Composable Extraction:** All state management, reactive mutations, data fetching, and calculation algorithms must live in dedicated domain composables (`client/src/composables/<feature>/`). `.vue` files handle presentation only.
 - **Readability for Academic Evaluation:** Code must be easily explainable for a university defense.
 - **Explicit Logic over Brevity:** Prefer step-by-step variable assignment over dense one-line operations. Break down all array chaining (`map`, `filter`) into readable blocks.
 - **Frontend Separation of Concerns:** Keep `.vue` files clean and readable. If a view or component has complex business logic, large state objects, or heavy API interactions, extract that logic into a Vue Composable (`.js` file). For simple UI components, keeping logic inline is fine, but always maintain strict vertical formatting.
