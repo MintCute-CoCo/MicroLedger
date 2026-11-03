@@ -29,18 +29,25 @@ export function applyDisplaySettings(settings = {}) {
  *
  * @param {number} cents - Monetary value represented in lowest integer denomination (cents).
  * @param {string|null} [currency=null] - Optional override ISO 4217 currency code.
+ * @param {number|null} [overrideDecimals=null] - Optional override decimal places.
  * @returns {string} Formatted currency representation (e.g., "$1,250.00").
  */
-export function formatMoney(cents, currency = null) {
+export function formatMoney(cents, currency = null, overrideDecimals = null) {
   const code = currency || displaySettings.currency_code;
-  const decimals = displaySettings.currency_decimals;
+  const decimals = Number.isInteger(overrideDecimals)
+    ? overrideDecimals
+    : displaySettings.currency_decimals;
 
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: code,
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(Number(cents || 0) / 100);
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: code,
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(Number(cents || 0) / 100);
+  } catch {
+    return `${code} ${(Number(cents || 0) / 100).toFixed(decimals)}`;
+  }
 }
 
 /**

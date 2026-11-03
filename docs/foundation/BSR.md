@@ -149,7 +149,7 @@ Delivery is phased. Phase 1 delivers the Core (all Must Have items). Phase 2 del
 
 ### 4.6 Assumptions and Constraints
 
-- One store, one currency, one branch.
+- One store, one currency, one branch. The store currency setting (`currency_code`, `currency_decimals`) defines visual formatting, POS labels, and receipt symbols; it does not perform dynamic foreign-exchange (FX) rate conversions. Existing catalog product prices retain their nominal values and must be updated directly or re-imported via spreadsheet if the store changes base currency. Historical transactions and ledger entries remain immutable.
 
 - Capacity for planning and testing: up to 10,000 products, about 500 sales per day, up to 5 concurrent users.
 

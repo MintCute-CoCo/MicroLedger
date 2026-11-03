@@ -25,8 +25,8 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 7 | 7 / 7 | **Done** |
 | **E13 — Frontend Quality** | Composables, Vuetify primitives, demo mode, anti-slop | 17 | 17 / 17 | **Done** |
-| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 8 | 7 / 8 | **In Progress** |
-| **Total** | **Full System Implementation Backlog** | **119** | **118 / 119** | **99% Complete** |
+| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 9 | 8 / 9 | **In Progress** |
+| **Total** | **Full System Implementation Backlog** | **120** | **119 / 120** | **99% Complete** |
 
 ---
 
@@ -251,3 +251,4 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-117 | Update vulnerable packages (body-parser, multer) | S | Must | T-096 | NFR-11 | Done |
 | T-118 | Synchronize root README with full-stack v1.0 & benchmarks | S | Must | T-117 | NFR-13 | Done |
 | T-119 | Printable thermal receipt modal & full-system diagrams portal | M | Must | T-118 | SRS-SAL-01, AC-016 | Done |
+| T-120 | Single currency guardrails, format preview & safety dialog | S | Must | T-119 | SRS-SET-01, BSR §4.6 | Done |

@@ -222,7 +222,7 @@ function handlePrint() {
               <span>-{{ formatMoney(receiptData.discountCents) }}</span>
             </div>
             <div class="totals-row total-grand">
-              <span>TOTAL (VND):</span>
+              <span>TOTAL ({{ displaySettings.currency_code }}):</span>
               <span class="grand-amount">{{ formatMoney(receiptData.totalCents) }}</span>
             </div>
             <div class="totals-row payment-method">

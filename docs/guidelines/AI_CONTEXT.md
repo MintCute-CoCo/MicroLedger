@@ -25,7 +25,7 @@ MicroLedger: a responsive web POS, inventory and warranty-tracking app for **one
 5. **Negative stock is impossible** (service check + `CHECK (stock_qty >= 0)`).
 6. The client **never sends prices**. The server uses the current `selling_price` and stores a snapshot on `sale_items`.
 7. Sales, sale items, `inventory_transactions` and `audit_logs` are **never edited or deleted** by the app. The only change to a sale is a void.
-8. Money = `NUMERIC(12,2)` in DB; strings with 2 decimals in JSON; never JS floats for calculations (use integer minor units or a decimal library).
+8. Money = `NUMERIC(12,2)` in DB; strings with 2 decimals in JSON; never JS floats for calculations (use integer minor units or a decimal library). Single-store, single-currency policy (BSR §4.6): store settings `currency_code` and `currency_decimals` govern visual formatting and receipt labeling; they do not run live FX conversions. Database prices are nominal amounts; historical sales and ledger rows are strictly immutable.
 9. Timestamps `TIMESTAMPTZ` (UTC). The store timezone (GMT+7 / `Asia/Ho_Chi_Minh`) is handled strictly at the infrastructure level via the Node.js Docker container's `TZ` environment variable. There is no dynamic database-driven timezone setting.
 10. Every endpoint declares allowed roles; the server checks them. The system uses a strict two-role architecture (**Admin** and **Staff**). **Staff responses never contain `cost_price`, stock value or profit data.**
 11. Excel/CSV: parse and validate **only on the server**, streaming, never write uploads to disk. Exports neutralise text starting with `=`, `+`, `-`, `@`, tab, CR.
@@ -85,6 +85,7 @@ MicroLedger: a responsive web POS, inventory and warranty-tracking app for **one
 - Returning cost data to Staff.
 - Storing overdue as a status or column.
 - Deleting rows instead of deactivating or voiding.
+- Assuming changing currency_code converts database prices via exchange rates (multi-currency is out of scope per BSR §4.6; currency settings govern visual formatting and decimals).
 
 ## 9. Document map
 
