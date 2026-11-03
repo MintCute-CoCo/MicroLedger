@@ -12,7 +12,7 @@
 - **Zero Scoped Layout CSS Hacks**: Do not introduce ad-hoc CSS grids, fixed pixel layouts, or negative margin compensations.
 
 ### 1.2 Unified Vertical Alignment & Global Wrapper
-- To eliminate page jumps during navigation, all 16 authenticated application panels wrap their content inside an identical top-level container:
+- To eliminate page jumps during navigation, all 16 authenticated application panels (plus 2 auth flow views, totaling 18 views in `client/src/router/index.js`) wrap their content inside an identical top-level container:
   ```html
   <v-container fluid class="pa-4 pa-md-6">
   ```
@@ -21,6 +21,27 @@
   - Eyebrow: `.eyebrow text-overline text-medium-emphasis`
   - Title: `text-h5 font-weight-bold`
   - Action buttons: Primary `<v-btn color="primary">` and secondary `<v-btn variant="outlined">`
+
+#### Authenticated Application Panels
+| Route Path | View Component | Panel Title | Allowed Roles |
+|---|---|---|---|
+| `/` | `DashboardView.vue` | Overview / Operational Dashboard | Admin, Staff |
+| `/pos` | `PosView.vue` | Point of Sale | Admin, Staff |
+| `/products` | `ProductsView.vue` | Products Catalog | Admin, Staff |
+| `/inventory` | `InventoryView.vue` | Inventory & Ledger | Admin, Staff |
+| `/sales` | `SalesView.vue` | Sales History | Admin, Staff |
+| `/customers` | `CustomersView.vue` | Customer Directory | Admin, Staff |
+| `/users` | `UsersView.vue` | User Administration | Admin |
+| `/categories` | `CategoriesView.vue` | Product Categories | Admin |
+| `/audit-logs` | `AuditView.vue` | Audit Log Viewer | Admin |
+| `/settings` | `SettingsView.vue` | Store Settings | Admin |
+| `/imports` | `ImportsView.vue` | Bulk Product Import | Admin |
+| `/reports/sales` | `SalesReportView.vue` | Sales Report | Admin |
+| `/reports` | `ReportsView.vue` | Reports & Export | Admin, Staff |
+| `/suppliers` | `SuppliersView.vue` | Supplier Directory | Admin, Staff |
+| `/warranties` | `WarrantiesView.vue` | Warranty Records | Admin, Staff |
+| `/claims` | `ClaimsView.vue` | Warranty Claims | Admin, Staff |
+*(Authentication flows: `/login` [`LoginView.vue`] and `/change-password` [`ChangePasswordView.vue`]).*
 
 ### 1.3 Universal Typography Scale
 To guarantee 1:1 visual parity across all panels, the application adheres strictly to this Vuetify typography mapping:
@@ -54,7 +75,7 @@ MicroLedger adopts a clean, high-density, modern FinTech & Enterprise ERP aesthe
   - **Brand & Headings**: `'Manrope', sans-serif` (modern, authoritative display font used for page titles, modal headers, brand marks, and store avatars).
 
 ### 2.2 Core Vuetify Theme Palette
-Defined centrally in [`client/src/main.js`](file:///c:/StudyAlot/WORKFOLDER/FYP/MicroLedger/client/src/main.js), the Vuetify 3 theme establishes the immutable base tokens used throughout all UI components:
+Defined centrally in [`client/src/main.js`](../../client/src/main.js), the Vuetify 3 theme establishes the immutable base tokens used throughout all UI components:
 
 | Token Name | Hex Code | RGB | Role & Application | Contrast on Light Surface |
 |---|---|---|---|---|
@@ -126,12 +147,13 @@ Metric cards (`.summary-card`) use standardized $36 \times 36\text{ px}$ pastel 
   - Primary button: Background `#253d90`, text `#ffffff`. Minimum height $44\text{ px}$.
   - Outlined button: Border `1px solid #d4dce8`, text `#354157`, hover background `#f5f7fb`.
   - Icon action buttons (`.v-btn--icon`): Fixed $44 \times 44\text{ px}$ touch target for touch screens and mobile tablets.
-- **Card Elevation**:
-  - Default card: `box-shadow: 0 1px 3px rgba(32, 42, 61, 0.05); border: 1px solid #d4dce8;`
-  - POS interactive product card hover: `border-color: #8b9bb8; background: #fbfcff;`
-  - POS product card focus-visible: `border-color: #5369ae;`
-  - Dialog modal shadow: `box-shadow: 0 20px 65px rgba(32, 50, 97, 0.09); border: 1px solid #edf0f5;`
-  - Dropdown menu shadow: `box-shadow: 0 4px 16px rgba(25, 42, 78, 0.1);`
+- **Card Elevation:**
+  - Default card: flat, variant="outlined", border 1px solid #d4dce8, NO resting box-shadow. (Matches AGENTS.md Quality and AI_CONTEXT.md §11.)
+  - POS interactive product card hover: border-color #8b9bb8; background #fbfcff.
+  - POS product card focus-visible: border-color #5369ae.
+  - Overlays only (they must separate from the content behind them):
+    - Dialog modal: box-shadow 0 20px 65px rgba(32, 50, 97, 0.09); border 1px solid #edf0f5.
+    - Dropdown menu: box-shadow 0 4px 16px rgba(25, 42, 78, 0.1).
 
 ---
 
@@ -163,6 +185,8 @@ flowchart TD
 
 ## 4. Screen Wireframes
 
+> **Note:** Sample data in wireframes 4.2 to 4.7 comes from the PC hardware reference dataset (O-03) for illustration only. UI labels stay retail-neutral.
+
 ### 4.1 Authentication & Login
 ```text
 +-------------------------------------------------------------+
@@ -190,7 +214,7 @@ flowchart TD
 |  [ Today Sales ]       |  [ Transactions ]    |  [ Low Stock Alerts ]    |  [ Total Inventory ]*  |
 |  18,450,000 VND        |  24 Completed        |  5 Items Low             |  142,800,000 VND       |
 +---------------------------------------------------------------------------------------------------+
-|  7-Day Sales Trend (Dynamic Bar Chart)           |  Top 5 Fast-Moving Hardware (7 Days)           |
+|  7-Day Sales Trend (Dynamic Bar Chart)           |  Top 5 Fast-Moving Products (7 Days)           |
 |  [||||   ||||||   ||||   ||||||||   |||||]       |  1. Kingston NV2 500GB PCIe 4.0 SSD     (42)   |
 |                                                  |  2. Corsair Vengeance LPX 16GB DDR4     (35)   |
 |                                                  |  3. Intel Core i5-12400F Processor      (19)   |
@@ -331,4 +355,4 @@ All views leverage standard, encapsulated components located in `client/src/comp
 
 To explore user interactions and view transitions interactively:
 - [**Workflow & User Interaction Flow (HTML)**](../diagrams/workflow/workflow.html) — Interactive standalone visualizer of POS checkout, inventory movements, and warranty claim lifecycles.
-- [**Interactive System & Code Explainer (HTML)**](../../MicroLedger_Explainer.html) — Step-by-step user journey animation and request tracing.
+- [**Interactive System & Code Explainer (HTML)**](MicroLedger_Interactive_Explainer.html) — Step-by-step user journey animation and request tracing.

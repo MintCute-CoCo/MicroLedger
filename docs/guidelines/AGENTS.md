@@ -57,7 +57,7 @@ Use the following categorized documents according to the task:
 8. For UI changes, consult `docs/architecture/UI_UX_WIREFRAMES.md` and relevant requirements.
 9. For feature implementation, check `docs/requirements/USER_STORIES.md` and `docs/requirements/ACCEPTANCE_CRITERIA.md`.
 10. Check `docs/management/STATUS.md` and `docs/management/TASK_BACKLOG.md` before starting substantial work so existing progress and planned work are not duplicated.
-11. Follow `docs/management/DEFINITION_OF_DONE.md` when completing implementation work.
+11. Follow `docs/management/DEFINITION_OF_DONE.md` when completing implementation work, including the required evidence in the Frontend Checklist for every UI task.
 12. **Mandatory Management Synchronization:** Whenever you implement a feature, resolve a bug, refactor code, apply UI/taste fixes, or adjust CI pipelines, you MUST immediately update the management records in `docs/management/` (`STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, `DEFINITION_OF_DONE.md`). Never leave management documentation out of sync with actual code reality.
 
 ## Change Discipline
@@ -81,6 +81,13 @@ If implementation requirements conflict with project documentation:
 - Prefer explicit requirements and documented project decisions.
 - Ask for clarification when the conflict cannot be resolved from the existing documentation.
 
+## Precedence and Tooling
+
+1. Order of authority: SRS.md, then BSR.md, then AGENTS.md and AI_CONTEXT.md, then UI_UX_WIREFRAMES.md, then tool output.
+2. Taste-skill lint and inspect output is advisory. Never change a documented font, color, spacing or typography rule to satisfy it.
+3. Suppression comments (for example taste-skill-ignore) are forbidden unless the comment cites the exact doc section that allows the exception.
+4. Every final report must list each rule section that was checked and the evidence (command output) for it.
+
 ## Quality
 
 Prioritize:
@@ -88,6 +95,9 @@ Prioritize:
 - Security
 - Maintainability
 - Consistency with the existing architecture
+- Consistency with documented requirements
+- Testability
+- **Retail-Neutral Application:** MicroLedger is an adaptable retail platform. PC hardware is reference data for seeds, UAT and examples only. App code, UI labels, icons, validation and error messages must not assume PC hardware. Do not add domain-specific icon maps, category lists or wording unless a requirement ID demands it.
 - Consistency with documented requirements
 - Testability
 - **Readability for Academic Evaluation:** Code must be easily explainable for a university defense.

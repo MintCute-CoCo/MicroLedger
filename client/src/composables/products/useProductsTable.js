@@ -8,11 +8,10 @@ export const PRODUCT_TONE_COLORS = ['sun', 'rose', 'blue', 'mint', 'lilac', 'san
 
 /**
  * Mapping of lowercase category keywords to Material Design Icons.
- * Covers reference PC hardware catalog as well as general retail domains
- * (apparel, books, food, groceries, furniture, tools, cosmetics, etc.).
+ * Aligned with the reference store catalog fixture. All other retail categories
+ * cleanly resolve to the neutral fallback icon (mdi-package-variant-closed).
  */
 export const PRODUCT_CATEGORY_ICON_MAP = {
-  // PC Hardware & Electronics Reference Catalog
   processors: 'mdi-cpu-64-bit',
   processor: 'mdi-cpu-64-bit',
   cpu: 'mdi-cpu-64-bit',
@@ -44,34 +43,6 @@ export const PRODUCT_CATEGORY_ICON_MAP = {
   peripheral: 'mdi-keyboard-mouse',
   accessories: 'mdi-cable-data',
   accessory: 'mdi-cable-data',
-  hardware: 'mdi-tools',
-  electronics: 'mdi-devices',
-
-  // General Retail Domains (Apparel, Books, Grocery, Home, etc.)
-  clothing: 'mdi-tshirt-crew-outline',
-  clothes: 'mdi-tshirt-crew-outline',
-  apparel: 'mdi-hanger',
-  fashion: 'mdi-tshirt-crew-outline',
-  footwear: 'mdi-shoe-sneaker',
-  shoes: 'mdi-shoe-sneaker',
-  books: 'mdi-book-open-page-variant-outline',
-  book: 'mdi-book-open-page-variant-outline',
-  stationery: 'mdi-lead-pencil',
-  groceries: 'mdi-basket-outline',
-  grocery: 'mdi-basket-outline',
-  food: 'mdi-food-apple-outline',
-  beverages: 'mdi-cup-water',
-  drinks: 'mdi-cup-water',
-  furniture: 'mdi-table-furniture',
-  home: 'mdi-home-outline',
-  tools: 'mdi-wrench-outline',
-  tool: 'mdi-wrench-outline',
-  toys: 'mdi-toy-brick-outline',
-  toy: 'mdi-toy-brick-outline',
-  beauty: 'mdi-spa-outline',
-  cosmetics: 'mdi-lipstick',
-  health: 'mdi-pill',
-  general: 'mdi-package-variant-closed',
 };
 
 /**

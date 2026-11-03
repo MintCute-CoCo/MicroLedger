@@ -3,7 +3,7 @@
 .app-drawer { border-right: 1px solid #edf0f5 !important; background: #fff !important; }
 .app-drawer .v-navigation-drawer__content { padding: 0 15px; }
 .brand-lockup { height: 82px; display: flex; align-items: center; gap: 11px; padding: 0 8px; }
-.brand-mark { width: 39px; height: 39px; border-radius: 13px; background: #253d90; color: #fff; display: grid; place-items: center; box-shadow: 0 5px 12px rgba(37, 61, 144, .19); }
+.brand-mark { width: 39px; height: 39px; border-radius: 13px; background: #253d90; color: #fff; display: grid; place-items: center; }
 .brand-name { color: #202a3d; font: 800 17px 'Manrope', sans-serif; letter-spacing: -.7px; }
 .brand-caption { margin-top: 2px; color: #9aa3b4; font-size: 9px; font-weight: 700; letter-spacing: 1.15px; }
 .store-switcher { display: flex; align-items: center; gap: 10px; margin: 4px 0 27px; padding: 11px 10px; background: #f8f9fc; border: 1px solid #eff1f6; border-radius: 12px; }

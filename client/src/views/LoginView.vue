@@ -6,6 +6,9 @@
  * Serves as the primary security gateway for MicroLedger retail store staff.
  * Validates credentials, handles account lockout states (5 failed attempts -> 15 min lock),
  * and provides one-click account loading for local evaluation/demo modes.
+ *
+ * WIREFRAME SPECIFICATION:
+ * Adheres strictly to UI_UX_WIREFRAMES.md §4.1 layout and typography.
  */
 import { computed } from 'vue';
 import { useLogin } from '../composables/auth/useLogin.js';
@@ -34,25 +37,21 @@ function fillDemoAccount(user, pass) {
 <template>
   <main class="auth-page">
     <section class="auth-card">
-      <div class="auth-brand">
+      <div class="auth-brand mb-2">
         <span class="auth-brand-mark">
-          <v-icon icon="mdi-chart-box-outline" />
+          <v-icon icon="mdi-chart-box-outline" size="22" />
         </span>
-        <span>microledger</span>
+        <h1 class="text-h5 font-weight-bold mb-0">MicroLedger</h1>
       </div>
 
-      <p class="auth-eyebrow">
-        Store workspace
-      </p>
-      <h1>Welcome back</h1>
-      <p class="auth-intro">
-        Sign in to continue to your store.
+      <p class="text-body-2 text-medium-emphasis mb-6">
+        Point of Sale, Inventory Ledger &amp; Warranty System
       </p>
 
       <div
         v-if="isDemoMode"
-        class="auth-alert mb-4"
-        style="background: #eef2ff; color: #3730a3; border-color: #c7d2fe; display: block;"
+        class="auth-alert mb-4 text-caption"
+        style="background: #eff2fc; color: #253d90; border-color: #d4dce8; display: block;"
         role="status"
       >
         <div class="mb-2 d-flex align-center ga-1">
@@ -81,7 +80,7 @@ function fillDemoAccount(user, pass) {
 
       <div
         v-if="auth.sessionError"
-        class="auth-alert"
+        class="auth-alert text-caption"
         role="status"
       >
         {{ auth.sessionError }} Check that the API is running and try again.
@@ -89,7 +88,7 @@ function fillDemoAccount(user, pass) {
 
       <div
         v-if="error"
-        class="auth-alert"
+        class="auth-alert text-caption"
         role="alert"
       >
         <template v-if="locked">
@@ -107,7 +106,7 @@ function fillDemoAccount(user, pass) {
         class="auth-form"
         @submit.prevent="submit"
       >
-        <label for="username">Username</label>
+        <label for="username" class="text-caption font-weight-bold">Username</label>
         <v-text-field
           id="username"
           v-model="username"
@@ -119,7 +118,7 @@ function fillDemoAccount(user, pass) {
           required
         />
 
-        <label for="password">Password</label>
+        <label for="password" class="text-caption font-weight-bold">Password</label>
         <v-text-field
           id="password"
           v-model="password"
@@ -137,10 +136,11 @@ function fillDemoAccount(user, pass) {
           color="primary"
           size="large"
           block
+          rounded="lg"
           :loading="auth.busy"
           :disabled="!username || !password"
         >
-          Sign in
+          Sign In
           <v-icon
             end
             icon="mdi-arrow-right"
@@ -148,7 +148,7 @@ function fillDemoAccount(user, pass) {
         </v-btn>
       </form>
 
-      <p class="auth-footer">
+      <p class="auth-footer text-caption">
         Secure access for your retail team
       </p>
     </section>

@@ -26,16 +26,15 @@ const {
 <template>
   <main class="auth-page">
     <section class="auth-card">
-      <div class="auth-brand">
+      <div class="auth-brand mb-2">
         <span class="auth-brand-mark">
-          <v-icon icon="mdi-chart-box-outline" />
+          <v-icon icon="mdi-chart-box-outline" size="22" />
         </span>
-        <span>microledger</span>
+        <span class="text-h6 font-weight-bold">MicroLedger</span>
       </div>
 
-      <p class="auth-eyebrow">ACCOUNT SECURITY</p>
-      <h1>Set a new password</h1>
-      <p class="auth-intro">Choose a new password before continuing to your workspace.</p>
+      <h1 class="text-h5 font-weight-bold mt-4 mb-1">Set a new password</h1>
+      <p class="text-body-2 text-medium-emphasis mb-6">Choose a new password before continuing to your workspace.</p>
 
       <div
         v-if="error"

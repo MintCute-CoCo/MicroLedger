@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { computed } from 'vue';
 import { formatDate, formatDateTime, formatMoney } from '../../utils/format.js';
 import ResponsiveTable from '../ResponsiveTable.vue';
@@ -395,11 +395,10 @@ const voidedSummary = computed(() => {
 }
 
 .sales-card {
-  border: 1px solid #e9edf3;
+  border: 1px solid #d4dce8;
   border-radius: 14px;
   background: #fff;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(25, 42, 78, .035);
 }
 
 .table-toolbar {

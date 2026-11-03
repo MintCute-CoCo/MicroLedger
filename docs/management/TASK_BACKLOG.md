@@ -254,4 +254,4 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-120 | Single currency guardrails, format preview & safety dialog | S | Must | T-119 | SRS-SET-01, BSR §4.6 | Done |
 | T-121 | Normalize receipt monetary cents parsing & fix double scaling | S | Must | T-119 | SRS-SAL-01, AC-016 | Done |
 | T-122 | Configurable store address/phone on receipt & general domain docs | S | Must | T-121 | SRS-SET-01, BSR §4.6 | Done |
-| T-123 | Decompose SettingsView into subcomponents & resolve taste-skill audit | S | Must | T-122 | SRS-SET-01, AGENTS.md | Done |
+| T-123 | Decompose SettingsView and enforce architectural rules | S | Must | T-122 | SRS-SET-01, SRS-SAL-01 | Done |

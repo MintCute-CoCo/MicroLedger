@@ -9,6 +9,26 @@
 
 The **Frontend Single-Page Application (`client/`)** is considered **Done** and ready for GitHub presentation when every criterion below is verified:
 
+## Frontend Checklist (required evidence for every UI task)
+- [ ] Docs read: AGENTS.md, AI_CONTEXT.md, UI_UX_WIREFRAMES.md, and the SRS/AC IDs for this task (list the IDs).
+- [ ] grep output attached, zero violations (or each hit justified with a doc section) for:
+      - font-size with px
+      - <table, <tr, <td
+      - <style scoped containing layout rules
+      - box-shadow on resting elements
+      - emoji or decorative symbols in text
+      - gradients
+      - hex colors outside the documented palette tokens
+      - .vue files missing <script setup>
+- [ ] Views are containers only; sections are in components/ subfolders.
+- [ ] .vue files hold presentation only. Calculation, formatting and state live in composables.
+- [ ] Money is never calculated with JS floats; the client never computes or sends prices; Staff never see cost data (AI_CONTEXT rules 6, 8, 10).
+- [ ] Every function has a block comment; no one-liners or chained array methods; one statement per line (AI_CONTEXT §10-11).
+- [ ] Typography uses only text-h5, text-h6, text-overline, text-body-2, text-caption; fonts per UI_UX §2.1 (DM Sans, Manrope).
+- [ ] Touch targets are at least 44px; layout works at 360px width.
+- [ ] STATUS.md, TASK_BACKLOG.md, DEVELOPMENT_ROADMAP.md and DEFINITION_OF_DONE.md are updated (AGENTS.md rule 12).
+- [ ] No suppression comments without a cited doc section.
+
 ### 1.1 UI/UX & Component Architecture
 - [x] **Strict Vuetify 3 Primitives**: All 18 route views (16 authenticated panels + 2 auth flows) use native Vuetify 3 components (`v-container`, `v-row`, `v-col`, `v-card`, `v-data-table` / `ResponsiveTable`, `v-btn`, `v-select`, `v-chip`, `v-dialog`). Zero raw HTML tables (`<table>`) and zero scoped CSS layout hacks.
 - [x] **Universal Layout Wrapper**: All 16 authenticated views are wrapped in an identical `<v-container fluid class="pa-4 pa-md-6">` container, ensuring zero vertical jumps or header shifts during route navigation.

@@ -29,8 +29,9 @@ MicroLedger: a responsive web POS, inventory and warranty-tracking app for **one
 9. Timestamps `TIMESTAMPTZ` (UTC). The store timezone (GMT+7 / `Asia/Ho_Chi_Minh`) is handled strictly at the infrastructure level via the Node.js Docker container's `TZ` environment variable. There is no dynamic database-driven timezone setting.
 10. Every endpoint declares allowed roles; the server checks them. The system uses a strict two-role architecture (**Admin** and **Staff**). **Staff responses never contain `cost_price`, stock value or profit data.**
 11. Excel/CSV: parse and validate **only on the server**, streaming, never write uploads to disk. Exports neutralise text starting with `=`, `+`, `-`, `@`, tab, CR.
+12. Documentation precedence: SRS.md > BSR.md > AGENTS.md / AI_CONTEXT.md > UI_UX_WIREFRAMES.md > tool output. Linters and design tools never override documented tokens, and suppression comments must cite a doc section.
 13. No secrets in Git. Config from environment variables.
-14. All database seeds and test fixtures strictly use authentic PC hardware catalog data (Intel, MSI, Corsair, WD, Kingston). Faker.js and random hash strings are prohibited.
+14. Seeds and test fixtures use authentic PC hardware catalog data (Intel, MSI, Corsair, WD, Kingston). This is reference data only. Application code, UI labels, icons, validation and error messages must be retail-neutral and must not assume PC hardware. Faker.js and random hash strings are prohibited.
 15. Frontend strictly uses Vuetify 3 components (`v-container`, `v-row`, `v-col`, `v-card`, `v-data-table` / `ResponsiveTable`, `v-btn`, `v-select`, `v-chip`, etc.) for all layouts, grids, and UI elements. Raw HTML tables (`<table>`, `<tr>`, `<td>`) and custom scoped CSS for layout purposes are strictly prohibited.
 16. **Reporting Scope & Profit/Margin:** The Dashboard is strictly a static "Today / 7-Day" operational performance snapshot. Dynamic date-range boundaries and multidimensional groupings (`day`, `product`, `category`, `user`, `payment`) are exclusively handled by the dedicated Sales Report module (`/reports/sales`, `SalesReportView.vue`). Profit and margin calculations and cost-price tracking in sales reports are out of scope (Could Have); sales reports evaluate units sold, subtotal, discounts, and net revenue.
 
@@ -120,6 +121,7 @@ The frontend codebase must follow strict readability rules for academic evaluati
   - **Table Headers & Eyebrows:** `text-overline`.
   - **Standard Data & Body Text:** `text-body-2` (compact and readable).
   - **Helper Text & Validation:** `text-caption`.
+  - **Print exception:** Inside @media print rules of the receipt dialog only, fixed print units (pt or mm) may be used so the receipt fits the paper width. This never applies to screen styles. If the receipt feature is not required by SRS, SCOPE or an AC, there is no exception.
 - **Anti-Slop & Taste Skill Compliance (`tasteskill v2`):** Adhere strictly to the flat achromatic ledger design language. All cards and panels use flat `variant="outlined"` with 1px border (`#d4dce8`) and zero fuzzy resting drop shadows. Decorative emojis (such as `✦` or `⚡`) as UI text are strictly banned; use `@mdi/font` icons exclusively. Background gradients are forbidden in favor of clean neutral surfaces (`#f5f7fb`, `#ffffff`). All interactive touch targets on mobile must maintain at least 44px height/width.
 
 ## 12. Test Data & Database Seeding
