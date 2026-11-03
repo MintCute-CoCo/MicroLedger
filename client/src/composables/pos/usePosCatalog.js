@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { apiRequest } from '../../api/client.js';
+import { categoryIcon } from '../products/useProductsTable.js';
 
 /**
  * Returns a contextual Material Design icon based on product category.
@@ -8,16 +9,7 @@ import { apiRequest } from '../../api/client.js';
  * @returns {string} MDI icon identifier.
  */
 export function getCategoryIcon(categoryName) {
-  switch (categoryName) {
-    case 'Lighting':
-      return 'mdi-lamp-outline';
-    case 'Electrical':
-      return 'mdi-power-plug-outline';
-    case 'Hardware':
-      return 'mdi-tools';
-    default:
-      return 'mdi-flower-outline';
-  }
+  return categoryIcon(categoryName);
 }
 
 /**

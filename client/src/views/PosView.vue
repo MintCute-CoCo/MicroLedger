@@ -5,6 +5,7 @@ import PosProductCatalog from '../components/pos/PosProductCatalog.vue';
 import PosCheckoutPanel from '../components/pos/PosCheckoutPanel.vue';
 import ReceiptDialog from '../components/pos/ReceiptDialog.vue';
 import { usePos } from '../composables/pos/usePos.js';
+import { categoryIcon } from '../composables/products/useProductsTable.js';
 
 /**
  * Point of Sale (POS) View.
@@ -44,59 +45,6 @@ const {
   receiptDialogSale,
   receiptDialogOpen,
 } = usePos();
-
-/**
- * Returns a contextual Material Design icon based on PC hardware product category.
- *
- * @param {string} categoryName - Category title.
- * @returns {string} MDI icon identifier.
- */
-function getCategoryIcon(categoryName) {
-  if (!categoryName) {
-    return 'mdi-chip';
-  }
-
-  const key = String(categoryName).toLowerCase().trim();
-
-  if (key.includes('processor') || key.includes('cpu')) {
-    return 'mdi-cpu-64-bit';
-  }
-  if (key.includes('motherboard')) {
-    return 'mdi-developer-board';
-  }
-  if (key.includes('graphic') || key.includes('gpu')) {
-    return 'mdi-expansion-card';
-  }
-  if (key.includes('memory') || key.includes('ram')) {
-    return 'mdi-memory';
-  }
-  if (key.includes('storage') || key.includes('ssd') || key.includes('hdd')) {
-    return 'mdi-harddisk';
-  }
-  if (key.includes('power') || key.includes('psu')) {
-    return 'mdi-power-plug';
-  }
-  if (key.includes('cool') || key.includes('fan')) {
-    return 'mdi-fan';
-  }
-  if (key.includes('case') || key.includes('chassis')) {
-    return 'mdi-desktop-tower';
-  }
-  if (key.includes('display') || key.includes('monitor')) {
-    return 'mdi-monitor';
-  }
-  if (key.includes('network')) {
-    return 'mdi-router-wireless';
-  }
-  if (key.includes('peripheral')) {
-    return 'mdi-keyboard-mouse';
-  }
-  if (key.includes('accessor')) {
-    return 'mdi-cable-data';
-  }
-
-  return 'mdi-chip';
-}
 
 onMounted(() => {
   // Ensure no stale 'Other' payment option persists
@@ -142,7 +90,7 @@ onMounted(() => {
           :categories="categories"
           :products="filteredProducts"
           :loading="registerLoading"
-          :category-icon="getCategoryIcon"
+          :category-icon="categoryIcon"
           @add-product="addToCart"
         />
       </v-col>
@@ -185,4 +133,3 @@ onMounted(() => {
     />
   </v-container>
 </template>
-

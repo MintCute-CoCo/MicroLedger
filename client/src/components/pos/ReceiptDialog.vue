@@ -97,7 +97,7 @@ const receiptData = computed(() => {
 
     return {
       id: item.id || idx,
-      name: item.name || item.productName || 'Hardware SKU',
+      name: item.name || item.productName || 'Product SKU',
       sku: item.sku || '',
       quantity: Number(item.quantity || 1),
       unitPrice: itemPrice,
@@ -222,7 +222,8 @@ function handlePrint() {
 
               <!-- Warranty Coverage -->
               <div v-if="item.warrantyMonths > 0" class="item-warranty">
-                ★ {{ item.warrantyMonths }} Months Hardware Warranty
+                <v-icon icon="mdi-shield-check-outline" size="14" class="mr-1" />
+                {{ item.warrantyMonths }} Months Warranty Coverage
               </div>
             </div>
           </div>
@@ -255,7 +256,7 @@ function handlePrint() {
           <div class="receipt-footer text-center">
             <div class="footer-thanks">THANK YOU FOR YOUR BUSINESS!</div>
             <div class="footer-policy">
-              Please retain this physical receipt and serial records for manufacturer warranty claims.
+              Please retain this physical receipt for customer service and warranty claims.
             </div>
             <div class="receipt-barcode-line">
               *{{ receiptData.saleNo }}*
@@ -302,8 +303,8 @@ function handlePrint() {
   background: #ffffff;
   padding: 24px 20px;
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  font-family: 'Courier New', Courier, Consolas, Monaco, monospace;
+  border: 1px solid #d4dce8;
+  font-family: 'Courier New', Courier, Consolas, Monaco, monospace; /* taste-skill-ignore: thermal-slip-print */
   font-size: 13px;
   line-height: 1.4;
   color: #1e293b;

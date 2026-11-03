@@ -14,6 +14,9 @@
  * Store identity details (name, address, telephone) are fully customizable for
  * any retail store location or commercial niche.
  */
+import StoreProfileCard from '../components/settings/StoreProfileCard.vue';
+import StoreCurrencyCard from '../components/settings/StoreCurrencyCard.vue';
+import CurrencyConfirmDialog from '../components/settings/CurrencyConfirmDialog.vue';
 import { useSettings } from '../composables/settings/useSettings.js';
 
 /**
@@ -36,6 +39,24 @@ const {
   handleSaveClick,
   executeSave,
 } = useSettings();
+
+/**
+ * Clears validation error for a specific field when updated by child components.
+ *
+ * @param {string} fieldName - Field name key.
+ */
+function handleClearError(fieldName) {
+  fieldErrors.value[fieldName] = undefined;
+}
+
+/**
+ * Applies selected regional currency preset.
+ *
+ * @param {Object} preset - Preset containing code and decimals.
+ */
+function handleApplyPreset(preset) {
+  applyPreset(preset.code, preset.decimals);
+}
 </script>
 
 <template>
@@ -79,108 +100,12 @@ const {
 
     <v-row>
       <v-col cols="12" md="10" lg="8">
-        <!-- Store Profile & Receipt Branding Card -->
-        <v-card
-          rounded="xl"
-          variant="outlined"
-          class="settings-card mb-6"
-        >
-          <v-card-item class="border-b pa-4">
-            <v-card-title class="text-h6 font-weight-bold">Store profile &amp; receipt branding</v-card-title>
-            <v-card-subtitle class="text-caption text-medium-emphasis">
-              Customize business name, physical address, and telephone printed on receipts
-            </v-card-subtitle>
-          </v-card-item>
-
-          <v-card-text class="pa-6">
-            <v-row dense>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.store_name"
-                  label="Store name"
-                  placeholder="e.g. MicroLedger Store"
-                  maxlength="100"
-                  :error-messages="fieldErrors.store_name"
-                  variant="outlined"
-                  density="compact"
-                  hint="Appears prominently at the top of printed receipts"
-                  persistent-hint
-                  @update:model-value="fieldErrors.store_name = undefined"
-                />
-              </v-col>
-
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.store_tagline"
-                  label="Business tagline / Subtitle"
-                  placeholder="e.g. PC Hardware & Tech Solutions"
-                  maxlength="150"
-                  :error-messages="fieldErrors.store_tagline"
-                  variant="outlined"
-                  density="compact"
-                  hint="Store category or business slogan"
-                  persistent-hint
-                  @update:model-value="fieldErrors.store_tagline = undefined"
-                />
-              </v-col>
-
-              <v-col cols="12" sm="7">
-                <v-text-field
-                  v-model="form.store_address"
-                  label="Store physical address"
-                  placeholder="e.g. 123 Hoan Kiem, Hanoi or 70000 Ho Chi Minh City"
-                  maxlength="255"
-                  :error-messages="fieldErrors.store_address"
-                  variant="outlined"
-                  density="compact"
-                  hint="Full retail shop address printed on transaction slips"
-                  persistent-hint
-                  @update:model-value="fieldErrors.store_address = undefined"
-                />
-              </v-col>
-
-              <v-col cols="12" sm="5">
-                <v-text-field
-                  v-model="form.store_phone"
-                  label="Store contact telephone"
-                  placeholder="e.g. +84 (024) 3822-1234"
-                  maxlength="50"
-                  :error-messages="fieldErrors.store_phone"
-                  variant="outlined"
-                  density="compact"
-                  hint="Official contact phone for customer queries"
-                  persistent-hint
-                  @update:model-value="fieldErrors.store_phone = undefined"
-                />
-              </v-col>
-            </v-row>
-
-            <!-- Live Thermal Receipt Slip Header Preview -->
-            <v-card
-              variant="flat"
-              rounded="lg"
-              class="bg-grey-lighten-4 pa-4 mt-4 border font-monospace text-center"
-            >
-              <div class="text-overline text-medium-emphasis mb-2 text-left">
-                RECEIPT HEADER PREVIEW (80MM THERMAL SLIP)
-              </div>
-              <div class="pa-3 bg-white border rounded">
-                <div class="text-h6 font-weight-bold letter-spacing-1">
-                  {{ (form.store_name || 'STORE NAME').toUpperCase() }}
-                </div>
-                <div v-if="form.store_tagline" class="text-caption text-medium-emphasis font-weight-bold">
-                  {{ form.store_tagline.toUpperCase() }}
-                </div>
-                <div class="text-caption text-medium-emphasis">
-                  {{ form.store_address || 'No address specified' }}
-                </div>
-                <div v-if="form.store_phone" class="text-caption text-medium-emphasis">
-                  Tel: {{ form.store_phone }}
-                </div>
-              </div>
-            </v-card>
-          </v-card-text>
-        </v-card>
+        <!-- Store Profile & Receipt Branding Component -->
+        <StoreProfileCard
+          :form="form"
+          :field-errors="fieldErrors"
+          @clear-error="handleClearError"
+        />
 
         <!-- Single Domestic Currency Policy Callout (BSR §4.6) -->
         <v-alert
@@ -201,222 +126,31 @@ const {
           </div>
         </v-alert>
 
-        <!-- Currency & Locale Configuration Card -->
-        <v-card
-          rounded="xl"
-          variant="outlined"
-          class="settings-card mb-6"
-        >
-          <v-card-item class="border-b pa-4">
-            <v-card-title class="text-h6 font-weight-bold">Currency &amp; locale</v-card-title>
-            <v-card-subtitle class="text-caption text-medium-emphasis">
-              Select standard deployment presets or specify custom ISO 4217 rules
-            </v-card-subtitle>
-          </v-card-item>
-
-          <v-card-text class="pa-6">
-            <!-- Quick Preset Chips -->
-            <div class="mb-5">
-              <div class="text-caption font-weight-medium text-medium-emphasis mb-2">
-                QUICK REGIONAL PRESETS
-              </div>
-              <div class="d-flex flex-wrap gap-2">
-                <v-chip
-                  v-for="preset in presets"
-                  :key="preset.code"
-                  variant="outlined"
-                  class="mr-2 mb-2"
-                  :color="form.currency_code === preset.code ? 'primary' : undefined"
-                  @click="applyPreset(preset.code, preset.decimals)"
-                >
-                  <v-icon
-                    start
-                    :icon="form.currency_code === preset.code ? 'mdi-check-circle' : 'mdi-currency-usd'"
-                  />
-                  {{ preset.label }}
-                </v-chip>
-              </div>
-            </div>
-
-            <!-- Currency Inputs -->
-            <v-row dense>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.currency_code"
-                  label="Currency code (ISO 4217)"
-                  placeholder="e.g. VND, USD, EUR"
-                  maxlength="3"
-                  :error-messages="fieldErrors.currency_code"
-                  variant="outlined"
-                  density="compact"
-                  hint="3 uppercase letters (e.g., VND, USD)"
-                  persistent-hint
-                  @update:model-value="fieldErrors.currency_code = undefined"
-                />
-              </v-col>
-
-              <v-col cols="12" sm="6">
-                <v-select
-                  v-model.number="form.currency_decimals"
-                  :items="[0, 1, 2]"
-                  label="Currency decimal places"
-                  :error-messages="fieldErrors.currency_decimals"
-                  variant="outlined"
-                  density="compact"
-                  hint="0 for VND/JPY, 2 for USD/EUR"
-                  persistent-hint
-                  @update:model-value="fieldErrors.currency_decimals = undefined"
-                />
-              </v-col>
-            </v-row>
-
-            <!-- Currency Modification Warning Banner -->
-            <v-alert
-              v-if="isCurrencyChanged"
-              type="warning"
-              variant="tonal"
-              rounded="lg"
-              class="mt-4 mb-4"
-              icon="mdi-alert-outline"
-            >
-              <div class="text-subtitle-2 font-weight-bold">
-                Currency change detected ({{ initialCurrencyCode }} &rarr; {{ form.currency_code }})
-              </div>
-              <div class="text-caption">
-                Catalog product prices will retain their existing numerical values. For example, a product
-                priced at 3,190,000 will be formatted as {{ form.currency_code }} 3,190,000 without exchange
-                rate division. You will be asked to confirm before saving.
-              </div>
-            </v-alert>
-
-            <!-- Live Formatting Preview Box -->
-            <v-card
-              variant="flat"
-              rounded="lg"
-              class="bg-grey-lighten-4 pa-4 mt-4 mb-6 border"
-            >
-              <div class="text-overline text-medium-emphasis mb-2">LIVE FORMATTING PREVIEW</div>
-              <v-row dense>
-                <v-col cols="12" sm="6">
-                  <div class="text-caption text-medium-emphasis">Hardware Component (3,190,000):</div>
-                  <div class="text-h6 font-weight-bold text-primary">
-                    {{ previewAmount(319000000) }}
-                  </div>
-                </v-col>
-                <v-col cols="12" sm="6">
-                  <div class="text-caption text-medium-emphasis">Peripheral Item (150,000):</div>
-                  <div class="text-h6 font-weight-bold text-primary">
-                    {{ previewAmount(15000000) }}
-                  </div>
-                </v-col>
-              </v-row>
-            </v-card>
-
-            <!-- Action Buttons -->
-            <div class="d-flex flex-wrap gap-2">
-              <v-btn
-                color="primary"
-                rounded="lg"
-                class="w-100 w-sm-auto mr-sm-2"
-                :loading="busy"
-                :disabled="busy"
-                @click="handleSaveClick"
-              >
-                Save all settings
-              </v-btn>
-
-              <v-btn
-                v-if="isCurrencyChanged"
-                variant="text"
-                rounded="lg"
-                class="w-100 w-sm-auto"
-                :disabled="busy"
-                @click="revertSettings"
-              >
-                Revert changes
-              </v-btn>
-            </div>
-          </v-card-text>
-        </v-card>
+        <!-- Currency & Locale Configuration Component -->
+        <StoreCurrencyCard
+          :form="form"
+          :field-errors="fieldErrors"
+          :initial-currency-code="initialCurrencyCode"
+          :is-currency-changed="isCurrencyChanged"
+          :presets="presets"
+          :busy="busy"
+          :preview-amount="previewAmount"
+          @apply-preset="handleApplyPreset"
+          @clear-error="handleClearError"
+          @save="handleSaveClick"
+          @revert="revertSettings"
+        />
       </v-col>
     </v-row>
 
     <!-- Confirmation Guardrail Dialog for Currency Changes -->
-    <v-dialog
+    <CurrencyConfirmDialog
       v-model="confirmDialogOpen"
-      max-width="500"
-      persistent
-    >
-      <v-card rounded="xl" class="pa-2">
-        <v-card-item class="pa-4">
-          <div class="d-flex align-center">
-            <v-icon
-              icon="mdi-alert"
-              color="warning"
-              size="28"
-              class="mr-3"
-            />
-            <v-card-title class="text-h6 font-weight-bold pa-0">
-              Confirm Store Currency Change
-            </v-card-title>
-          </div>
-        </v-card-item>
-
-        <v-card-text class="pa-4 pt-0">
-          <p class="text-body-2 mb-3">
-            You are changing the store base currency from
-            <strong>{{ initialCurrencyCode }}</strong> to
-            <strong>{{ form.currency_code }}</strong> (with {{ form.currency_decimals }} decimal places).
-          </p>
-
-          <v-alert
-            type="warning"
-            variant="tonal"
-            rounded="lg"
-            density="compact"
-            class="text-caption mb-3"
-          >
-            <strong>Nominal Value Preservation:</strong> MicroLedger does not perform automatic
-            exchange-rate conversions. Existing catalog prices (e.g. 3,190,000) will keep their numerical
-            numbers and display as {{ form.currency_code }} 3,190,000.
-          </v-alert>
-
-          <p class="text-caption text-medium-emphasis mb-0">
-            Past sales transactions, receipts, and audit logs remain strictly immutable according to financial
-            accounting standards. To update product prices after changing currency, please use the Products
-            view or Catalog Excel Import.
-          </p>
-        </v-card-text>
-
-        <v-card-actions class="pa-4 border-t d-flex justify-end gap-2">
-          <v-btn
-            variant="outlined"
-            rounded="lg"
-            :disabled="busy"
-            @click="confirmDialogOpen = false"
-          >
-            Cancel
-          </v-btn>
-
-          <v-btn
-            color="primary"
-            rounded="lg"
-            :loading="busy"
-            @click="executeSave"
-          >
-            Confirm & Save
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      :initial-currency-code="initialCurrencyCode"
+      :target-currency-code="form.currency_code"
+      :target-decimals="form.currency_decimals"
+      :busy="busy"
+      @confirm="executeSave"
+    />
   </v-container>
 </template>
-
-<style scoped>
-.gap-2 {
-  gap: 8px;
-}
-.letter-spacing-1 {
-  letter-spacing: 1px;
-}
-</style>

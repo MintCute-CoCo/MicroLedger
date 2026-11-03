@@ -8,14 +8,19 @@ export const PRODUCT_TONE_COLORS = ['sun', 'rose', 'blue', 'mint', 'lilac', 'san
 
 /**
  * Mapping of lowercase category keywords to Material Design Icons.
- * Aligned with authentic PC hardware store catalog (CPU, GPU, RAM, SSD, etc.).
+ * Covers reference PC hardware catalog as well as general retail domains
+ * (apparel, books, food, groceries, furniture, tools, cosmetics, etc.).
  */
 export const PRODUCT_CATEGORY_ICON_MAP = {
+  // PC Hardware & Electronics Reference Catalog
   processors: 'mdi-cpu-64-bit',
+  processor: 'mdi-cpu-64-bit',
   cpu: 'mdi-cpu-64-bit',
   motherboards: 'mdi-developer-board',
+  motherboard: 'mdi-developer-board',
   'graphics cards': 'mdi-expansion-card',
   'graphics-cards': 'mdi-expansion-card',
+  graphics: 'mdi-expansion-card',
   gpu: 'mdi-expansion-card',
   memory: 'mdi-memory',
   ram: 'mdi-memory',
@@ -24,16 +29,49 @@ export const PRODUCT_CATEGORY_ICON_MAP = {
   hdd: 'mdi-harddisk',
   'power supplies': 'mdi-power-plug',
   'power-supplies': 'mdi-power-plug',
+  power: 'mdi-power-plug',
   psu: 'mdi-power-plug',
   cooling: 'mdi-fan',
+  cooler: 'mdi-fan',
   cases: 'mdi-desktop-tower',
   chassis: 'mdi-desktop-tower',
   monitors: 'mdi-monitor',
+  monitor: 'mdi-monitor',
   displays: 'mdi-monitor',
   networking: 'mdi-router-wireless',
+  network: 'mdi-router-wireless',
   peripherals: 'mdi-keyboard-mouse',
+  peripheral: 'mdi-keyboard-mouse',
   accessories: 'mdi-cable-data',
-  hardware: 'mdi-chip',
+  accessory: 'mdi-cable-data',
+  hardware: 'mdi-tools',
+  electronics: 'mdi-devices',
+
+  // General Retail Domains (Apparel, Books, Grocery, Home, etc.)
+  clothing: 'mdi-tshirt-crew-outline',
+  clothes: 'mdi-tshirt-crew-outline',
+  apparel: 'mdi-hanger',
+  fashion: 'mdi-tshirt-crew-outline',
+  footwear: 'mdi-shoe-sneaker',
+  shoes: 'mdi-shoe-sneaker',
+  books: 'mdi-book-open-page-variant-outline',
+  book: 'mdi-book-open-page-variant-outline',
+  stationery: 'mdi-lead-pencil',
+  groceries: 'mdi-basket-outline',
+  grocery: 'mdi-basket-outline',
+  food: 'mdi-food-apple-outline',
+  beverages: 'mdi-cup-water',
+  drinks: 'mdi-cup-water',
+  furniture: 'mdi-table-furniture',
+  home: 'mdi-home-outline',
+  tools: 'mdi-wrench-outline',
+  tool: 'mdi-wrench-outline',
+  toys: 'mdi-toy-brick-outline',
+  toy: 'mdi-toy-brick-outline',
+  beauty: 'mdi-spa-outline',
+  cosmetics: 'mdi-lipstick',
+  health: 'mdi-pill',
+  general: 'mdi-package-variant-closed',
 };
 
 /**
@@ -47,8 +85,22 @@ export function categoryIcon(categoryName) {
     return 'mdi-package-variant-closed';
   }
 
-  const normalizedKey = categoryName.toLowerCase();
-  return PRODUCT_CATEGORY_ICON_MAP[normalizedKey] || 'mdi-package-variant-closed';
+  const normalizedKey = String(categoryName).toLowerCase().trim();
+
+  // 1. Direct exact key lookup
+  if (PRODUCT_CATEGORY_ICON_MAP[normalizedKey]) {
+    return PRODUCT_CATEGORY_ICON_MAP[normalizedKey];
+  }
+
+  // 2. Substring keyword match
+  for (const [key, icon] of Object.entries(PRODUCT_CATEGORY_ICON_MAP)) {
+    if (normalizedKey.includes(key)) {
+      return icon;
+    }
+  }
+
+  // 3. Fallback generic retail icon
+  return 'mdi-package-variant-closed';
 }
 
 /**

@@ -499,8 +499,8 @@ export function createInitialDemoState() {
   const settings = {
     currency_code: 'VND',
     currency_decimals: 0,
-    store_name: 'MicroLedger PC Hardware Store',
-    store_tagline: 'PC Hardware & Tech Solutions',
+    store_name: 'MicroLedger Retail Store',
+    store_tagline: 'Retail POS & Inventory Solutions',
     store_address: '70000 Ho Chi Minh City, Vietnam',
     store_phone: '+84 (028) 3822-9999',
     time_zone: 'Asia/Ho_Chi_Minh',

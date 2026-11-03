@@ -42,7 +42,7 @@ function fillDemoAccount(user, pass) {
       </div>
 
       <p class="auth-eyebrow">
-        STORE WORKSPACE
+        Store workspace
       </p>
       <h1>Welcome back</h1>
       <p class="auth-intro">
