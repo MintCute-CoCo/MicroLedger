@@ -52,11 +52,26 @@ export function usePos() {
     discountCents: cart.discountCents,
     clearCart: cart.clearCart,
     onCheckoutSuccess: async (createdSale) => {
-      await catalog.loadCatalog();
-      await checkout.loadCustomers();
+      // 1. Instantly present completed printable receipt to cashier
       if (createdSale) {
         receiptDialogSale.value = createdSale;
         receiptDialogOpen.value = true;
+      }
+
+      // 2. Refresh catalog products & stock in background safely
+      try {
+        await catalog.loadCatalog();
+      } catch (catalogErr) {
+        console.warn('Background POS catalog refresh notice:', catalogErr);
+      }
+
+      // 3. Refresh customers in background safely
+      try {
+        if (typeof checkout?.loadCustomers === 'function') {
+          await checkout.loadCustomers();
+        }
+      } catch (custErr) {
+        console.warn('Background POS customer refresh notice:', custErr);
       }
     },
   });

@@ -26,3 +26,4 @@ Each diagram is governed by its versioned `candidate.json` specification:
 # Deliver updated workflow diagram
 node .agents/skills/archify/bin/archify.mjs deliver workflow docs/diagrams/workflow/candidate.json docs/diagrams/workflow/workflow.html --quality showcase --json
 ```
+

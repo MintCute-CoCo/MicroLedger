@@ -258,8 +258,8 @@ export function usePosCheckout({ cart, discountCents, clearCart, onCheckoutSucce
     if (saleCompleted && typeof onCheckoutSuccess === 'function') {
       try {
         await onCheckoutSuccess(createdSaleRecord);
-      } catch {
-        checkoutError.value = 'Sale completed, but the POS data could not be refreshed.';
+      } catch (postActionError) {
+        console.warn('POS checkout post-action notice:', postActionError);
       }
     }
   }
