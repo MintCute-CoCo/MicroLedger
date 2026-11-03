@@ -6,6 +6,8 @@
  * Provides inputs to customize store business name, tagline, physical address,
  * and contact telephone, alongside a live 80mm thermal receipt slip preview.
  */
+import ReceiptHeader from '../receipt/ReceiptHeader.vue';
+
 const props = defineProps({
   form: {
     type: Object,
@@ -117,18 +119,12 @@ function handleFieldInput(fieldName) {
           RECEIPT HEADER PREVIEW (80MM THERMAL SLIP)
         </div>
         <div class="pa-3 bg-white border rounded">
-          <div class="text-h6 font-weight-bold">
-            {{ (props.form.store_name || 'STORE NAME').toUpperCase() }}
-          </div>
-          <div v-if="props.form.store_tagline" class="text-caption text-medium-emphasis font-weight-bold">
-            {{ props.form.store_tagline.toUpperCase() }}
-          </div>
-          <div class="text-caption text-medium-emphasis">
-            {{ props.form.store_address || 'No address specified' }}
-          </div>
-          <div v-if="props.form.store_phone" class="text-caption text-medium-emphasis">
-            Tel: {{ props.form.store_phone }}
-          </div>
+          <ReceiptHeader
+            :store-name="props.form.store_name"
+            :store-tagline="props.form.store_tagline"
+            :store-address="props.form.store_address"
+            :store-phone="props.form.store_phone"
+          />
         </div>
       </v-card>
     </v-card-text>
