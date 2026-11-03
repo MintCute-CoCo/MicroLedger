@@ -52,28 +52,49 @@ export function useSaleDetail({ apiMode, onVoidSuccess }) {
 
       const rawLineItems = sale.items || [];
       const formattedItems = rawLineItems.map((line) => {
-        const lineTotalCents = Number(line.lineTotal || 0) * 100;
-        const unitPriceCents = Number(line.unitPrice || 0) * 100;
+        const rawLineTotal = line.lineTotal ?? line.totalPrice ?? 0;
+        const rawUnitPrice = line.unitPrice ?? line.price ?? 0;
+        const lineTotalCents = Math.round(Number(rawLineTotal) * 100);
+        const unitPriceCents = Math.round(Number(rawUnitPrice) * 100);
 
         return {
           ...line,
+          name: line.name || line.productName || 'Hardware SKU',
           lineTotal: lineTotalCents,
           unitPrice: unitPriceCents,
+          _isCents: true,
         };
       });
 
       const isVoided = sale.status === 'voided';
-      const saleTotalCents = Number(sale.total || 0) * 100;
+      const rawSubtotal = sale.subtotal ?? sale.total ?? 0;
+      const rawDiscount = sale.discountAmount ?? 0;
+      const rawTotal = sale.total ?? 0;
+
+      const subtotalCents = Math.round(Number(rawSubtotal) * 100);
+      const discountCents = Math.round(Number(rawDiscount) * 100);
+      const saleTotalCents = Math.round(Number(rawTotal) * 100);
 
       selectedSale.value = {
         ...item,
-        customer: sale.customerName,
-        staff: sale.staffName,
+        id: sale.id || item.id,
+        saleNo: sale.saleNo || item.number,
+        number: sale.saleNo || item.number,
+        customer: sale.customerName || item.customer,
+        customerName: sale.customerName || item.customer,
+        customerPhone: sale.customerPhone || item.customerPhone || '',
+        staff: sale.staffName || item.staff,
+        staffName: sale.staffName || item.staff,
         payment: formatPaymentMethod(sale.paymentMethod),
+        paymentMethod: sale.paymentMethod,
+        subtotal: subtotalCents,
+        discountAmount: discountCents,
         total: saleTotalCents,
         status: isVoided ? 'Voided' : 'Completed',
-        createdAt: sale.soldAt,
+        createdAt: sale.soldAt || item.createdAt,
+        soldAt: sale.soldAt || item.createdAt,
         items: formattedItems,
+        _isCents: true,
       };
     } catch (error) {
       detailError.value = error.message;

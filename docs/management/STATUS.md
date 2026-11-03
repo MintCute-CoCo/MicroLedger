@@ -37,6 +37,7 @@ Key milestones achieved in this release cycle:
 | **Root Readme & Benchmark Synchronization** | Documentation | **Done** | Updated root `README.md` to `v1.0-fullstack`, linked interactive HTML diagrams, and published verified sub-15ms P95 latency benchmarks. |
 | **Printable Thermal Receipts & Diagrams Portal** | Frontend & Tooling | **Done** | Implemented `ReceiptDialog.vue` with `@media print` 80mm slip formatting; wired into POS & Sales history; delivered unified full-system diagrams portal at `docs/diagrams/index.html`. |
 | **Single Currency Guardrails & Live Format Preview** | Frontend & Architecture | **Done** | Implemented Single Domestic Currency policy callout (BSR §4.6), regional presets (VND, USD, EUR), live formatting preview box, and safety confirmation guardrail dialog in `SettingsView.vue` and `useSettings.js`. |
+| **Receipt Cents Normalization & Scale Fix** | Frontend & POS | **Done** | Unified monetary parsing in `ReceiptDialog.vue` and `useSaleDetail.js` to eliminate double-scaling of integer cents (resolved $69 $\to$ $6900 display discrepancy). |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
 
 ---

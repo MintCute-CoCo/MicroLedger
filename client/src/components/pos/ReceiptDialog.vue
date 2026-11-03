@@ -40,35 +40,53 @@ const receiptData = computed(() => {
   const phone = raw.customerPhone || '';
   const payment = raw.paymentMethod || raw.payment || 'Card';
 
-  // Normalize totals to cents
-  const parseToCents = (val) => {
-    if (val === undefined || val === null) return 0;
+  /**
+   * Normalizes an amount into integer cents for formatMoney(cents).
+   * Handles strings from REST API ("69.99", "14890000.00"), floats (69.99),
+   * and integer cents passed from client store/composable state (6999).
+   *
+   * @param {string|number|null|undefined} val - Input monetary amount.
+   * @param {boolean} [itemIsCents=false] - Item-level cents flag.
+   * @returns {number} Normalized integer cents.
+   */
+  const parseToCents = (val, itemIsCents = false) => {
+    if (val === undefined || val === null || val === '') {
+      return 0;
+    }
+
+    // 1. Explicitly flagged as already in cents from client composable
+    if (raw._isCents || itemIsCents) {
+      return Math.round(Number(val) || 0);
+    }
+
+    // 2. Numeric inputs:
+    if (typeof val === 'number') {
+      // Float with decimal places (e.g. 69.99) -> convert to cents
+      if (!Number.isInteger(val)) {
+        return Math.round(val * 100);
+      }
+      // Integer number: in client sales state, values are stored as cents (e.g. 6999)
+      return val;
+    }
+
+    // 3. String inputs from PostgreSQL NUMERIC(12,2) or demoEngine (e.g. "69.99", "14890000.00"):
     const num = Number(val);
-    // If greater than 10000 and has no decimals, could already be cents or large VND amount
-    // But check if line items are formatted with cents
-    return num;
+    if (Number.isNaN(num)) {
+      return 0;
+    }
+    return Math.round(num * 100);
   };
 
-  const totalCents = typeof raw.total === 'number' && Number.isInteger(raw.total) && raw.total > 1000000
-    ? raw.total
-    : Math.round(Number(raw.total || 0) * 100);
-
-  const subtotalCents = typeof raw.subtotal === 'number' && Number.isInteger(raw.subtotal) && raw.subtotal > 1000000
-    ? raw.subtotal
-    : Math.round(Number(raw.subtotal || raw.total || 0) * 100);
-
-  const discountCents = typeof raw.discountAmount === 'number' && Number.isInteger(raw.discountAmount)
-    ? raw.discountAmount
-    : Math.round(Number(raw.discountAmount || 0) * 100);
+  const totalCents = parseToCents(raw.total);
+  const subtotalCents = parseToCents(raw.subtotal ?? raw.total);
+  const discountCents = parseToCents(raw.discountAmount);
 
   const items = (raw.items || []).map((item, idx) => {
-    const itemTotal = typeof item.lineTotal === 'number' && Number.isInteger(item.lineTotal) && item.lineTotal > 100000
-      ? item.lineTotal
-      : Math.round(Number(item.lineTotal || 0) * 100);
+    const rawLineTotal = item.lineTotal ?? item.totalPrice ?? 0;
+    const rawUnitPrice = item.unitPrice ?? item.price ?? 0;
 
-    const itemPrice = typeof item.unitPrice === 'number' && Number.isInteger(item.unitPrice) && item.unitPrice > 100000
-      ? item.unitPrice
-      : Math.round(Number(item.unitPrice || item.price || 0) * 100);
+    const itemTotal = parseToCents(rawLineTotal, item._isCents);
+    const itemPrice = parseToCents(rawUnitPrice, item._isCents);
 
     let serials = [];
     if (Array.isArray(item.serialNumbers)) {
