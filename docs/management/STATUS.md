@@ -77,6 +77,8 @@ Key milestones achieved in this release cycle:
 - **Documentation Verification:** **25 / 25** Markdown files in clean UTF-8 with 0 broken links.
 - **Vuetify 3 Compliance:** 100% primitive component usage; zero raw HTML tables and zero custom CSS layout grids.
 - **Offline Readiness:** 100% operable via in-browser Standalone Demo Mode Engine.
+- **Security Audit Status:** **0 High Severity Vulnerabilities** (dependencies `body-parser` and `multer` updated cleanly; SQL injection 100% defended via Knex parameterization; append-only permissions verified).
+- **Interactive Visualizers:** 4 standalone interactive HTML diagrams (`architecture.html`, `workflow.html`, `sequence.html`, `dataflow.html`) indexed in `docs/diagrams/` plus root `MicroLedger_Explainer.html`.
 
 ---
 

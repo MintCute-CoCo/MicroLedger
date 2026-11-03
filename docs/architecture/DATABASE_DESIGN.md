@@ -28,6 +28,12 @@ erDiagram
   warranty_claims ||--o{ claim_status_history : logs
 ```
 
+> [!NOTE]
+> The entity relationship diagram above models the 15 relational tables sharing foreign key constraints. Table 16, **`store_settings`**, is a single-row configuration table without relational foreign keys, maintaining store currency and decimal formatting.
+>
+> **Interactive Dataflow & State Mutations:**  
+> For an interactive, explorable diagram of data pipelines, stock deduction mechanisms, and snapshotting, see [**Dataflow & Mutation Pipeline (HTML)**](../diagrams/dataflow/dataflow.html).
+
 ---
 
 ## 2. Relational Schema (DDL)

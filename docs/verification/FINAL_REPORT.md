@@ -2,7 +2,7 @@
 
 **Project Title:** MicroLedger — Responsive Web POS, Inventory & Warranty Tracking System  
 **Academic Context:** Final Year Project (FYP)  
-**Date:** 13 October 2026  
+**Date:** November 2026  
 **Document Version:** 1.0  
 **Repository Working Directory:** `c:\StudyAlot\WORKFOLDER\FYP\MicroLedger`  
 **Primary Standards:** BRD v3.1, PRD v3.1, SRS v1.0, IEEE 830 / ISO/IEC 25010 Quality Standards
@@ -36,12 +36,21 @@ MicroLedger was developed using a strict phased engineering approach defined in 
 |  - Token Auth & 15-min Brute-Force Lockout         |  - Supplier Management & Associations          |
 |  - Server-Enforced Role Separation (Admin/Staff)  |  - Serial Number Tracking on Checkout          |
 |  - Atomic Stock Ledger & Invariant Enforcement     |  - Warranty Expiry & Customer Linkage          |
-|  - POS Cart, Line Merging & Atomic Checkout        |  - 5-Stage Claim Lifecycle (Submitted -> Ret)  |
+|  - POS Cart, Line Merging & Atomic Checkout        |  - 7-Stage Claim Lifecycle (SRS-CLM-03)        |
 |  - Admin Sale Void with Automatic Restock          |  - Store Time-Zone Overdue Calculation         |
 |  - Streaming Excel/CSV Import Preview (60m exp)    |  - Multi-Criteria Filtering & Filtered Exports  |
 |  - Formula Neutralization & 50k Export Cap         |  - Claim Reversal & Void Guarding              |
 +----------------------------------------------------------------------------------------------------+
 ```
+
+> [!TIP]
+> **Interactive Standalone Architecture & Workflow Visualizers:**  
+> Academic evaluators can explore the live system structure and lifecycle diagrams in standalone HTML:
+> - [**System Architecture Topology (HTML)**](../diagrams/architecture/architecture.html)
+> - [**Workflow & Interaction Flow (HTML)**](../diagrams/workflow/workflow.html)
+> - [**API Sequence & Message Lifecycle (HTML)**](../diagrams/sequence/sequence.html)
+> - [**Dataflow & Mutation Pipeline (HTML)**](../diagrams/dataflow/dataflow.html)
+> - [**Interactive System & Code Explainer (HTML)**](../../MicroLedger_Explainer.html)
 
 All 28 Functional Requirements (FR-001 through FR-028) and all 19 Business Rules (BR-01 through BR-19) are 100% implemented in the codebase.
 

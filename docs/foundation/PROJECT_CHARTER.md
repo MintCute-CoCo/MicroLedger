@@ -5,11 +5,11 @@
 | **Project title** | MicroLedger — Responsive Web POS, Inventory & Warranty Tracking |
 | **Type** | Final Year Project (FYP) |
 | **Version** | 1.0 (baseline BRD/PRD v3.1, SRS v1.0) |
-| **Last updated** | 4 October 2026 |
+| **Last updated** | November 2026 |
 
 ## 1. Background
 
-Small retailers selling household, electrical and furniture products often track stock and sales in Excel. Stock drifts from reality, price and stock changes leave no trail, and warranty cases are followed up by memory or chat messages.
+Small retailers (such as single-store PC hardware, electronics, and peripheral shops) often track stock and sales in Excel. Stock drifts from reality, price and stock changes leave no trail, and warranty cases are followed up by memory or chat messages.
 
 ## 2. Purpose
 
@@ -21,8 +21,8 @@ See `OBJECTIVES.md`. In short: one responsive app; Admin/Staff roles; safe POS w
 
 ## 4. Scope summary
 
-- **In:** Phase 1 Core (Must), Phase 2 Warranty (Should).
-- **Out:** accounting, tax calculation, payment gateways, multi-branch, offline mode, repair management, AI forecasting.
+- **In:** Phase 1 Core (Must), Phase 2 Warranty (Should), In-Browser Standalone Demo Engine.
+- **Out:** full accounting / double-entry bookkeeping, tax calculation, external payment gateways, multi-branch/multi-warehouse, component-level repair servicing, AI forecasting.
 
 Details in `SCOPE.md`.
 
@@ -30,12 +30,14 @@ Details in `SCOPE.md`.
 
 | # | Deliverable |
 |---|---|
-| 1 | Working web application (Phase 1 and Phase 2) deployed on a staging/UAT environment |
-| 2 | Source code in Git with automated tests and CI |
-| 3 | Documentation set: BRD, PRD, SRS and this markdown pack |
-| 4 | Import template (.xlsx and .csv) |
-| 5 | UAT report with results and defect log |
-| 6 | Final FYP report and demonstration |
+| 1 | Working full-stack web application (Phase 1 and Phase 2) with automated CI/CD pipeline |
+| 2 | In-browser standalone demo engine enabling 100% offline evaluator demonstration |
+| 3 | Source code in Git with automated test suites and live PostgreSQL CI execution |
+| 4 | Complete living documentation set: BRD, PRD, SRS, architecture specs, and markdown hub |
+| 5 | Interactive standalone HTML architecture, workflow, sequence, and dataflow diagrams |
+| 6 | Import template (.xlsx and .csv) and authentic 500-product PC hardware catalog seed |
+| 7 | UAT report with results, defect log, and SUS evaluation score (90.0/100) |
+| 8 | Final academic FYP report and committee presentation demonstration script |
 
 ## 6. Stakeholders and responsibilities
 

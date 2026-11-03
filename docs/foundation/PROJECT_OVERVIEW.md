@@ -1,7 +1,7 @@
 # MicroLedger — Project Overview
 
 > Responsive Web POS, Inventory & Warranty Tracking for small retail stores
-> Baseline: BRD v3.1 · PRD v3.1 · SRS v1.0 · Last updated: 4 October 2026
+> Baseline: BRD v3.1 · PRD v3.1 · SRS v1.0 · Last updated: November 2026
 
 ## 1. What is MicroLedger?
 
@@ -15,7 +15,7 @@ MicroLedger is a lightweight web application for small retail businesses that ru
 - dashboard, reports and an audit log
 - a warranty and claim tracking workflow (Phase 2)
 
-Initial product areas: household products, indoor/outdoor electrical products, and furniture.
+Target retail domain: single retail PC hardware and components store (CPUs, GPUs, RAM, motherboards, storage, peripherals, and custom accessories), modeled using authentic catalog seeds.
 
 It is deliberately **not** an ERP, an accounting system or a repair-shop system.
 
@@ -77,11 +77,20 @@ The documentation suite is structured into dedicated domain folders:
 | **Architecture** | [SYSTEM_ARCHITECTURE.md](../architecture/SYSTEM_ARCHITECTURE.md) | Components, flows, folders |
 | **Architecture** | [DATABASE_DESIGN.md](../architecture/DATABASE_DESIGN.md) | Schema, SQL, invariants |
 | **Architecture** | [UI_UX_WIREFRAMES.md](../architecture/UI_UX_WIREFRAMES.md) | Navigation and wireframes |
+| **Diagrams** | [architecture.html](../diagrams/architecture/architecture.html) | Interactive standalone architecture visualizer |
+| **Diagrams** | [workflow.html](../diagrams/workflow/workflow.html) | Interactive user workflow visualizer |
+| **Diagrams** | [sequence.html](../diagrams/sequence/sequence.html) | Interactive API sequence lifecycle visualizer |
+| **Diagrams** | [dataflow.html](../diagrams/dataflow/dataflow.html) | Interactive data mutation pipeline visualizer |
 | **Management** | [DEVELOPMENT_ROADMAP.md](../management/DEVELOPMENT_ROADMAP.md) | Phases, sprints, milestones |
 | **Management** | [TASK_BACKLOG.md](../management/TASK_BACKLOG.md) | Epics and tasks |
 | **Management** | [STATUS.md](../management/STATUS.md) | Current progress and next steps |
 | **Management** | [DEFINITION_OF_DONE.md](../management/DEFINITION_OF_DONE.md) | When work counts as done |
+| **Verification** | [UAT_SETUP.md](../verification/UAT_SETUP.md) | 500-product authentic catalog seeding guide |
+| **Verification** | [UAT_SCRIPT.md](../verification/UAT_SCRIPT.md) | Acceptance test execution & SUS score (90.0) |
+| **Verification** | [FINAL_REPORT.md](../verification/FINAL_REPORT.md) | Comprehensive academic FYP outcomes report |
+| **Verification** | [DEMO_SCRIPT.md](../verification/DEMO_SCRIPT.md) | Timed walkthrough script for defense committee |
 | **Guidelines** | [AI_CONTEXT.md](../guidelines/AI_CONTEXT.md) | Rules for AI coding assistants |
+| **Guidelines** | [AGENTS.md](../guidelines/AGENTS.md) | Operating guidelines for AI coding agents |
 | **Hub** | [README.md](../README.md) | Documentation index and reading paths |
 
 ## 7. Open items (Resolved)

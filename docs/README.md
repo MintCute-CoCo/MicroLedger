@@ -15,6 +15,7 @@ docs/
 ├── foundation/       # Project Charter, Business Rationale, Objectives & Scope
 ├── requirements/     # Formal Specifications (SRS, Stories, Roles, Acceptance Criteria)
 ├── architecture/     # Technical Design (System Architecture, DB Design, UI/UX Wireframes)
+├── diagrams/         # Standalone Interactive HTML Architecture, Workflow & Dataflow Diagrams
 ├── management/       # Development Roadmap, Backlog, DoD & Live Status Tracking
 ├── verification/     # UAT Scripts, Setup Guides, Final FYP Report & Defense Demo
 ├── guidelines/       # AI Guidelines, Agent Discipline & Coding Standards
@@ -101,12 +102,27 @@ Rules and constraints for engineers and AI coding assistants:
 
 ---
 
+## 📂 7. Interactive Architecture & Process Diagrams (`docs/diagrams/`)
+
+Interactive standalone HTML diagrams and system explainers for browser inspection and defense presentations:
+
+| Diagram / Visualizer | Format | Description & Scope |
+|---|:---:|---|
+| [**System Architecture Diagram**](diagrams/architecture/architecture.html) | Standalone HTML | Multi-tier topology, Express middleware boundaries, PostgreSQL container isolation, and client-server network separation. |
+| [**Workflow & User Interaction Flow**](diagrams/workflow/workflow.html) | Standalone HTML | End-to-end POS cashier checkout, catalog searching, inventory adjustments, and 7-stage warranty claim transitions. |
+| [**API Sequence & Message Lifecycle**](diagrams/sequence/sequence.html) | Standalone HTML | Deep-dive sequence diagrams tracing HTTP request lifecycles from Vue client through Express controllers to Knex transactions. |
+| [**Dataflow & Mutation Pipeline**](diagrams/dataflow/dataflow.html) | Standalone HTML | Data flow pipelines tracing price snapshots, conditional stock deductions, and append-only ledger transaction rows. |
+| [**Interactive System & Code Explainer**](../MicroLedger_Explainer.html) | Standalone HTML | Comprehensive defense explainer featuring Big Picture, User Journey, animated Request Tracer, and Code Explorer. |
+
+---
+
 ## 🎓 Recommended Reading Paths
 
 - **For Academic Examiners & Supervisors**:
   1. [`foundation/PROJECT_OVERVIEW.md`](foundation/PROJECT_OVERVIEW.md) ➔ [`foundation/OBJECTIVES.md`](foundation/OBJECTIVES.md) ➔ [`requirements/SRS.md`](requirements/SRS.md)
   2. [`architecture/SYSTEM_ARCHITECTURE.md`](architecture/SYSTEM_ARCHITECTURE.md) ➔ [`architecture/DATABASE_DESIGN.md`](architecture/DATABASE_DESIGN.md)
-  3. [`verification/FINAL_REPORT.md`](verification/FINAL_REPORT.md) ➔ [`verification/DEMO_SCRIPT.md`](verification/DEMO_SCRIPT.md)
+  3. Interactive exploration: [`diagrams/architecture/architecture.html`](diagrams/architecture/architecture.html) & [`../MicroLedger_Explainer.html`](../MicroLedger_Explainer.html)
+  4. [`verification/FINAL_REPORT.md`](verification/FINAL_REPORT.md) ➔ [`verification/DEMO_SCRIPT.md`](verification/DEMO_SCRIPT.md)
 
 - **For Software Developers & Evaluators**:
   1. [`architecture/SYSTEM_ARCHITECTURE.md`](architecture/SYSTEM_ARCHITECTURE.md) ➔ [`architecture/DATABASE_DESIGN.md`](architecture/DATABASE_DESIGN.md)

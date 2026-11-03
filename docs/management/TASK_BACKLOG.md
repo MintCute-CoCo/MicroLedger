@@ -25,8 +25,8 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 7 | 7 / 7 | **Done** |
 | **E13 — Frontend Quality** | Composables, Vuetify primitives, demo mode, anti-slop | 17 | 17 / 17 | **Done** |
-| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 7 | 6 / 7 | **In Progress** |
-| **Total** | **Full System Implementation Backlog** | **118** | **117 / 118** | **99% Complete** |
+| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 8 | 7 / 8 | **In Progress** |
+| **Total** | **Full System Implementation Backlog** | **119** | **118 / 119** | **99% Complete** |
 
 ---
 
@@ -248,3 +248,4 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-100 | Full-stack CI execution & release sign-off | M | Must | T-096 | M4 | Done |
 | T-107 | Rate-limiting header regression tests | M | Must | T-097 | SRS-AUTH-03 | Done |
 | T-108 | Final CSS deduplication & cleanup | M | Should | T-102 | Maintainability | Done |
+| T-117 | Update vulnerable packages (body-parser, multer) | S | Must | T-096 | NFR-11 | Done |

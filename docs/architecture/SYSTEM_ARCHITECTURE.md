@@ -19,6 +19,13 @@ flowchart LR
 | **PostgreSQL 16** | Relational persistence, primary keys (`BIGINT GENERATED ALWAYS AS IDENTITY`), foreign key constraints, column CHECK constraints (`stock_qty >= 0`), trigram text search indexes (`pg_trgm`), and sequences for sale and claim numbering. |
 | **Backup Utility** | Scheduled database dumps, 7-day backup retention, and disaster recovery validation drills before UAT release. |
 
+> [!TIP]
+> **Interactive Standalone Visualizations & Deep-Dive Explainers:**
+> - [**System Architecture Diagram (HTML)**](../diagrams/architecture/architecture.html) — Explorable standalone multi-tier architecture topology.
+> - [**API Sequence & Message Lifecycle (HTML)**](../diagrams/sequence/sequence.html) — Animated message tracing through router, controllers, and database transactions.
+> - [**Dataflow & Mutation Pipeline (HTML)**](../diagrams/dataflow/dataflow.html) — Visual pipeline of price snapshots, conditional stock deductions, and audit trails.
+> - [**Interactive System & Code Explainer (HTML)**](../../MicroLedger_Explainer.html) — Self-contained oral defense walkthrough tool with live request tracer and quiz.
+
 ---
 
 ## 2. Architectural Principles

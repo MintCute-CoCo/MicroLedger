@@ -324,3 +324,11 @@ All views leverage standard, encapsulated components located in `client/src/comp
 - **`BarcodeScannerModal.vue`**: Quick SKU/barcode modal input with immediate catalog debounce querying.
 - **`ReceiptDialog.vue`**: Formatted printable receipt dialog with print CSS styles.
 - **`ConfirmDialog.vue`**: Modal for destructive actions (sale void, user deactivation, stock adjustment).
+
+---
+
+## 6. Interactive Process & Workflow Visualizations
+
+To explore user interactions and view transitions interactively:
+- [**Workflow & User Interaction Flow (HTML)**](../diagrams/workflow/workflow.html) — Interactive standalone visualizer of POS checkout, inventory movements, and warranty claim lifecycles.
+- [**Interactive System & Code Explainer (HTML)**](../../MicroLedger_Explainer.html) — Step-by-step user journey animation and request tracing.
