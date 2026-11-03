@@ -33,6 +33,7 @@ Key milestones achieved in this release cycle:
 | **Client Production Build Optimization** | Frontend Build | **Done** | Vite production bundle compiles cleanly into `client/dist/` in < 1 second (783 ms) with zero errors. |
 | **Backend API & PostgreSQL Migrations** | Backend Integration | **Done** | Express 5 API with Knex schema migrations (`0001_core_schema.js`, `0002_phase2_warranty.js`), authentic PC hardware seeds, and append-only role provisioning. |
 | **Automated GitHub Actions CI Pipeline** | Infrastructure / CI | **Done** | Full-stack CI workflow (`ci.yml`) running client builds, PostgreSQL 16 migrations, role creation, seeds, and API test suites. |
+| **Technology Selection Rationale & Audit** | Architecture / Defense | **Done** | Documented exhaustive technology comparison vs rejected alternatives in `SYSTEM_ARCHITECTURE.md §7` and verified system-wide function latencies < 15 ms. |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
 
 ---

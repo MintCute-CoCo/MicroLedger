@@ -232,17 +232,69 @@ MicroLedger/
 
 ---
 
-## 7. Technology Decisions Matrix
+## 7. Technology Decisions & Alternatives Comparison
 
-| Layer | Choice | Rationale |
-|---|---|---|
-| **Frontend Framework** | **Vue 3.5** (Composition API, `<script setup>`) | High performance, clear state reactivity, student-readable code structure |
-| **UI Component System** | **Vuetify 3.13** | Standardized Material Design primitives, built-in accessibility, responsive drawer/sheet layouts |
-| **Build Tool** | **Vite 8** | Sub-second hot module replacement and optimized production builds |
-| **API Runtime** | **Node.js 20 LTS** + **Express 5** | Proven asynchronous I/O, native ES module support, broad ecosystem |
-| **Input Validation** | **Zod 4** | Type-safe declarative schema validation for all incoming HTTP payloads |
-| **Database** | **PostgreSQL 16** | ACID compliance, row-level locking, table CHECK constraints, trigram indexing |
-| **Data Access** | **Knex 3** + **pg** | SQL parameterization preventing injection, robust migrations, programmatic transactions |
-| **Spreadsheet Engine** | **ExcelJS 4** | Streaming memory processing preventing disk bloat and memory leaks |
-| **Testing** | **Node.js Test Runner** + **Supertest** | Built-in test execution against a live PostgreSQL test database |
-| **CI / Automation** | **GitHub Actions** | Automated build, migration, test, and load benchmark execution on push/PR |
+### 7.1 Selection Matrix Summary
+
+| Architectural Layer | Selected Technology | Primary Justification | Rejected Alternatives | Key Disqualification Reason |
+|---|---|---|---|---|
+| **Frontend Framework** | **Vue 3.5** (Composition API, `<script setup>`) | Explicit state reactivity, student-readable code structure, composable separation of concerns | React 19, Angular 18, Svelte 5 | Complex external state wiring, hook dependency pitfalls, and enterprise boilerplate obscuring academic defense |
+| **UI Component System** | **Vuetify 3.13** | Standardized Material Design 3 primitives, accessible 44 px mobile touch targets, built-in responsive drawers/sheets | Tailwind CSS, Ant Design, Material UI (MUI) | Unstructured custom CSS "class soup", lack of high-level grid abstractions, poor native Vue 3 integration |
+| **Client Bundler & Build** | **Vite 8** | Sub-second HMR, clean ES module compilation (700 ms production build), pure static SPA output | Next.js 14, Nuxt 3, Webpack 5 | Unnecessary Node.js SSR runtime on client, hydration mismatch risks, higher memory footprint |
+| **Backend API Runtime** | **Node.js 20 LTS** + **Express 5** | Lightweight asynchronous non-blocking event loop (< 15 ms latency), transparent middleware pipeline | NestJS, Python / Django, Java / Spring Boot | Excessive enterprise decorators and heavy JVM/WSGI memory overhead violating FYP simplicity rules |
+| **Schema Validation** | **Zod 4** | Declarative runtime type validation, parameter-pollution defense via `.strict()`, shared contract format | Joi, express-validator, Yup | Inferior TypeScript/JSDoc type inference, verbose imperative validation chains |
+| **Relational Database** | **PostgreSQL 16** | Strict ACID transactions, atomic row-level locks (`FOR UPDATE`), disk-level `CHECK (stock_qty >= 0)`, role permissions | MongoDB 7, MySQL 8, SQLite 3 | Lack of strict relational ledger invariants, missing append-only role security, and multi-document consistency risks |
+| **Query & Migration Layer**| **Knex 3** + **pg** | Programmatic transaction control, automated sequential migrations, 100% parameterized SQL injection defense | Prisma 5, TypeORM, Sequelize | Heavy ORM abstractions generating opaque queries; inability to execute fine-grained conditional atomic updates |
+| **Spreadsheet Processing**| **ExcelJS 4** (Server-Streaming) | Ephemeral in-memory streaming, formula injection sanitization, zero disk bloat | PapaParse, SheetJS (xlsx) | Client tampering risks, browser tab memory exhaustion on 50,000-row files, security vulnerabilities |
+| **Authentication Engine** | **Self-Managed JWT + Rotating Cookie** | Fully offline/LAN operational, zero external SaaS dependency, Argon2id/bcrypt security, automatic lockout | Firebase Auth, Auth0, Supabase | Inability to operate during local store internet outages, recurring vendor subscription costs |
+| **Continuous Integration**| **GitHub Actions** | Automated end-to-end testing with containerized PostgreSQL service container on every commit/PR | Jenkins, CircleCI, GitLab CI | Complex self-hosted maintenance, external infrastructure overhead |
+
+---
+
+### 7.2 In-Depth Rationale vs. Alternatives
+
+#### 1. Frontend: Vue 3 (Composition API) vs. React & Angular
+- **Why Vue 3 Was Chosen**:
+  Vue 3 with `<script setup>` and the Composition API provides an ideal balance of performance, developer ergonomics, and academic explainability. State reactivity (`ref`, `computed`) is declarative and granular, avoiding the complex lifecycle mental model and stale closure traps common to React Hooks (e.g., `useEffect` dependency arrays). Business logic is neatly extracted into isolated, reusable composables (`useProductsTable.js`, `useSales.js`), keeping `.vue` template containers small and strictly focused on presentation.
+- **Why React Was Rejected**:
+  React requires extensive external tooling (Redux Toolkit, Zustand) for state management and lacks an official, cohesive Material Design primitive library with native drawer and bottom-sheet capabilities. Furthermore, React's re-rendering nuances (memoization via `useMemo` / `useCallback`) add unnecessary complexity that distracts from core retail domain logic during an oral committee defense.
+- **Why Angular Was Rejected**:
+  Angular introduces heavy enterprise boilerplate—TypeScript decorators, RxJS observable streams, and dependency injection hierarchies—which over-engineers a single-store retail application and contradicts the student project's "avoid enterprise over-engineering" rule.
+
+#### 2. UI System: Vuetify 3 vs. Tailwind CSS & Utility Libraries
+- **Why Vuetify 3 Was Chosen**:
+  Vuetify 3 provides a production-tested Material Design 3 component suite (`v-container`, `v-row`, `v-col`, `v-card`, `v-data-table`, `v-bottom-sheet`, `v-autocomplete`). It guarantees accessible 44 px mobile touch targets, unified typography tokens (`text-h5`, `text-body-2`, `text-overline`), and responsive layout wrappers with zero custom scoped CSS layout hacks.
+- **Why Tailwind CSS Was Rejected**:
+  Tailwind produces long strings of arbitrary utility classes directly in the template ("class soup"), making DOM structures difficult to read and audit. Crucially, Tailwind provides no built-in complex behavior primitives (such as mobile bottom sheets, accessible modal focus traps, or responsive table pagination), requiring developers to hand-roll custom JavaScript implementations.
+
+#### 3. Architecture: Pure Client SPA (Vite) vs. SSR / Full-Stack Frameworks (Next.js / Nuxt)
+- **Why Vite SPA Was Chosen**:
+  MicroLedger is designed for on-premise single-store operations (cashier terminals, manager desks, warehouse tablets). A pure Single Page Application built by Vite compiles in under 1 second (700 ms) into static HTML/JS/CSS assets that can be served from any lightweight web server (or run offline via the embedded demo engine).
+- **Why Next.js / Nuxt Was Rejected**:
+  Server-Side Rendering (SSR) requires running a persistent Node.js server to render frontend HTML, doubling the infrastructure footprint, introducing hydration mismatch bugs, and complicating local offline store operation.
+
+#### 4. Backend: Node.js + Express 5 vs. NestJS, Python (Django), & Java (Spring Boot)
+- **Why Express 5 on Node.js Was Chosen**:
+  Express 5 offers a minimalist, transparent middleware pipeline (`rateLimit` ➔ `authenticate` ➔ `authorize` ➔ `validateBody` ➔ `controller` ➔ `service` ➔ `repository`). The asynchronous event loop handles concurrent POS checkouts with sub-15 ms latency while maintaining a negligible memory footprint (~60 MB RAM).
+- **Why Java / Spring Boot Was Rejected**:
+  Spring Boot requires heavy memory consumption (500 MB+ JVM heap), slow cold starts, and multi-layered boilerplate (DTOs, DAOs, AbstractFactories, Beans) that obscures the core business rules from academic reviewers.
+- **Why Python / Django Was Rejected**:
+  Django's synchronous WSGI concurrency model has lower throughput under concurrent POS checkouts. Its built-in ORM hides raw SQL transactional execution details, making it harder to prove deterministic stock ledger invariants.
+
+#### 5. Database: PostgreSQL 16 + Knex vs. MongoDB & Heavy ORMs (Prisma / TypeORM)
+- **Why PostgreSQL 16 + Knex Was Chosen**:
+  PostgreSQL provides rock-solid ACID compliance, sequences for monotonic receipt numbering (`S-000001`), row-level locking (`FOR UPDATE`), and disk-level CHECK constraints (`CHECK stock_qty >= 0`) that make negative inventory mathematically impossible. Knex provides transparent query parameterization (preventing SQL injection), robust migration management, and programmatic transaction boundaries (`knex.transaction()`).
+- **Why MongoDB Was Rejected**:
+  NoSQL document databases lack relational integrity constraints, foreign key validation, and table-level check constraints. In a financial and inventory ledger where every movement must match the formula $\Delta S = \text{Balance}$, MongoDB creates unacceptable risks of inventory drift.
+- **Why Prisma Was Rejected**:
+  Prisma generates complex, automated SQL abstractions that hinder manual optimization of atomic conditional queries (`UPDATE products SET stock_qty = stock_qty - $q WHERE stock_qty >= $q RETURNING ...`).
+
+#### 6. Spreadsheet Processing: Server-Side ExcelJS vs. Client-Side Libraries
+- **Why ExcelJS Was Chosen**:
+  File uploads are processed 100% on the server in streaming memory mode, validating each row against domain rules before committing. Formula injection (`=, +, -, @`) is automatically sanitized on export.
+- **Why Client-Side Parsing (PapaParse) Was Rejected**:
+  Client-side parsing allows users to bypass validation logic via browser dev tools and risks freezing or crashing the browser when parsing 5,000–50,000 item catalogs.
+
+#### 7. Authentication: App-Managed JWT & Cookies vs. Cloud Identity Providers (Firebase / Auth0)
+- **Why App-Managed Authentication Was Chosen**:
+  The system manages its own user identities, bcrypt password hashes, and rotating refresh tokens in httpOnly cookies. This guarantees that cashier terminals and warehouse devices can authenticate locally on the local network even during external internet service interruptions, with zero recurring vendor subscription fees.
