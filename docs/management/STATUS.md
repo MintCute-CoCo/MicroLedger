@@ -34,6 +34,7 @@ Key milestones achieved in this release cycle:
 | **Backend API & PostgreSQL Migrations** | Backend Integration | **Done** | Express 5 API with Knex schema migrations (`0001_core_schema.js`, `0002_phase2_warranty.js`), authentic PC hardware seeds, and append-only role provisioning. |
 | **Automated GitHub Actions CI Pipeline** | Infrastructure / CI | **Done** | Full-stack CI workflow (`ci.yml`) running client builds, PostgreSQL 16 migrations, role creation, seeds, and API test suites. |
 | **Technology Selection Rationale & Audit** | Architecture / Defense | **Done** | Documented exhaustive technology comparison vs rejected alternatives in `SYSTEM_ARCHITECTURE.md §7` and verified system-wide function latencies < 15 ms. |
+| **Root Readme & Benchmark Synchronization** | Documentation | **Done** | Updated root `README.md` to `v1.0-fullstack`, linked interactive HTML diagrams, and published verified sub-15ms P95 latency benchmarks. |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
 
 ---

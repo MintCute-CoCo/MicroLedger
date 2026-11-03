@@ -249,3 +249,4 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-107 | Rate-limiting header regression tests | M | Must | T-097 | SRS-AUTH-03 | Done |
 | T-108 | Final CSS deduplication & cleanup | M | Should | T-102 | Maintainability | Done |
 | T-117 | Update vulnerable packages (body-parser, multer) | S | Must | T-096 | NFR-11 | Done |
+| T-118 | Synchronize root README with full-stack v1.0 & benchmarks | S | Must | T-117 | NFR-13 | Done |
