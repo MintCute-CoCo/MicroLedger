@@ -9,12 +9,16 @@ import { reactive } from 'vue';
 export const displaySettings = reactive({
   currency_code: 'USD',
   currency_decimals: 2,
+  store_name: 'MicroLedger Store',
+  store_tagline: 'Retail POS & Inventory Solutions',
+  store_address: '70000 Ho Chi Minh City, Vietnam',
+  store_phone: '+84 (028) 3822-9999',
 });
 
 /**
- * Updates global reactive display settings (currency code and decimal precision).
+ * Updates global reactive display settings (currency code, precision decimals, and store profile).
  *
- * @param {Object} settings - Configuration payload containing currency_code and currency_decimals.
+ * @param {Object} settings - Configuration payload containing currency and store metadata.
  * @returns {void}
  */
 export function applyDisplaySettings(settings = {}) {
@@ -22,6 +26,19 @@ export function applyDisplaySettings(settings = {}) {
   displaySettings.currency_decimals = Number.isInteger(settings.currency_decimals)
     ? settings.currency_decimals
     : 2;
+
+  if (settings.store_name !== undefined && settings.store_name !== null) {
+    displaySettings.store_name = String(settings.store_name).trim();
+  }
+  if (settings.store_tagline !== undefined && settings.store_tagline !== null) {
+    displaySettings.store_tagline = String(settings.store_tagline).trim();
+  }
+  if (settings.store_address !== undefined && settings.store_address !== null) {
+    displaySettings.store_address = String(settings.store_address).trim();
+  }
+  if (settings.store_phone !== undefined && settings.store_phone !== null) {
+    displaySettings.store_phone = String(settings.store_phone).trim();
+  }
 }
 
 /**

@@ -242,7 +242,7 @@ Requirements are grouped by feature area. Descriptions of multi-step processing 
 | SRS-AUD-03 | The database role used by the API shall have only INSERT and SELECT rights on audit_logs and inventory_transactions, so the application cannot edit or delete them.                                                           | Must         | FR-019, BR-12     |
 | SRS-AUD-04 | An Admin shall view the audit log with filters for user, action, entity and date range, paginated.                                                                                                                            | Must         | FR-019            |
 | SRS-AUD-05 | Audit details shall never contain passwords, password hashes or tokens.                                                                                                                                                       | Must         | NFR-11            |
-| SRS-SET-01 | An Admin shall view and change store settings: currency code (ISO 4217) and currency decimal places (0 to 2). Application timezone is handled at the infrastructure level via the Node.js Docker container's `TZ` environment variable (removing dynamic DB-driven timezone setting). Changes shall be audited. | Must         | BR-18, O-01, O-02 |
+| SRS-SET-01 | An Admin shall view and change store settings: currency code (ISO 4217), currency decimal places (0 to 2), and store profile metadata (store name, tagline, physical address, telephone for receipt branding). Application timezone is handled at the infrastructure level via the Node.js Docker container's `TZ` environment variable (removing dynamic DB-driven timezone setting). Changes shall be audited. | Must         | BR-18, O-01, O-02 |
 
 ### 3.12 Processing Sequences
 
@@ -538,7 +538,7 @@ Append-only. Index on (created_at), (user_id), (action).
 
 | **Column** | **Type**    | **Constraints**                                                                                                                                           |
 |------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| key        | VARCHAR(50) | Primary key. `currency_code`, `currency_decimals`. (Note: store time zone GMT+7 is handled at the infrastructure level via container `TZ` env variable). |
+| key        | VARCHAR(50) | Primary key. `currency_code`, `currency_decimals`, `store_name`, `store_tagline`, `store_address`, `store_phone`. (Note: store time zone GMT+7 is handled at the infrastructure level via container `TZ` env variable). |
 | value      | JSONB       | NOT NULL.                                                                                                                                                 |
 
 ### 5.13 suppliers (Should)

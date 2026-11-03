@@ -29,21 +29,29 @@ export const CURRENCY_PRESETS = [
 
 /**
  * Composable managing global store configuration, ISO currency formatting,
- * decimal precision settings, safety guardrails, and server-side persistence.
+ * store branding/receipt metadata, safety guardrails, and server persistence.
  *
  * @returns {Object} Reactive state, error maps, and settings save handler.
  */
 export function useSettings() {
   /**
-   * Currency settings form state.
+   * Currency and store branding form state.
    */
   const form = reactive({
     currency_code: 'USD',
     currency_decimals: 2,
+    store_name: 'MicroLedger Store',
+    store_tagline: 'Retail POS & Inventory Solutions',
+    store_address: '70000 Ho Chi Minh City, Vietnam',
+    store_phone: '+84 (028) 3822-9999',
   });
 
   const initialCurrencyCode = ref('USD');
   const initialCurrencyDecimals = ref(2);
+  const initialStoreName = ref('MicroLedger Store');
+  const initialStoreTagline = ref('Retail POS & Inventory Solutions');
+  const initialStoreAddress = ref('70000 Ho Chi Minh City, Vietnam');
+  const initialStorePhone = ref('+84 (028) 3822-9999');
 
   const busy = ref(false);
   const message = ref('');
@@ -95,6 +103,10 @@ export function useSettings() {
   function revertSettings() {
     form.currency_code = initialCurrencyCode.value;
     form.currency_decimals = initialCurrencyDecimals.value;
+    form.store_name = initialStoreName.value;
+    form.store_tagline = initialStoreTagline.value;
+    form.store_address = initialStoreAddress.value;
+    form.store_phone = initialStorePhone.value;
     fieldErrors.value = {};
     confirmDialogOpen.value = false;
   }
@@ -110,8 +122,17 @@ export function useSettings() {
         ? data.currency_decimals
         : 2;
 
+      if (data.store_name) form.store_name = data.store_name;
+      if (data.store_tagline) form.store_tagline = data.store_tagline;
+      if (data.store_address) form.store_address = data.store_address;
+      if (data.store_phone) form.store_phone = data.store_phone;
+
       initialCurrencyCode.value = form.currency_code;
       initialCurrencyDecimals.value = form.currency_decimals;
+      initialStoreName.value = form.store_name;
+      initialStoreTagline.value = form.store_tagline;
+      initialStoreAddress.value = form.store_address;
+      initialStorePhone.value = form.store_phone;
     } catch (e) {
       error.value = e.message;
     }
@@ -142,6 +163,10 @@ export function useSettings() {
       const payload = {
         currency_code: form.currency_code.trim().toUpperCase(),
         currency_decimals: form.currency_decimals,
+        store_name: form.store_name.trim(),
+        store_tagline: form.store_tagline.trim(),
+        store_address: form.store_address.trim(),
+        store_phone: form.store_phone.trim(),
       };
 
       const updated = await apiRequest('/settings', {
@@ -154,11 +179,20 @@ export function useSettings() {
         ? updated.currency_decimals
         : form.currency_decimals;
 
+      if (updated.store_name) form.store_name = updated.store_name;
+      if (updated.store_tagline) form.store_tagline = updated.store_tagline;
+      if (updated.store_address) form.store_address = updated.store_address;
+      if (updated.store_phone) form.store_phone = updated.store_phone;
+
       initialCurrencyCode.value = form.currency_code;
       initialCurrencyDecimals.value = form.currency_decimals;
+      initialStoreName.value = form.store_name;
+      initialStoreTagline.value = form.store_tagline;
+      initialStoreAddress.value = form.store_address;
+      initialStorePhone.value = form.store_phone;
 
       applyDisplaySettings(updated);
-      message.value = 'Settings saved successfully.';
+      message.value = 'Store settings saved successfully.';
     } catch (e) {
       const mapped = fieldErrorsFrom(e);
       fieldErrors.value = mapped.fields;

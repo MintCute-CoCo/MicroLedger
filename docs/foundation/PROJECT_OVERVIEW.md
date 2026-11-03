@@ -10,12 +10,13 @@ MicroLedger is a lightweight web application for small retail businesses that ru
 - product and category management
 - inventory with a full stock-movement ledger
 - simple POS sales that deduct stock automatically and safely
+- printable 80mm thermal receipts with configurable store branding (store name, physical address, contact telephone)
 - basic customer records
 - Excel/CSV import (with preview) and export
 - dashboard, reports and an audit log
 - a warranty and claim tracking workflow (Phase 2)
 
-Target retail domain: single retail PC hardware and components store (CPUs, GPUs, RAM, motherboards, storage, peripherals, and custom accessories), modeled using authentic catalog seeds.
+**Retail Domain Flexibility:** MicroLedger is engineered as a general-purpose retail management system adaptable for diverse single-store retail sectors (electronics, lifestyle hardware, accessories, specialty retail). An authentic PC hardware and components catalog (Intel, MSI, Corsair, Western Digital, Kingston) is utilized as the concrete reference implementation and UAT domain fixture for academic evaluation.
 
 It is deliberately **not** an ERP, an accounting system or a repair-shop system.
 
@@ -23,14 +24,14 @@ It is deliberately **not** an ERP, an accounting system or a repair-shop system.
 
 | Role | Typical person | Main use |
 |---|---|---|
-| Admin | Store owner / manager | Configure, import, adjust stock, void sales, reports, users |
-| Staff | Counter employee | Sell, receive stock, look up customers, handle claims |
+| Admin | Store owner / manager | Configure store profile/currency, import, adjust stock, void sales, reports, users |
+| Staff | Counter employee | Sell, receive stock, look up customers, handle claims, print receipts |
 
 ## 3. Feature summary by phase
 
 | Phase | Content |
 |---|---|
-| **Phase 1 — Core (Must)** | Login and users, roles, products, categories, inventory and movement history, stock-in and adjustment, POS sales (payment method, optional discount), sale void, customers, Excel/CSV import with preview, export, dashboard and reports, search, audit log, store settings |
+| **Phase 1 — Core (Must)** | Login and users, roles, products, categories, inventory and movement history, stock-in and adjustment, POS sales (payment method, optional discount), printable thermal receipts, sale void, customers, Excel/CSV import with preview, export, dashboard and reports, search, audit log, store settings (currency, decimals, store profile) |
 | **Phase 2 — Warranty (Should)** | Low-stock alert, suppliers, per-product warranty, claims with 7 statuses, supplier/return tracking with overdue calculation, serial numbers, advanced filtering |
 | **Phase 3 — UAT** | User acceptance testing, defect fixing, hardening, final documentation |
 | **Could Have** | Barcode scanning, purchase orders, product images, partial returns/refunds, price override with approval, expiry notifications, profit analytics |
@@ -43,9 +44,9 @@ It is deliberately **not** an ERP, an accounting system or a repair-shop system.
 | API | Node.js + Express, REST/JSON, Zod validation |
 | Database | **PostgreSQL 16** (managed), node-postgres + Knex migrations |
 | Auth | App-managed username/password, argon2id (or bcrypt), JWT access + refresh cookie |
-| Excel/CSV | ExcelJS (server side only) |
-| Hosting | Static frontend host, Render API, managed PostgreSQL |
-| Tooling | Git/GitHub, GitHub Actions, Vitest/Jest + Supertest, Playwright |
+| Excel/CSV | ExcelJS, server-side only, streaming |
+| Tests | Vitest, Supertest, Playwright |
+| Hosting | Managed Node.js + managed PostgreSQL |
 
 ## 5. Key design principles
 
@@ -53,11 +54,11 @@ It is deliberately **not** an ERP, an accounting system or a repair-shop system.
 2. All business rules live in the API service layer; database constraints are the backstop.
 3. Every stock change happens inside one database transaction and writes one ledger row.
 4. Negative stock is impossible (`CHECK (stock_qty >= 0)`).
-5. Money is `NUMERIC(12,2)`; timestamps are UTC `TIMESTAMPTZ`. Store timezone (GMT+7) is anchored via container `TZ=Asia/Ho_Chi_Minh`.
+5. Money is `NUMERIC(12,2)`; timestamps are UTC `TIMESTAMPTZ`. Store timezone (GMT+7) is anchored via container `TZ=Asia/Ho_Chi_Minh`. Store profile metadata (name, address, telephone) is customizable in Settings.
 6. Sales, ledger and audit records are append-only; database role `app_user` has `UPDATE` and `DELETE` revoked on ledger and audit tables.
 7. Frontend strictly uses Vuetify 3 component primitives (`v-container`, `v-row`, `v-col`, `v-card`, `v-data-table` / `ResponsiveTable`, `v-btn`, etc.); raw HTML tables and scoped CSS layout hacks are prohibited.
 8. Operational Dashboard (Today + 7-Day snapshot) is decoupled from analytical Sales Report (`/reports/sales`, dynamic date ranges, aggregations, net revenue).
-9. Authentic PC hardware catalog seeds (Intel, MSI, Corsair, WD, Kingston); zero Faker.js or random string hashes.
+9. Authentic reference domain fixtures (PC hardware catalog seeds: Intel, MSI, Corsair, WD, Kingston); zero Faker.js or random string hashes.
 
 ## 6. Document map
 
@@ -78,21 +79,16 @@ The documentation suite is structured into dedicated domain folders:
 | **Architecture** | [DATABASE_DESIGN.md](../architecture/DATABASE_DESIGN.md) | Schema, SQL, invariants |
 | **Architecture** | [UI_UX_WIREFRAMES.md](../architecture/UI_UX_WIREFRAMES.md) | Navigation and wireframes |
 | **Diagrams** | [architecture.html](../diagrams/architecture/architecture.html) | Interactive standalone architecture visualizer |
-| **Diagrams** | [workflow.html](../diagrams/workflow/workflow.html) | Interactive user workflow visualizer |
-| **Diagrams** | [sequence.html](../diagrams/sequence/sequence.html) | Interactive API sequence lifecycle visualizer |
-| **Diagrams** | [dataflow.html](../diagrams/dataflow/dataflow.html) | Interactive data mutation pipeline visualizer |
-| **Management** | [DEVELOPMENT_ROADMAP.md](../management/DEVELOPMENT_ROADMAP.md) | Phases, sprints, milestones |
-| **Management** | [TASK_BACKLOG.md](../management/TASK_BACKLOG.md) | Epics and tasks |
-| **Management** | [STATUS.md](../management/STATUS.md) | Current progress and next steps |
-| **Management** | [DEFINITION_OF_DONE.md](../management/DEFINITION_OF_DONE.md) | When work counts as done |
-| **Verification** | [UAT_SETUP.md](../verification/UAT_SETUP.md) | 500-product authentic catalog seeding guide |
-| **Verification** | [UAT_SCRIPT.md](../verification/UAT_SCRIPT.md) | Acceptance test execution & SUS score (90.0) |
-| **Verification** | [FINAL_REPORT.md](../verification/FINAL_REPORT.md) | Comprehensive academic FYP outcomes report |
-| **Verification** | [DEMO_SCRIPT.md](../verification/DEMO_SCRIPT.md) | Timed walkthrough script for defense committee |
-| **Guidelines** | [AI_CONTEXT.md](../guidelines/AI_CONTEXT.md) | Rules for AI coding assistants |
-| **Guidelines** | [AGENTS.md](../guidelines/AGENTS.md) | Operating guidelines for AI coding agents |
-| **Hub** | [README.md](../README.md) | Documentation index and reading paths |
-
-## 7. Open items (Resolved)
+| **Management** | [DEVELOPMENT_ROADMAP.md](../management/DEVELOPMENT_ROADMAP.md) | Sprints and milestones |
+| **Management** | [TASK_BACKLOG.md](../management/TASK_BACKLOG.md) | Fine-grained tasks and dependencies |
+| **Management** | [STATUS.md](../management/STATUS.md) | Current phase, decisions, open items |
+| **Management** | [DEFINITION_OF_DONE.md](../management/DEFINITION_OF_DONE.md) | Quality checklist |
+| **Verification** | [UAT_SETUP.md](../verification/UAT_SETUP.md) | Catalog fixture setup & authentic seed specifications |
+| **Verification** | [UAT_SCRIPT.md](../verification/UAT_SCRIPT.md) | UAT scenarios, execution results, and SUS evaluation |
+| **Verification** | [FINAL_REPORT.md](../verification/FINAL_REPORT.md) | Comprehensive academic report & project outcomes |
+| **Verification** | [DEMO_SCRIPT.md](../verification/DEMO_SCRIPT.md) | Step-by-step presentation script for university defense |
+| **Guidelines** | [AI_CONTEXT.md](../guidelines/AI_CONTEXT.md) | AI coding rules and project constraints |
+| **Guidelines** | [AGENTS.md](../guidelines/AGENTS.md) | Coding discipline and quality rules |
+| **Index** | [README.md](../README.md) | Central entry point |
 
 Open items O-01 (VND/0 decimals), O-02 (container `TZ=Asia/Ho_Chi_Minh`), O-03 (authentic PC hardware catalog), O-04 (containerized hosting), O-05 (PostgreSQL 16 role permissions), O-06 (UAT 1 Admin + 2 Staff), and O-07 (Staff stock-in confirmed) are all fully resolved and closed in [`../management/STATUS.md`](../management/STATUS.md).

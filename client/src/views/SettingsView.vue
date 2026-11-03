@@ -4,12 +4,15 @@
  *
  * PURPOSE:
  * Manages store-wide localization parameters including ISO currency code,
- * decimal precision formatting, and single domestic currency policy guardrails.
+ * decimal precision formatting, single domestic currency policy guardrails,
+ * and customizable store profile / receipt branding (name, address, telephone).
  *
  * ARCHITECTURAL INVARIANT (BSR §4.6 & SRS §4.6):
  * MicroLedger operates in a single domestic currency. Currency settings define
  * display symbol and formatting rules across POS, reports, and receipts. They
  * do not perform live foreign-exchange conversions on existing database prices.
+ * Store identity details (name, address, telephone) are fully customizable for
+ * any retail store location or commercial niche.
  */
 import { useSettings } from '../composables/settings/useSettings.js';
 
@@ -42,13 +45,143 @@ const {
         <div class="text-overline text-medium-emphasis">ADMINISTRATION</div>
         <h1 class="text-h5 font-weight-bold">Store settings</h1>
         <p class="text-body-2 text-medium-emphasis">
-          Configure store currency and decimal display rules across POS, sales reports, and receipts.
+          Configure store identity, receipt header metadata, and currency display rules across the system.
         </p>
       </div>
     </div>
 
+    <!-- Feedback Alerts -->
+    <v-row v-if="message || error">
+      <v-col cols="12" md="10" lg="8">
+        <v-alert
+          v-if="message"
+          type="success"
+          variant="tonal"
+          rounded="lg"
+          class="mb-4"
+          icon="mdi-check-circle-outline"
+        >
+          {{ message }}
+        </v-alert>
+
+        <v-alert
+          v-if="error"
+          type="error"
+          variant="tonal"
+          rounded="lg"
+          class="mb-4"
+          icon="mdi-alert-circle-outline"
+        >
+          {{ error }}
+        </v-alert>
+      </v-col>
+    </v-row>
+
     <v-row>
-      <v-col cols="12" md="8" lg="7">
+      <v-col cols="12" md="10" lg="8">
+        <!-- Store Profile & Receipt Branding Card -->
+        <v-card
+          rounded="xl"
+          variant="outlined"
+          class="settings-card mb-6"
+        >
+          <v-card-item class="border-b pa-4">
+            <v-card-title class="text-h6 font-weight-bold">Store profile &amp; receipt branding</v-card-title>
+            <v-card-subtitle class="text-caption text-medium-emphasis">
+              Customize business name, physical address, and telephone printed on receipts
+            </v-card-subtitle>
+          </v-card-item>
+
+          <v-card-text class="pa-6">
+            <v-row dense>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  v-model="form.store_name"
+                  label="Store name"
+                  placeholder="e.g. MicroLedger Store"
+                  maxlength="100"
+                  :error-messages="fieldErrors.store_name"
+                  variant="outlined"
+                  density="compact"
+                  hint="Appears prominently at the top of printed receipts"
+                  persistent-hint
+                  @update:model-value="fieldErrors.store_name = undefined"
+                />
+              </v-col>
+
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  v-model="form.store_tagline"
+                  label="Business tagline / Subtitle"
+                  placeholder="e.g. PC Hardware & Tech Solutions"
+                  maxlength="150"
+                  :error-messages="fieldErrors.store_tagline"
+                  variant="outlined"
+                  density="compact"
+                  hint="Store category or business slogan"
+                  persistent-hint
+                  @update:model-value="fieldErrors.store_tagline = undefined"
+                />
+              </v-col>
+
+              <v-col cols="12" sm="7">
+                <v-text-field
+                  v-model="form.store_address"
+                  label="Store physical address"
+                  placeholder="e.g. 123 Hoan Kiem, Hanoi or 70000 Ho Chi Minh City"
+                  maxlength="255"
+                  :error-messages="fieldErrors.store_address"
+                  variant="outlined"
+                  density="compact"
+                  hint="Full retail shop address printed on transaction slips"
+                  persistent-hint
+                  @update:model-value="fieldErrors.store_address = undefined"
+                />
+              </v-col>
+
+              <v-col cols="12" sm="5">
+                <v-text-field
+                  v-model="form.store_phone"
+                  label="Store contact telephone"
+                  placeholder="e.g. +84 (024) 3822-1234"
+                  maxlength="50"
+                  :error-messages="fieldErrors.store_phone"
+                  variant="outlined"
+                  density="compact"
+                  hint="Official contact phone for customer queries"
+                  persistent-hint
+                  @update:model-value="fieldErrors.store_phone = undefined"
+                />
+              </v-col>
+            </v-row>
+
+            <!-- Live Thermal Receipt Slip Header Preview -->
+            <v-card
+              variant="flat"
+              rounded="lg"
+              class="bg-grey-lighten-4 pa-4 mt-4 border font-monospace text-center"
+            >
+              <div class="text-overline text-medium-emphasis mb-2 text-left">
+                RECEIPT HEADER PREVIEW (80MM THERMAL SLIP)
+              </div>
+              <div class="pa-3 bg-white border rounded">
+                <div class="text-h6 font-weight-bold letter-spacing-1">
+                  {{ (form.store_name || 'STORE NAME').toUpperCase() }}
+                </div>
+                <div v-if="form.store_tagline" class="text-caption text-medium-emphasis font-weight-bold">
+                  {{ form.store_tagline.toUpperCase() }}
+                </div>
+                <div class="text-caption text-medium-emphasis">
+                  {{ form.store_address || 'No address specified' }}
+                </div>
+                <div v-if="form.store_phone" class="text-caption text-medium-emphasis">
+                  Tel: {{ form.store_phone }}
+                </div>
+              </div>
+            </v-card>
+          </v-card-text>
+        </v-card>
+
         <!-- Single Domestic Currency Policy Callout (BSR §4.6) -->
         <v-alert
           type="info"
@@ -68,42 +201,20 @@ const {
           </div>
         </v-alert>
 
-        <!-- Main Configuration Card -->
+        <!-- Currency & Locale Configuration Card -->
         <v-card
           rounded="xl"
           variant="outlined"
           class="settings-card mb-6"
         >
           <v-card-item class="border-b pa-4">
-            <v-card-title class="text-h6 font-weight-bold">Currency & locale</v-card-title>
+            <v-card-title class="text-h6 font-weight-bold">Currency &amp; locale</v-card-title>
             <v-card-subtitle class="text-caption text-medium-emphasis">
               Select standard deployment presets or specify custom ISO 4217 rules
             </v-card-subtitle>
           </v-card-item>
 
           <v-card-text class="pa-6">
-            <v-alert
-              v-if="message"
-              type="success"
-              variant="tonal"
-              rounded="lg"
-              class="mb-4"
-              icon="mdi-check-circle-outline"
-            >
-              {{ message }}
-            </v-alert>
-
-            <v-alert
-              v-if="error"
-              type="error"
-              variant="tonal"
-              rounded="lg"
-              class="mb-4"
-              icon="mdi-alert-circle-outline"
-            >
-              {{ error }}
-            </v-alert>
-
             <!-- Quick Preset Chips -->
             <div class="mb-5">
               <div class="text-caption font-weight-medium text-medium-emphasis mb-2">
@@ -127,7 +238,7 @@ const {
               </div>
             </div>
 
-            <!-- Form Inputs -->
+            <!-- Currency Inputs -->
             <v-row dense>
               <v-col cols="12" sm="6">
                 <v-text-field
@@ -211,7 +322,7 @@ const {
                 :disabled="busy"
                 @click="handleSaveClick"
               >
-                Save settings
+                Save all settings
               </v-btn>
 
               <v-btn
@@ -304,5 +415,8 @@ const {
 <style scoped>
 .gap-2 {
   gap: 8px;
+}
+.letter-spacing-1 {
+  letter-spacing: 1px;
 }
 </style>

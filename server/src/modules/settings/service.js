@@ -14,6 +14,10 @@ const defaults = {
   currency_code: 'USD',
   currency_decimals: 2,
   time_zone: 'UTC',
+  store_name: 'MicroLedger Store',
+  store_tagline: 'Retail POS & Inventory Solutions',
+  store_address: '70000 Ho Chi Minh City, Vietnam',
+  store_phone: '+84 (028) 3822-9999',
 };
 
 /**
@@ -53,7 +57,7 @@ export async function validateTimeZone(zone) {
 /**
  * Retrieves current store settings merged with system defaults.
  *
- * @returns {Promise<{ currency_code: string, currency_decimals: number, time_zone: string }>} Effective settings.
+ * @returns {Promise<Object>} Effective settings.
  */
 export async function getSettings() {
   const rows = await fetchSettings();

@@ -17,7 +17,7 @@
 - Dashboard (static "Today / 7-Day" operational snapshot) and dedicated Sales Report (dynamic date-range filtering, dimensional aggregations, void transaction isolation)
 - Search and filter
 - Audit log
-- Store settings (currency code, decimals; store time zone GMT+7 strictly managed at infrastructure level via container `TZ` environment variable)
+- Store settings (currency code, decimals, store profile branding including name, address, phone; store time zone GMT+7 strictly managed at infrastructure level via container `TZ` environment variable)
 
 ### Phase 2 — Should Have
 
@@ -53,7 +53,7 @@ Barcode scanning · supplier purchase orders · product images · partial return
 - One store, one currency, one branch.
 - Store Time Zone: Fixed at GMT+7 (`Asia/Ho_Chi_Minh`), managed strictly at the infrastructure level via the Node.js Docker container's `TZ` environment variable. Dynamic database-driven timezone configuration is deliberately avoided.
 - UI/UX Framework: The frontend relies exclusively on Vuetify 3 component primitives (`v-container`, `v-row`, `v-col`, `v-card`, `v-data-table` / `ResponsiveTable`, `v-btn`, `v-select`, etc.) for all layouts, grids, dialogs, and typography. Raw HTML tables (`<table>`, `<tr>`, `<td>`) and custom scoped CSS layout hacks are strictly prohibited.
-- Test Data & Domain Realism: All database seeds and UAT scenarios strictly model a realistic Vietnamese PC hardware retail store (Intel, MSI, Corsair, WD, Kingston, authentic Vietnamese names and phone numbers). Random string hashes and Faker.js are banned.
+- Domain Adaptability & Reference Catalog: MicroLedger is built as a flexible retail POS and inventory platform. Database seeds and UAT scenarios model an authentic retail store fixture (using PC hardware as the primary reference domain: Intel, MSI, Corsair, WD, Kingston, authentic Vietnamese names and phone numbers). Random string hashes and Faker.js are banned.
 - Up to 10,000 products, about 500 sales per day, up to 5 concurrent users.
 - Existing Excel files are tabular and confirmed via verified PC hardware catalog templates (O-03 resolved).
 - Low-cost containerized hosting; limits confirmed and verified in staging/CI.

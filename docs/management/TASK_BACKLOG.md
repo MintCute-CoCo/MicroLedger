@@ -25,8 +25,8 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 7 | 7 / 7 | **Done** |
 | **E13 — Frontend Quality** | Composables, Vuetify primitives, demo mode, anti-slop | 17 | 17 / 17 | **Done** |
-| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 10 | 9 / 10 | **In Progress** |
-| **Total** | **Full System Implementation Backlog** | **121** | **120 / 121** | **99% Complete** |
+| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 11 | 10 / 11 | **In Progress** |
+| **Total** | **Full System Implementation Backlog** | **122** | **121 / 122** | **99% Complete** |
 
 ---
 
@@ -253,3 +253,4 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-119 | Printable thermal receipt modal & full-system diagrams portal | M | Must | T-118 | SRS-SAL-01, AC-016 | Done |
 | T-120 | Single currency guardrails, format preview & safety dialog | S | Must | T-119 | SRS-SET-01, BSR §4.6 | Done |
 | T-121 | Normalize receipt monetary cents parsing & fix double scaling | S | Must | T-119 | SRS-SAL-01, AC-016 | Done |
+| T-122 | Configurable store address/phone on receipt & general domain docs | S | Must | T-121 | SRS-SET-01, BSR §4.6 | Done |

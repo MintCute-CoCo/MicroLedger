@@ -126,5 +126,5 @@ The frontend codebase must follow strict readability rules for academic evaluati
 
 To preserve the realism, professional presentation, and academic integrity of this project:
 - **No Random Generators:** Absolutely no Faker.js, random string hashes (e.g., `Product_1792...`, `SKU_179...`), or generic placeholder text (`Test Customer`, `Supplier A`, `Reject Customer`) may be used in this project.
-- **Domain-Specific Realism:** All seed data, UAT data, and test cases MUST use highly realistic, domain-specific data matching a Vietnamese PC Hardware store (e.g., real brands like Intel, MSI, Corsair, Western Digital, Kingston, and authentic Vietnamese customer and supplier names).
+- **Domain-Specific Realism:** All seed data, UAT data, and test cases model an authentic retail store fixture (using PC hardware as the primary reference domain: e.g., real brands like Intel, MSI, Corsair, Western Digital, Kingston, and authentic Vietnamese customer and supplier names). MicroLedger is an adaptable retail platform whose store identity, address, and phone can be tailored via Settings.
 - **Strict Invariant Maintenance:** All test fixtures and seeds that introduce or modify stock records must preserve the Stock Ledger Invariant (`SRS-INV-02`, `AC-015a`) where current `stock_qty` strictly equals `SUM(inventory_transactions.quantity_change)`.

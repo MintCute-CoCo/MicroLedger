@@ -102,7 +102,17 @@ const emit = defineEmits([
             <v-card rounded="lg" variant="outlined" class="pa-2 w-100 text-left">
               <div class="d-flex align-center ga-2">
                 <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
-                  <v-icon :icon="props.categoryIcon(product.category)" size="large" />
+                  <v-img
+                    v-if="product.image || product.imageUrl"
+                    :src="product.image || product.imageUrl"
+                    cover
+                    alt=""
+                  />
+                  <v-icon
+                    v-else
+                    :icon="props.categoryIcon(product.category)"
+                    size="large"
+                  />
                 </v-avatar>
                 <div class="flex-grow-1 min-w-0 text-left">
                   <div class="text-caption text-truncate">{{ product.sku }}</div>

@@ -154,10 +154,10 @@ function handlePrint() {
         <div id="microledger-printable-receipt" class="receipt-slip">
           <!-- Store Header -->
           <div class="receipt-header text-center">
-            <h2 class="receipt-brand-title">MICROLEDGER</h2>
-            <div class="receipt-subline">PC HARDWARE &amp; TECH SOLUTIONS</div>
-            <div class="receipt-muted-info">70000 Ho Chi Minh City, Vietnam</div>
-            <div class="receipt-muted-info">Tel: +84 (028) 3822-9999</div>
+            <h2 class="receipt-brand-title">{{ (displaySettings.store_name || 'MICROLEDGER').toUpperCase() }}</h2>
+            <div v-if="displaySettings.store_tagline" class="receipt-subline">{{ displaySettings.store_tagline.toUpperCase() }}</div>
+            <div v-if="displaySettings.store_address" class="receipt-muted-info">{{ displaySettings.store_address }}</div>
+            <div v-if="displaySettings.store_phone" class="receipt-muted-info">Tel: {{ displaySettings.store_phone }}</div>
           </div>
 
           <div class="receipt-divider-dashed" />

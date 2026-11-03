@@ -43,6 +43,7 @@ export function adaptProducts(rawItems) {
       stock: item.stockQty ?? 0,
       reorder: item.reorderLevel ?? 0,
       tone: 'blue',
+      image: item.image || item.imageUrl || item.image_url || null,
     };
   });
 }

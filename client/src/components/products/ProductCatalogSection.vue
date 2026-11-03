@@ -223,7 +223,13 @@ const emit = defineEmits([
       <template #item.name="{ item }">
         <div class="d-flex align-center ga-2">
           <v-avatar color="primary" variant="tonal" rounded="lg" size="36">
-            <v-icon :icon="props.categoryIcon(item.category)" />
+            <v-img
+              v-if="item.image || item.imageUrl || item.image_url"
+              :src="item.image || item.imageUrl || item.image_url"
+              cover
+              alt=""
+            />
+            <v-icon v-else :icon="props.categoryIcon(item.category)" />
           </v-avatar>
           <span class="text-body-2 font-weight-medium">{{ item.name }}</span>
         </div>

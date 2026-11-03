@@ -151,6 +151,10 @@ Delivery is phased. Phase 1 delivers the Core (all Must Have items). Phase 2 del
 
 - One store, one currency, one branch. The store currency setting (`currency_code`, `currency_decimals`) defines visual formatting, POS labels, and receipt symbols; it does not perform dynamic foreign-exchange (FX) rate conversions. Existing catalog product prices retain their nominal values and must be updated directly or re-imported via spreadsheet if the store changes base currency. Historical transactions and ledger entries remain immutable.
 
+- Store Profile & Receipt Branding: Store identity metadata (Store Name, Business Tagline, Physical Address, Contact Telephone) is fully customizable via Store Settings. Thermal receipt slips dynamically reflect the configured store metadata, enabling deployment for any store location (Hanoi, Ho Chi Minh City, Da Nang, etc.) or retail niche.
+
+- Domain Adaptability & Reference Catalog: MicroLedger is engineered as a general-purpose single-store retail platform adaptable across commercial merchandise sectors. The authentic PC Hardware catalog (Intel, MSI, Corsair, WD, Kingston) serves as the primary reference implementation and realistic UAT domain fixture for academic evaluation.
+
 - Capacity for planning and testing: up to 10,000 products, about 500 sales per day, up to 5 concurrent users.
 
 - FYP timeline and low-cost hosting; hosting limits are a known constraint (§8.3, §11).
