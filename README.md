@@ -175,14 +175,17 @@ MicroLedger/
 │       └── ci.yml             # GitHub Actions CI pipeline configuration
 ├── client/                    # Vue 3 Frontend Application
 │   ├── src/
-│   │   ├── api/               # API clients grouped by domain (auth, products, sales, etc.)
+│   │   ├── api/               # API clients & Standalone Demo Mode engine (client.js, demoEngine.js)
 │   │   ├── components/        # Reusable Vuetify components (tables, dialogs, charts)
+│   │   ├── composables/       # 17 domain composables (cart, POS, inventory, claims, auth)
 │   │   ├── router/            # Routes, navigation metadata, and role guard guards
 │   │   ├── stores/            # Pinia stores (auth, cart, notifications)
 │   │   ├── utils/             # Formatters (currency, dates, badge helpers)
 │   │   ├── views/             # 18 route views (16 authenticated panels + 2 auth flows)
 │   │   ├── App.vue            # Root application component with layout frame
 │   │   └── main.js            # Entry point initializing Vue, Vuetify, Pinia & Router
+│   ├── index.html             # Vite single-page application entry point
+│   ├── vite.config.js         # Vite build configuration and plugins
 │   ├── .env.example           # Client environment template
 │   └── package.json           # Frontend dependencies and build scripts
 ├── server/                    # Node.js / Express Backend Application
@@ -198,6 +201,7 @@ MicroLedger/
 │   │   └── index.js           # Express app bootstrap and HTTP server listener
 │   ├── scripts/               # Backup/restore utilities and load-test benchmark script
 │   ├── tests/                 # Automated integration, invariant, and security tests
+│   ├── knexfile.js            # Knex connection pool and migration configuration
 │   ├── .env.example           # Server environment template
 │   └── package.json           # Backend dependencies and execution scripts
 ├── docs/                      # Categorized specifications and architecture documents
@@ -214,6 +218,7 @@ MicroLedger/
 │   ├── guidelines/            # AI Guidelines & Agent Operating Rules
 │   └── README.md              # Master documentation hub and reading guide
 ├── MicroLedger_Explainer.html # Interactive standalone one-page executive & architecture explainer
+├── LICENSE                    # MIT open-source license
 ├── .gitignore                 # Git ignore rules for node_modules, build dist, and secrets
 └── README.md                  # Project overview, setup guide, and documentation index
 ```
