@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useAuthStore } from '../../stores/auth.js';
 import {
   usePosCatalog,
@@ -23,6 +23,16 @@ export function usePos() {
   const apiMode = computed(() => true);
 
   /**
+   * Sale object passed to ReceiptDialog upon successful checkout.
+   */
+  const receiptDialogSale = ref(null);
+
+  /**
+   * Visibility flag for completed transaction receipt modal.
+   */
+  const receiptDialogOpen = ref(false);
+
+  /**
    * Product catalog sub-composable.
    */
   const catalog = usePosCatalog();
@@ -41,9 +51,13 @@ export function usePos() {
     cart: cart.cart,
     discountCents: cart.discountCents,
     clearCart: cart.clearCart,
-    onCheckoutSuccess: async () => {
+    onCheckoutSuccess: async (createdSale) => {
       await catalog.loadCatalog();
       await checkout.loadCustomers();
+      if (createdSale) {
+        receiptDialogSale.value = createdSale;
+        receiptDialogOpen.value = true;
+      }
     },
   });
 
@@ -116,5 +130,9 @@ export function usePos() {
     selectedCustomer: checkout.selectedCustomer,
     checkout: checkout.checkout,
     getPaymentIcon,
+
+    // Printable receipt state
+    receiptDialogSale,
+    receiptDialogOpen,
   };
 }

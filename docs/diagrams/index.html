@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MicroLedger — Interactive System Diagrams Portal</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --primary: #3b82f6;
+      --primary-light: #1e3a8a;
+      --success: #10b981;
+      --success-light: #064e3b;
+      --warning: #f59e0b;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* Header & Navigation Bar */
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .system-badge {
+      font-size: 0.75rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .diagram-nav {
+      display: flex;
+      gap: 6px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--text);
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .action-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+      color: var(--text);
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .action-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Sub-bar / Context Info */
+    .context-bar {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 20px;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .context-summary {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .metric-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .metric-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    /* Main Viewport Container */
+    .viewport-container {
+      flex: 1;
+      position: relative;
+      background: #090d16;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Loading Overlay */
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      pointer-events: none;
+      display: none;
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <header>
+    <div class="brand-section">
+      <div class="brand-title">
+        <span>⚡ MicroLedger</span>
+      </div>
+      <span class="system-badge">v1.0-fullstack</span>
+    </div>
+
+    <nav class="diagram-nav" id="diagramNav">
+      <button class="nav-btn active" onclick="loadDiagram('workflow', this)">
+        <span>🔄</span> Workflow (All Steps)
+      </button>
+      <button class="nav-btn" onclick="loadDiagram('architecture', this)">
+        <span>🏛️</span> Architecture (Tiers)
+      </button>
+      <button class="nav-btn" onclick="loadDiagram('sequence', this)">
+        <span>⚡</span> Sequence (API Calls)
+      </button>
+      <button class="nav-btn" onclick="loadDiagram('dataflow', this)">
+        <span>📊</span> Dataflow (Ledger)
+      </button>
+      <button class="nav-btn" onclick="loadDiagram('explainer', this)">
+        <span>📖</span> Full Explainer
+      </button>
+    </nav>
+
+    <div class="header-actions">
+      <a id="openStandaloneLink" href="workflow/workflow.html" target="_blank" class="action-btn" title="Open active diagram standalone">
+        <span>↗</span> Fullscreen
+      </a>
+      <button class="action-btn" onclick="toggleTheme()" id="themeBtn">
+        <span id="themeIcon">☀️</span> Light Mode
+      </button>
+    </div>
+  </header>
+
+  <div class="context-bar">
+    <div class="context-summary">
+      <span id="diagramDescription">Step-by-step cashier checkout, serial capture, atomic stock guard, and printable thermal receipt issuance.</span>
+    </div>
+    <div class="context-summary">
+      <span class="metric-chip"><span class="metric-dot"></span> P95: &lt; 15 ms</span>
+      <span class="metric-chip">CHECK (stock_qty &gt;= 0)</span>
+      <span class="metric-chip">80mm Thermal Receipt Ready</span>
+    </div>
+  </div>
+
+  <div class="viewport-container">
+    <div id="loader" class="loader">Loading system diagram...</div>
+    <iframe id="diagramFrame" src="workflow/workflow.html" onload="hideLoader()"></iframe>
+  </div>
+
+  <script>
+    const diagramMap = {
+      workflow: {
+        path: 'workflow/workflow.html',
+        desc: 'End-to-end retail operations lifecycle: cart intake, serial prompt, tender payment, atomic knex transaction, conditional stock decrement, and printable thermal receipt issuance.'
+      },
+      architecture: {
+        path: 'architecture/architecture.html',
+        desc: 'Multi-tier system topology: Vue 3 Single Page Application, In-Browser Demo Engine, Express 5 REST API, and PostgreSQL 16 restricted role isolation.'
+      },
+      sequence: {
+        path: 'sequence/sequence.html',
+        desc: 'API calls & message lifecycles: POS checkout submission, idempotency lock acquisition, conditional stock check, and Excel streaming export.'
+      },
+      dataflow: {
+        path: 'dataflow/dataflow.html',
+        desc: 'Double-entry ledger pipeline: immutable inventory_transactions, Staff role sensitive cost redaction, and tamper-evident audit logging.'
+      },
+      explainer: {
+        path: '../../MicroLedger_Explainer.html',
+        desc: 'Interactive comprehensive one-page explainer: animated request tracer, code explorer, error boundary catalog, and defense quiz.'
+      }
+    };
+
+    function loadDiagram(key, btn) {
+      const config = diagramMap[key];
+      if (!config) return;
+
+      showLoader();
+      const frame = document.getElementById('diagramFrame');
+      frame.src = config.path;
+
+      document.getElementById('diagramDescription').textContent = config.desc;
+      document.getElementById('openStandaloneLink').href = config.path;
+
+      const buttons = document.querySelectorAll('.nav-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function showLoader() {
+      document.getElementById('loader').style.display = 'block';
+    }
+
+    function hideLoader() {
+      document.getElementById('loader').style.display = 'none';
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const current = body.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', next);
+
+      document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+      document.getElementById('themeBtn').innerHTML = `<span id="themeIcon">${next === 'dark' ? '☀️' : '🌙'}</span> ${next === 'dark' ? 'Light Mode' : 'Dark Mode'}`;
+    }
+  </script>
+</body>
+</html>

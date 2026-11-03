@@ -164,7 +164,13 @@ function updateVoidReason(value) {
       
 
       <div class="d-flex flex-wrap justify-end ga-2 mt-4">
-        
+        <v-btn
+          variant="outlined"
+          prepend-icon="mdi-printer"
+          @click="emit('print')"
+        >
+          Print receipt
+        </v-btn>
         <v-btn
           color="primary"
           rounded="lg"

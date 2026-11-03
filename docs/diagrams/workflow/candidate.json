@@ -2,12 +2,32 @@
   "schema_version": 2,
   "diagram_type": "workflow",
   "meta": {
-    "title": "MicroLedger POS Checkout & Inventory Workflow",
-    "subtitle": "Step-by-step cashier transaction lifecycle from cart intake to atomic inventory deduction and warranty issuance",
+    "title": "MicroLedger Full Retail Operations & Ledger Lifecycle",
+    "subtitle": "End-to-end retail lifecycle: supplier stock intake, POS checkout with printable receipts, serial tracking, 7-stage warranty RMA, and transactional ledger invariants",
     "output": "workflow.html",
     "animation": "trace",
     "visual_preset": "signal-flow",
-    "quality_profile": "showcase"
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "full_lifecycle",
+        "label": "Full Operations Lifecycle",
+        "focus": ["cashier_login", "cart_selection", "serial_prompt", "tender_payment", "stock_guard", "complete_receipt"],
+        "note": "Complete retail store flow spanning counter sales, serial capture, atomic settlement, and thermal receipts."
+      },
+      {
+        "id": "pos_and_receipts",
+        "label": "POS & Printable Receipts",
+        "focus": ["cart_selection", "serial_prompt", "pricing_subtotal", "tender_payment", "submit_sale", "complete_receipt"],
+        "note": "Cashier checkout flow with itemized serial registration and 80mm thermal receipt printing."
+      },
+      {
+        "id": "acid_ledger",
+        "label": "ACID Ledger & Stock Guard",
+        "focus": ["submit_sale", "validate_payload", "atomic_transaction", "stock_guard"],
+        "note": "Non-negative stock constraint enforcement and append-only double-entry transactional accounting."
+      }
+    ]
   },
   "lanes": [
     { "id": "cashier", "label": "Cashier / Counter Staff" },
@@ -44,7 +64,7 @@
     { "id": "validate_payload", "lane": "backend", "col": 4, "type": "backend", "label": "Validate Request", "sublabel": "Zod schema & role check", "width": 140 },
     { "id": "atomic_transaction", "lane": "backend", "col": 5, "type": "backend", "label": "Atomic knex.tx()", "sublabel": "rollback on conflict", "tag": "ACID boundary", "width": 140 },
     { "id": "stock_guard", "lane": "database", "col": 5, "type": "database", "label": "Conditional Decrement", "sublabel": "WHERE stock_qty >= qty", "tag": "zero oversell", "width": 140 },
-    { "id": "complete_receipt", "lane": "cashier", "col": 5, "type": "frontend", "label": "Receipt & Token", "sublabel": "print thermal receipt", "tag": "warranty active", "width": 140 }
+    { "id": "complete_receipt", "lane": "cashier", "col": 5, "type": "frontend", "label": "Print Thermal Receipt", "sublabel": "80mm slip & S/N records", "tag": "receipt issued", "width": 140 }
   ],
   "edges": [
     { "id": "login-to-cust", "from": "cashier_login", "to": "customer_select", "variant": "default" },
@@ -61,11 +81,11 @@
   "cards": [
     {
       "dot": "cyan",
-      "title": "Front-Counter Cart Building",
+      "title": "Front-Counter Cart & Printable Receipts",
       "items": [
         "Cashier authenticates and links an existing customer or defaults to anonymous walk-in",
-        "Hardware items automatically flag mandatory serial number collection",
-        "Reactive total calculation enforces promotional rules and order-level discount ceilings"
+        "Hardware items automatically flag mandatory serial number collection with validation",
+        "On transaction commit, an 80mm thermal receipt dialog opens with instant print & serial history"
       ]
     },
     {

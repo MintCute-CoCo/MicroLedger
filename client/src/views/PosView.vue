@@ -3,6 +3,7 @@ import { onMounted } from 'vue';
 import { displaySettings } from '../utils/format.js';
 import PosProductCatalog from '../components/pos/PosProductCatalog.vue';
 import PosCheckoutPanel from '../components/pos/PosCheckoutPanel.vue';
+import ReceiptDialog from '../components/pos/ReceiptDialog.vue';
 import { usePos } from '../composables/pos/usePos.js';
 
 /**
@@ -40,6 +41,8 @@ const {
   clearCart,
   removeCartItem,
   parseSerialNumbers,
+  receiptDialogSale,
+  receiptDialogOpen,
 } = usePos();
 
 /**
@@ -174,6 +177,12 @@ onMounted(() => {
         />
       </v-col>
     </v-row>
+
+    <!-- Printable Receipt Modal after sale checkout -->
+    <ReceiptDialog
+      v-model="receiptDialogOpen"
+      :sale="receiptDialogSale"
+    />
   </v-container>
 </template>
 

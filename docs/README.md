@@ -65,6 +65,20 @@ System blueprints, database schemas, and interface wireframes:
 
 ---
 
+## 📐 3.1. Standalone Interactive Diagrams Hub (`docs/diagrams/`)
+
+Interactive visual architecture diagrams rendered with Archify, viewable directly in any web browser with element inspection and light/dark theme toggle:
+
+| Diagram | Purpose & Focus | Direct Link |
+|---|---|---|
+| [**Diagrams Portal**](diagrams/index.html) | Unified interactive dashboard allowing instant tabbed switching across all system diagrams | [Open Portal](diagrams/index.html) |
+| [**Full Operations Workflow**](diagrams/workflow/workflow.html) | Complete cashier checkout, serial capture, atomic stock guard, and printable thermal receipt issuance | [Open Workflow](diagrams/workflow/workflow.html) |
+| [**System Architecture**](diagrams/architecture/architecture.html) | Multi-tier topology, client SPA, Express 5 REST API, Knex pool, and PostgreSQL 16 security groups | [Open Architecture](diagrams/architecture/architecture.html) |
+| [**Transaction Sequences**](diagrams/sequence/sequence.html) | API sequences, idempotency lock acquisition, atomic conditional stock updates, and Excel export streaming | [Open Sequence](diagrams/sequence/sequence.html) |
+| [**Ledger Dataflow**](diagrams/dataflow/dataflow.html) | Double-entry inventory mutations, role-based sensitive cost masking, and tamper-evident audit logging | [Open Dataflow](diagrams/dataflow/dataflow.html) |
+
+---
+
 ## 📂 4. Project Management & Progress (`docs/management/`)
 
 Sprints, tasks, deliverables, and current progress:

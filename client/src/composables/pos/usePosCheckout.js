@@ -233,7 +233,7 @@ export function usePosCheckout({ cart, discountCents, clearCart, onCheckoutSucce
         };
       }
 
-      await apiRequest('/sales', {
+      const createdSaleRecord = await apiRequest('/sales', {
         method: 'POST',
         headers: {
           'Idempotency-Key': pendingCheckout.key,
@@ -257,7 +257,7 @@ export function usePosCheckout({ cart, discountCents, clearCart, onCheckoutSucce
 
     if (saleCompleted && typeof onCheckoutSuccess === 'function') {
       try {
-        await onCheckoutSuccess();
+        await onCheckoutSuccess(createdSaleRecord);
       } catch {
         checkoutError.value = 'Sale completed, but the POS data could not be refreshed.';
       }

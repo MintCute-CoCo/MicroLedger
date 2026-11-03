@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "3776056d-326d-437c-8eba-96fde1d0e339",
+  "receiptId": "e20ccce9-6778-4849-996b-aded132da487",
   "status": "current",
   "command": "deliver",
   "type": "workflow",
   "input": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\workflow\\candidate.json",
   "output": "C:\\StudyAlot\\WORKFOLDER\\FYP\\MicroLedger\\docs\\diagrams\\workflow\\workflow.html",
   "specification": {
-    "sha256": "608e2dd85daca672601b43c521a11cc4d0abdf534289429d4ced494335686d58",
-    "bytes": 5673
+    "sha256": "66ceaa1a7f425d6e4a29d0b04a71d5e1609a461387b9af77ef751c5f19814718",
+    "bytes": 6773
   },
   "artifact": {
-    "sha256": "702bd5541f77f7952b9e1cb2dd9044297bad1a46240a8d13ed0cff154dc808e5",
-    "bytes": 849917
+    "sha256": "5bee13977ee3f0e1f7cc6a6dc9d7cea441b7bbb42f9ac4fe965bbd70ce83a18b",
+    "bytes": 850128
   }
 }

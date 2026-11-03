@@ -7,7 +7,9 @@
  * payment method, and date filters. Supports sale details inspection, printable receipts,
  * and Admin-only transactional void operations with inventory rollbacks.
  */
+import { ref } from 'vue';
 import SaleDetailDialog from '../components/sales/SaleDetailDialog.vue';
+import ReceiptDialog from '../components/pos/ReceiptDialog.vue';
 import SalesRegisterCard from '../components/sales/SalesRegisterCard.vue';
 import { formatMoney } from '../utils/format.js';
 import { useSales } from '../composables/sales/useSales.js';
@@ -51,6 +53,8 @@ const {
   voidReason,
   voidSelectedSale,
 } = useSales();
+
+const receiptDialogOpen = ref(false);
 
 /**
  * Table header definitions for the sales history view.
@@ -181,6 +185,11 @@ const headers = [
       :is-admin="isAdmin"
       @close="selectedSale = null"
       @void="voidSelectedSale"
+      @print="receiptDialogOpen = true"
+    />
+    <ReceiptDialog
+      v-model="receiptDialogOpen"
+      :sale="selectedSale"
     />
   </v-container>
 </template>

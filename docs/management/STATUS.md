@@ -35,6 +35,7 @@ Key milestones achieved in this release cycle:
 | **Automated GitHub Actions CI Pipeline** | Infrastructure / CI | **Done** | Full-stack CI workflow (`ci.yml`) running client builds, PostgreSQL 16 migrations, role creation, seeds, and API test suites. |
 | **Technology Selection Rationale & Audit** | Architecture / Defense | **Done** | Documented exhaustive technology comparison vs rejected alternatives in `SYSTEM_ARCHITECTURE.md §7` and verified system-wide function latencies < 15 ms. |
 | **Root Readme & Benchmark Synchronization** | Documentation | **Done** | Updated root `README.md` to `v1.0-fullstack`, linked interactive HTML diagrams, and published verified sub-15ms P95 latency benchmarks. |
+| **Printable Thermal Receipts & Diagrams Portal** | Frontend & Tooling | **Done** | Implemented `ReceiptDialog.vue` with `@media print` 80mm slip formatting; wired into POS & Sales history; delivered unified full-system diagrams portal at `docs/diagrams/index.html`. |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
 
 ---
