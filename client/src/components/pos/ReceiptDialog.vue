@@ -443,6 +443,11 @@ function handlePrint() {
 
 /* Print Mode Optimization (@media print) */
 @media print {
+  @page {
+    size: auto;
+    margin: 4mm;
+  }
+
   /* Hide all outside elements in page when printing */
   :global(body *) {
     visibility: hidden !important;
