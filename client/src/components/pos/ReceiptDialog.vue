@@ -54,7 +54,7 @@ function handleClose() {
       </div>
 
       <!-- Printable Thermal Receipt Slip Container -->
-      <div class="receipt-slip-wrapper pa-5">
+      <div class="receipt-slip-wrapper d-flex justify-center pa-5">
         <ReceiptSlip :receipt-data="receiptData" />
       </div>
 
@@ -87,8 +87,6 @@ function handleClose() {
   background-color: #f1f5f9;
   max-height: 70vh;
   overflow-y: auto;
-  display: flex;
-  justify-content: center;
 }
 
 @media print {

@@ -3,7 +3,6 @@ import { settingsSchema } from './schema.js';
 import {
   getSettings,
   updateSettings,
-  validateTimeZone,
 } from './service.js';
 
 /**
@@ -42,11 +41,6 @@ export async function updateSettingsController(req, res) {
       'Check the submitted settings.',
       errorIssues
     );
-  }
-
-  // Validate IANA time zone identifier if provided
-  if (parsed.data.time_zone) {
-    await validateTimeZone(parsed.data.time_zone);
   }
 
   const actorId = req.user.id;

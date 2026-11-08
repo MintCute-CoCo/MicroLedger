@@ -81,13 +81,15 @@ Key milestones achieved in this release cycle:
 
 ## 5. Quality & Build Metrics
 
-- **Client Production Build Time:** **871 ms** (`vite build` into `client/dist`, verified 8 November 2026).
-- **Design Taste Linter Status:** **0 FAIL, 32 WARN** across all **137** client files.
+- **Client Production Build Time:** **650 ms** (`vite build` into `client/dist`, verified 8 November 2026).
+- **Design Taste Linter Status:** **0 FAIL, 31 WARN** across all **137** client files.
 - **Route Views Implemented:** **18 / 18** (16 authenticated panels + 2 auth views).
 - **Responsive Viewport Compliance:** 360 px (Mobile), 768 px (Tablet), 1280 px (Desktop).
-- **Backend Test Suites:** **11 / 11** passing against the PostgreSQL database, including 16-table backup and true restore verification, active stdout/stderr PII log inspection, and complete append-only denial checks on sales, sale_items, audit_logs, and inventory_transactions (T-065, T-067, T-130, T-131).
+- **Backend Test Suites:** **11 / 11** passing (51/51 tests) against the PostgreSQL database, including 16-table backup and true restore verification, active stdout/stderr PII log inspection, complete append-only denial checks on sales, sale_items, audit_logs, and inventory_transactions, and infrastructure TZ alignment (T-065, T-067, T-130, T-131, T-135, T-136).
 - **Documentation Verification:** **25 / 25** Markdown files in clean UTF-8 with 0 broken links.
-- **Vuetify 3 Compliance:** 100% primitive component usage; zero raw HTML tables and zero custom CSS layout grids.
+- **Vuetify 3 Compliance:** 100% primitive component usage; zero raw HTML tables, zero custom CSS layout grids, and zero custom scoped CSS layout styles (`ReceiptMeta.vue`, `ReceiptDialog.vue`, and `ReportDataGrid.vue` migrated to native Vuetify flex classes).
+- **Retail Neutrality:** PC hardware category keyword maps removed from application composables; app code, UI labels, and icons strictly maintain general retail neutrality with generic package icons (AGENTS.md, T-136).
+- **Timezone Alignment (SRS-SET-01, SRS-UI-07):** Store timezone is governed exclusively by container infrastructure `TZ` environment variable (read-only in settings API, with update attempts rejected with 422); client `formatDate` and `formatDateTime` format in the store time zone.
 - **Client Data Source:** Express API only; standalone/offline client mode is out of scope per SRS §1.2.
 - **Security Audit Status:** `npm audit --omit=dev` reports **0 vulnerabilities** (transitive ExcelJS uuid resolved via `server/package.json` override); destructive scripts are guarded with environment checks; runtime DB role permissions restrict mutation on all immutable tables; OWASP security headers active (T-129–T-133).
 - **Interactive Visualizers:** 4 standalone interactive HTML diagrams (`architecture.html`, `workflow.html`, `sequence.html`, `dataflow.html`) indexed in `docs/diagrams/` plus root `MicroLedger_Explainer.html`.

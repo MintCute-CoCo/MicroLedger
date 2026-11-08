@@ -21,12 +21,6 @@ export const settingsSchema = z
       .min(0, 'Currency decimals cannot be negative.')
       .max(2, 'Currency decimals cannot exceed 2.')
       .optional(),
-    time_zone: z
-      .string()
-      .trim()
-      .min(1, 'Time zone cannot be empty.')
-      .max(100, 'Time zone may not exceed 100 characters.')
-      .optional(),
     store_name: z
       .string()
       .trim()

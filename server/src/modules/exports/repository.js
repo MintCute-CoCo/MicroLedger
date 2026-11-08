@@ -6,22 +6,13 @@
  */
 
 /**
- * Retrieves the configured store time zone from settings.
+ * Retrieves the configured store time zone from infrastructure environment variable (SRS-SET-01).
  *
- * Purpose:
- * Reads the 'time_zone' setting from the database, falling back to 'UTC' if not configured.
- *
- * @param {import('knex').Knex | import('knex').Knex.Transaction} db - Knex database or transaction instance.
- * @returns {Promise<string>} Configured time zone string.
+ * @param {import('knex').Knex | import('knex').Knex.Transaction} [_db] - Knex database or transaction instance.
+ * @returns {Promise<string>} Configured time zone string from infrastructure TZ or 'UTC'.
  */
-export async function findStoreTimeZone(db) {
-  const query = db('settings');
-  query.where({ key: 'time_zone' });
-  query.first('value');
-
-  const setting = await query;
-  const timeZone = setting?.value || 'UTC';
-  return timeZone;
+export async function findStoreTimeZone(_db) {
+  return process.env.TZ || 'UTC';
 }
 
 /**

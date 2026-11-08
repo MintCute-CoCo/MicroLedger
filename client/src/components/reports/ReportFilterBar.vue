@@ -289,6 +289,3 @@ function handlePreset(presetCode) {
   </div>
 </template>
 
-<style scoped>
-</style>
-

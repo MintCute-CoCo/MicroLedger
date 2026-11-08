@@ -68,6 +68,9 @@ export async function getSettings() {
     settingsValues[row.key] = row.value;
   }
 
+  // Application timezone is handled at infrastructure level via container TZ env var (SRS-SET-01)
+  settingsValues.time_zone = process.env.TZ || 'UTC';
+
   return settingsValues;
 }
 
@@ -91,6 +94,7 @@ export async function updateSettings(actorId, input) {
       ...defaults,
       ...before,
       ...input,
+      time_zone: process.env.TZ || 'UTC',
     };
 
     // Upsert each provided setting key

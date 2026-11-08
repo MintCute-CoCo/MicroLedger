@@ -9,6 +9,7 @@ import { reactive } from 'vue';
 export const displaySettings = reactive({
   currency_code: 'USD',
   currency_decimals: 2,
+  time_zone: 'UTC',
   store_name: 'MicroLedger Store',
   store_tagline: 'Retail POS & Inventory Solutions',
   store_address: '70000 Ho Chi Minh City, Vietnam',
@@ -17,9 +18,9 @@ export const displaySettings = reactive({
 });
 
 /**
- * Updates global reactive display settings (currency code, precision decimals, and store profile).
+ * Updates global reactive display settings (currency code, precision decimals, store time zone, and profile).
  *
- * @param {Object} settings - Configuration payload containing currency and store metadata.
+ * @param {Object} settings - Configuration payload containing currency, time zone, and store metadata.
  * @returns {void}
  */
 export function applyDisplaySettings(settings = {}) {
@@ -27,6 +28,10 @@ export function applyDisplaySettings(settings = {}) {
   displaySettings.currency_decimals = Number.isInteger(settings.currency_decimals)
     ? settings.currency_decimals
     : 2;
+
+  if (settings.time_zone) {
+    displaySettings.time_zone = String(settings.time_zone).trim();
+  }
 
   if (settings.store_name !== undefined && settings.store_name !== null) {
     displaySettings.store_name = String(settings.store_name).trim();
@@ -72,12 +77,14 @@ export function formatMoney(cents, currency = null, overrideDecimals = null) {
 }
 
 /**
- * Formats a calendar date without time components (e.g., "Oct 17, 2031").
+ * Formats a calendar date without time components in the configured store time zone (e.g., "Oct 17, 2031").
+ * Conforms to SRS-UI-07: dates display in the store time zone.
  *
  * @param {string|Date} value - Raw date string, ISO timestamp, or Date object.
+ * @param {string|null} [overrideTimeZone=null] - Optional override time zone identifier.
  * @returns {string} Human-readable date string (e.g., "Oct 17, 2031") or fallback dash.
  */
-export function formatDate(value) {
+export function formatDate(value, overrideTimeZone = null) {
   if (!value) {
     return '—';
   }
@@ -88,20 +95,36 @@ export function formatDate(value) {
     return String(value);
   }
 
-  return new Intl.DateTimeFormat('en-US', {
+  const targetTimeZone = overrideTimeZone || displaySettings.time_zone || 'UTC';
+  const formatOptions = {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-  }).format(parsedDate);
+  };
+
+  try {
+    if (targetTimeZone) {
+      formatOptions.timeZone = targetTimeZone;
+    }
+    return new Intl.DateTimeFormat('en-US', formatOptions).format(parsedDate);
+  } catch {
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(parsedDate);
+  }
 }
 
 /**
- * Formats a date and timestamp using the user's local system time.
+ * Formats a date and timestamp in the configured store time zone.
+ * Conforms to SRS-UI-07: dates and times display in the store time zone.
  *
  * @param {string|Date} value - Raw timestamp string or Date object.
+ * @param {string|null} [overrideTimeZone=null] - Optional override time zone identifier.
  * @returns {string} Human-readable date and time string.
  */
-export function formatDateTime(value) {
+export function formatDateTime(value, overrideTimeZone = null) {
   if (!value) {
     return '';
   }
@@ -112,11 +135,27 @@ export function formatDateTime(value) {
     return String(value);
   }
 
-  return new Intl.DateTimeFormat('en-US', {
+  const targetTimeZone = overrideTimeZone || displaySettings.time_zone || 'UTC';
+  const formatOptions = {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
-  }).format(parsedDate);
+  };
+
+  try {
+    if (targetTimeZone) {
+      formatOptions.timeZone = targetTimeZone;
+    }
+    return new Intl.DateTimeFormat('en-US', formatOptions).format(parsedDate);
+  } catch {
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    }).format(parsedDate);
+  }
 }

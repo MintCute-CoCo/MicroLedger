@@ -7,70 +7,19 @@ import { apiRequest } from '../../api/client.js';
 export const PRODUCT_TONE_COLORS = ['sun', 'rose', 'blue', 'mint', 'lilac', 'sand'];
 
 /**
- * Mapping of lowercase category keywords to Material Design Icons.
- * Aligned with the reference store catalog fixture. All other retail categories
- * cleanly resolve to the neutral fallback icon (mdi-package-variant-closed).
+ * Retail-neutral category icon map.
+ * In accordance with AGENTS.md retail neutrality, application code does not
+ * maintain domain-specific PC hardware icon maps.
  */
-export const PRODUCT_CATEGORY_ICON_MAP = {
-  processors: 'mdi-cpu-64-bit',
-  processor: 'mdi-cpu-64-bit',
-  cpu: 'mdi-cpu-64-bit',
-  motherboards: 'mdi-developer-board',
-  motherboard: 'mdi-developer-board',
-  'graphics cards': 'mdi-expansion-card',
-  'graphics-cards': 'mdi-expansion-card',
-  graphics: 'mdi-expansion-card',
-  gpu: 'mdi-expansion-card',
-  memory: 'mdi-memory',
-  ram: 'mdi-memory',
-  storage: 'mdi-harddisk',
-  ssd: 'mdi-harddisk',
-  hdd: 'mdi-harddisk',
-  'power supplies': 'mdi-power-plug',
-  'power-supplies': 'mdi-power-plug',
-  power: 'mdi-power-plug',
-  psu: 'mdi-power-plug',
-  cooling: 'mdi-fan',
-  cooler: 'mdi-fan',
-  cases: 'mdi-desktop-tower',
-  chassis: 'mdi-desktop-tower',
-  monitors: 'mdi-monitor',
-  monitor: 'mdi-monitor',
-  displays: 'mdi-monitor',
-  networking: 'mdi-router-wireless',
-  network: 'mdi-router-wireless',
-  peripherals: 'mdi-keyboard-mouse',
-  peripheral: 'mdi-keyboard-mouse',
-  accessories: 'mdi-cable-data',
-  accessory: 'mdi-cable-data',
-};
+export const PRODUCT_CATEGORY_ICON_MAP = {};
 
 /**
- * Resolves contextual Material Design icon for a product category name.
+ * Resolves a retail-neutral Material Design icon for product categories.
  *
- * @param {string} categoryName - Category title.
- * @returns {string} MDI icon identifier.
+ * @param {string} [_categoryName] - Category title.
+ * @returns {string} Neutral MDI package icon identifier.
  */
-export function categoryIcon(categoryName) {
-  if (!categoryName) {
-    return 'mdi-package-variant-closed';
-  }
-
-  const normalizedKey = String(categoryName).toLowerCase().trim();
-
-  // 1. Direct exact key lookup
-  if (PRODUCT_CATEGORY_ICON_MAP[normalizedKey]) {
-    return PRODUCT_CATEGORY_ICON_MAP[normalizedKey];
-  }
-
-  // 2. Substring keyword match
-  for (const [key, icon] of Object.entries(PRODUCT_CATEGORY_ICON_MAP)) {
-    if (normalizedKey.includes(key)) {
-      return icon;
-    }
-  }
-
-  // 3. Fallback generic retail icon
+export function categoryIcon(_categoryName) {
   return 'mdi-package-variant-closed';
 }
 

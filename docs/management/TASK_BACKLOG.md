@@ -275,3 +275,4 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-133 | Resolve uuid dependency advisory | S | Should | T-096 | NFR-11 | Done |
 | T-134 | Correct verification documentation claims | M | Must | T-129, T-130, T-131, T-132 | SRS, M1, M3, M4 | Done |
 | T-135 | Disaster recovery isolated schema safety, error log scrubbing & Vuetify flex layout parity | M | Must | T-131, T-132, T-093 | NFR-10, NFR-11, Rule 15 | Done |
+| T-136 | Infrastructure timezone alignment, retail neutrality, flat resting elevations & scoped layout purge | M | Must | T-135 | SRS-SET-01, SRS-UI-07, AGENTS §Quality | Done |

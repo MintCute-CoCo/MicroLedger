@@ -211,7 +211,7 @@ const voidedSummary = computed(() => {
       <!-- Fallback toolbar if filters slot is not provided -->
       <div
         v-if="!$slots.filters"
-        class="table-toolbar"
+        class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-3 pa-4 border-b"
       >
         <div>
           <h2 class="text-h6 font-weight-bold mb-1">Grouped sales breakdown</h2>
@@ -289,7 +289,7 @@ const voidedSummary = computed(() => {
       rounded="xl"
       class="sales-card"
     >
-      <div class="table-toolbar">
+      <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-3 pa-4 border-b">
         <div>
           <div class="d-flex align-center">
             <v-icon
@@ -401,24 +401,6 @@ const voidedSummary = computed(() => {
   overflow: hidden;
 }
 
-.table-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 18px 13px;
-}
-
-.table-toolbar h2 {
-  margin: 0 0 4px;
-  color: #354157;
-}
-
-.table-toolbar p {
-  margin: 0;
-  color: #7c889b;
-}
-
 :deep(.v-data-table__th) {
   height: 42px !important;
   background: #fafbfc !important;
@@ -438,13 +420,6 @@ const voidedSummary = computed(() => {
 :deep(.v-data-table-footer) {
   min-height: 48px !important;
   color: #7c889b !important;
-}
-
-@media (max-width: 599px) {
-  .table-toolbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
 </style>
 

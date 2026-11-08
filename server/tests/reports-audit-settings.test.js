@@ -67,7 +67,7 @@ describe('G — Reports, Audit, and Settings (AC-030 to AC-033)', () => {
     assert.ok(entry.created_at || entry.createdAt);
   });
 
-  it('AC-033: Settings endpoint allows Admin to view and update store time zone and currency', async () => {
+  it('AC-033: Settings endpoint allows Admin to view store time zone (from infrastructure TZ) and update store profile/currency, while rejecting time_zone changes (SRS-SET-01)', async () => {
     const adminToken = await getAdminToken();
     const staffToken = await getStaffToken();
 
@@ -75,19 +75,28 @@ describe('G — Reports, Audit, and Settings (AC-030 to AC-033)', () => {
     const staffSettings = await api('/api/v1/settings', { token: staffToken });
     assert.equal(staffSettings.status, 403);
 
-    // Admin reads settings
+    // Admin reads settings: time_zone reflects infrastructure TZ
     const readSettings = await api('/api/v1/settings', { token: adminToken });
     assert.equal(readSettings.status, 200);
-    assert.ok(readSettings.data.time_zone || readSettings.data.timeZone);
+    assert.equal(readSettings.data.time_zone, process.env.TZ || 'UTC');
 
-    // Admin updates time zone
+    // Admin updates store profile / currency settings
     const updateRes = await api('/api/v1/settings', {
       method: 'PATCH',
       token: adminToken,
-      body: { time_zone: 'UTC' },
+      body: { store_name: 'MicroLedger Test Store' },
     });
     assert.equal(updateRes.status, 200);
-    assert.equal(updateRes.data.time_zone, 'UTC');
+    assert.equal(updateRes.data.store_name, 'MicroLedger Test Store');
+    assert.equal(updateRes.data.time_zone, process.env.TZ || 'UTC');
+
+    // Attempting to configure time_zone via store settings API is rejected per SRS-SET-01
+    const tzUpdateAttempt = await api('/api/v1/settings', {
+      method: 'PATCH',
+      token: adminToken,
+      body: { time_zone: 'America/New_York' },
+    });
+    assert.equal(tzUpdateAttempt.status, 422);
   });
 });
 

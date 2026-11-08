@@ -293,18 +293,13 @@ export function productExists(trxOrDb, id) {
 }
 
 /**
- * Retrieves the configured store time zone from the system settings table.
+ * Retrieves the configured store time zone from infrastructure environment variable (SRS-SET-01).
  *
- * @param {import('knex').Knex|import('knex').Knex.Transaction} [trxOrDb] - Database client or transaction.
- * @returns {Promise<string>} Store time zone string (defaults to 'UTC' if not found).
+ * @param {import('knex').Knex|import('knex').Knex.Transaction} [_trxOrDb] - Database client or transaction.
+ * @returns {Promise<string>} Store time zone string from infrastructure TZ (defaults to 'UTC').
  */
-export async function findStoreTimeZone(trxOrDb) {
-  const db = trxOrDb || requireDatabase();
-  const setting = await db('settings')
-    .where({ key: 'time_zone' })
-    .first('value');
-
-  return setting?.value ?? 'UTC';
+export async function findStoreTimeZone(_trxOrDb) {
+  return process.env.TZ || 'UTC';
 }
 
 /**

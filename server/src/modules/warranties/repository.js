@@ -20,16 +20,13 @@ export async function runInTransaction(callback) {
 }
 
 /**
- * Retrieves the configured store time zone from application settings.
+ * Retrieves the configured store time zone from infrastructure environment variable (SRS-SET-01).
  *
- * @param {import('knex').Knex|import('knex').Knex.Transaction} [trxOrDb] - Knex client or active transaction.
- * @returns {Promise<string>} Configured IANA time zone identifier, defaulting to 'UTC'.
+ * @param {import('knex').Knex|import('knex').Knex.Transaction} [_trxOrDb] - Knex client or active transaction.
+ * @returns {Promise<string>} Configured IANA time zone identifier from infrastructure TZ, defaulting to 'UTC'.
  */
-export async function findStoreTimeZone(trxOrDb) {
-  const db = trxOrDb || requireDatabase();
-  const setting = await db('settings').where({ key: 'time_zone' }).first('value');
-  const storeZone = setting?.value || 'UTC';
-  return storeZone;
+export async function findStoreTimeZone(_trxOrDb) {
+  return process.env.TZ || 'UTC';
 }
 
 /**

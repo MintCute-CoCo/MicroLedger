@@ -29,27 +29,13 @@ export function applyDateRange(query, column, filters, timeZone) {
 }
 
 /**
- * Retrieves the configured store time zone from the system settings table.
- * If set to 'UTC' or missing, defaults to the host system's time zone.
+ * Retrieves the configured store time zone from infrastructure environment variable (SRS-SET-01).
  *
- * @param {import('knex').Knex|import('knex').Knex.Transaction} [trxOrDb] - Knex client or transaction.
- * @returns {Promise<string>} Store time zone string (e.g. 'Asia/Bangkok').
+ * @param {import('knex').Knex|import('knex').Knex.Transaction} [_trxOrDb] - Knex client or transaction.
+ * @returns {Promise<string>} Store time zone string from infrastructure TZ (e.g. 'Asia/Bangkok' or 'UTC').
  */
-export async function findStoreTimeZone(trxOrDb) {
-  const db = trxOrDb || requireDatabase();
-  const setting = await db('settings')
-    .where({ key: 'time_zone' })
-    .first('value');
-
-  // If a specific time zone is configured and not default 'UTC', use it
-  const configuredValue = setting?.value;
-  if (configuredValue && configuredValue !== 'UTC') {
-    return configuredValue;
-  }
-
-  // Fall back to host system time zone
-  const systemZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return systemZone || 'UTC';
+export async function findStoreTimeZone(_trxOrDb) {
+  return process.env.TZ || 'UTC';
 }
 
 /**

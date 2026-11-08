@@ -292,7 +292,6 @@
   z-index: 8;
   bottom: 0;
   border-top: 1px solid #edf0f5;
-  box-shadow: 0 -5px 20px rgba(22, 37, 67, 0.05) !important;
 }
 
 .mobile-bottom-nav .v-btn {
