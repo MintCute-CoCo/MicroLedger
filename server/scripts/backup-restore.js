@@ -280,10 +280,27 @@ export async function restoreFromBackup(
       }
     }
 
-    // Reset business sequences if restoring into public schema
+    // Reset business sequences to MAX existing value + 1 so subsequent inserts do not collide
     if (targetSchema === 'public') {
-      await client.query(`ALTER SEQUENCE IF EXISTS sale_no_seq RESTART WITH 1;`);
-      await client.query(`ALTER SEQUENCE IF EXISTS claim_no_seq RESTART WITH 1;`);
+      const maxSaleRes = await client.query(`
+        SELECT COALESCE(MAX(NULLIF(regexp_replace(sale_no, '\\D', '', 'g'), '')::bigint), 0) as max_val
+        FROM "sales"
+      `);
+      const maxSaleVal = Number(maxSaleRes.rows[0]?.max_val || 0);
+      await client.query(
+        `SELECT setval('sale_no_seq', GREATEST($1::bigint, 1), $1 > 0)`,
+        [maxSaleVal]
+      );
+
+      const maxClaimRes = await client.query(`
+        SELECT COALESCE(MAX(NULLIF(regexp_replace(claim_no, '\\D', '', 'g'), '')::bigint), 0) as max_val
+        FROM "warranty_claims"
+      `);
+      const maxClaimVal = Number(maxClaimRes.rows[0]?.max_val || 0);
+      await client.query(
+        `SELECT setval('claim_no_seq', GREATEST($1::bigint, 1), $1 > 0)`,
+        [maxClaimVal]
+      );
     }
 
     await client.query('COMMIT');

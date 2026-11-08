@@ -10,11 +10,12 @@
 }
 
 .brand-lockup {
-  height: 82px;
+  height: 68px;
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 0 8px;
+  gap: 12px;
+  padding: 0 4px;
+  margin-bottom: 4px;
 }
 
 .brand-mark {
@@ -26,21 +27,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
+}
+
+.brand-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .brand-name {
   color: #202a3d;
   font-family: 'Manrope', sans-serif;
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   font-weight: 800;
-  letter-spacing: -0.7px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .brand-caption {
   margin-top: 2px;
-  color: #9aa3b4;
+  color: #8993a4;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 1.15px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .store-switcher {
@@ -92,10 +106,12 @@
 }
 
 .nav-label {
-  padding: 0 11px 8px;
+  padding: 8px 11px 6px;
   color: #a0a9b8;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 1.1px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
 }
 
 .nav-list {
@@ -119,7 +135,7 @@
 
 .nav-list .v-list-item__prepend > .v-icon {
   opacity: 1;
-  font-size: 19px;
+  font-size: 1.2rem;
 }
 
 .nav-label-lower {

@@ -102,7 +102,7 @@ The architecture strictly adheres to academic Final Year Project readability sta
 3. **Typography Standardization**: Unified typography classes applied across all 18 views: `text-h5` for page titles, `text-h6` for card headers, `text-overline` for table headers/eyebrows, and `text-body-2` for standard cells.
 4. **POS Ergonomics**: 8:4 desktop grid split with independent scrolling panels; compact 40px search field, responsive category chips, and persistent `Complete Sale` footer button.
 5. **Form Validation Encapsulation**: Form validation logic is contained directly within dialog components (`ProductFormDialog.vue`, `CustomerFormDialog.vue`, `InventoryMovementDialog.vue`), emitting verified payloads to parent views.
-6. **Database Least Privilege**: Intended runtime role is `app_user`; its current grants still allow changes to immutable sales and sale_items and need correction (T-130).
+6. **Database Least Privilege**: Runtime role is `app_user`; immutable table protections strictly revoke UPDATE/DELETE on `sales`, `sale_items`, `audit_logs`, and `inventory_transactions`, restricting sales modifications solely to void columns (`status`, `voided_by`, `voided_at`, `void_reason`) (T-130).
 7. **Mandatory Management Synchronization**: All management documents (`STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, `DEFINITION_OF_DONE.md`) are kept synchronized with code commits.
 
 ---

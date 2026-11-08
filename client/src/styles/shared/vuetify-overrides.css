@@ -49,11 +49,11 @@
   min-height: 36px !important;
   padding: 6px 12px !important;
   border-radius: 6px !important;
-  font-size: 13px !important;
+  font-size: 0.875rem !important;
 }
 
 .v-overlay__content .v-list-item-title {
-  font-size: 13px !important;
+  font-size: 0.875rem !important;
   color: #354157 !important;
   font-weight: 500 !important;
   line-height: 1.4 !important;
@@ -74,7 +74,7 @@
   height: 42px !important;
   background: #fafbfc !important;
   color: #7c889b !important;
-  font-size: 11px !important;
+  font-size: 0.75rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.55px !important;
   text-transform: uppercase !important;
@@ -85,14 +85,14 @@
 .v-data-table .v-data-table__td {
   height: 52px !important;
   color: #3e4b61 !important;
-  font-size: 13px !important;
+  font-size: 0.875rem !important;
   border-bottom: 1px solid #f0f2f6 !important;
 }
 
 .v-data-table-footer {
   min-height: 48px !important;
   color: #7c889b !important;
-  font-size: 12px !important;
+  font-size: 0.75rem !important;
 }
 
 .v-data-table-footer .v-field {
@@ -101,20 +101,20 @@
 
 .v-data-table-footer .v-field__input {
   min-height: 28px !important;
-  font-size: 12px !important;
+  font-size: 0.75rem !important;
   padding: 2px 6px !important;
 }
 
 .v-data-table-footer .v-select__selection-text {
-  font-size: 12px !important;
+  font-size: 0.75rem !important;
 }
 
 .v-data-table-footer .v-data-table-footer__info {
-  font-size: 12px !important;
+  font-size: 0.75rem !important;
 }
 
 .v-data-table-footer .v-data-table-footer__items-per-page {
-  font-size: 12px !important;
+  font-size: 0.75rem !important;
 }
 
 /* Universal Action Buttons within Toolbars */
@@ -122,7 +122,7 @@
 .action-btn {
   min-height: 38px !important;
   height: 38px !important;
-  font-size: 12px !important;
+  font-size: 0.75rem !important;
   font-weight: 600 !important;
   padding: 0 16px !important;
 }

@@ -9,7 +9,7 @@ flowchart LR
   U["Admin / Staff<br/>(Desktop, Tablet, Mobile)"] -->|HTTPS| FE["Web Client (SPA)<br/>Vue 3 + Vuetify 3 on Vite"]
   FE -->|"HTTPS REST/JSON<br/>Bearer Access Token"| API["API Server<br/>Node.js 20 + Express 5"]
   API -->|"SQL, Parameterized<br/>Knex / pg pool (app_user)"| DB[("PostgreSQL 16 Database<br/>(16 Relational Tables)")]
-  BK["Scheduled Backup Utility<br/>scripts/backup-restore.js"] -->|"pg_dump, 7-day retention"| DB
+  BK["Scheduled Backup Utility<br/>scripts/backup-restore.js"] -->|"JSON snapshots (SHA-256 / AES-256-GCM), 7-day retention"| DB
 ```
 
 | Component | Responsibility |
@@ -17,7 +17,7 @@ flowchart LR
 | **Web Client** | User interface presentation, routing, client-side input validation, responsive cart state, Vuetify 3 primitives. JWT access token held in memory only; refresh token managed via rotating `httpOnly` cookie. Enforces zero client-side business logic that the API does not independently validate. |
 | **API Server** | Authentication, role authorization, Zod schema validation, transactional domain services, streaming server-side Excel/CSV parsing and generation (ExcelJS), audit log writing, and reporting. |
 | **PostgreSQL 16** | Relational persistence, primary keys (`BIGINT GENERATED ALWAYS AS IDENTITY`), foreign key constraints, column CHECK constraints (`stock_qty >= 0`), trigram text search indexes (`pg_trgm`), and sequences for sale and claim numbering. |
-| **Backup Utility** | Scheduled database dumps, 7-day backup retention, and disaster recovery validation drills before UAT release. |
+| **Backup Utility** | Scheduled 16-table deterministic JSON snapshots with SHA-256 checksums, optional AES-256-GCM encryption, 7-day retention pruning, and isolated-schema disaster recovery restore verification drills (SRS-NFR-10). |
 
 > [!TIP]
 > **Interactive Standalone Visualizations & Deep-Dive Explainers:**

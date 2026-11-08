@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { describe, it, after } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
+import pg from 'pg';
 import { runBackup, verifyRestoreDrill, restoreFromBackup, pruneOldBackups, TABLES } from '../scripts/backup-restore.js';
 import { closeKnex } from './helpers.js';
 
@@ -41,6 +42,25 @@ describe('Database Operations: Backup, 7-Day Retention & Restore Drill (SRS-NFR-
     assert.equal(restoreRes.success, true);
     assert.equal(restoreRes.tablesRestored, 16);
     assert.ok(restoreRes.totalRows >= 0);
+
+    // Verify that sale_no_seq and claim_no_seq generate values above existing max to prevent collision
+    const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
+    await client.connect();
+    try {
+      const nextSaleRes = await client.query(`SELECT nextval('sale_no_seq') as next_seq`);
+      const nextSaleSeq = Number(nextSaleRes.rows[0].next_seq);
+      const maxSaleRes = await client.query(`
+        SELECT COALESCE(MAX(NULLIF(regexp_replace(sale_no, '\\D', '', 'g'), '')::bigint), 0) as max_val
+        FROM "sales"
+      `);
+      const maxSaleVal = Number(maxSaleRes.rows[0].max_val);
+      assert.ok(
+        nextSaleSeq > maxSaleVal,
+        `nextval('sale_no_seq') (${nextSaleSeq}) must be greater than max existing sale (${maxSaleVal}) to prevent unique collision`
+      );
+    } finally {
+      await client.end();
+    }
   });
 
   it('supports cryptographic snapshot encryption (AES-256-GCM) and verified tamper-evident checksums', async () => {

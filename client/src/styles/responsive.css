@@ -12,5 +12,5 @@
   .top-profile { width: 29px; height: 29px; margin-left: 1px; }
   .top-icon { width: 38px !important; height: 38px !important; }
   .page-frame { padding: 0 0 90px; }
-  .breadcrumbs { font-size: 10px; }
+  .breadcrumbs { font-size: 0.6875rem; }
 }

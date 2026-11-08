@@ -46,16 +46,16 @@ const {
           <div class="brand-mark">
             <v-icon
               icon="mdi-chart-box-outline"
-              size="23"
+              size="22"
             />
           </div>
-          <div>
-            <div class="brand-name">microledger</div>
-            <div class="brand-caption">STORE WORKSPACE</div>
+          <div class="brand-text">
+            <div class="brand-name">MicroLedger</div>
+            <div class="brand-caption">Retail Operations</div>
           </div>
         </div>
 
-        <div class="nav-label">WORKSPACE</div>
+        <div class="nav-label">Menu</div>
         <v-list
           nav
           class="nav-list"

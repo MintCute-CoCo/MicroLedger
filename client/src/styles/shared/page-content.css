@@ -1,7 +1,7 @@
 /* Shared headings, dialogs, summary cards, and table toolbars. */
 
-.dialog-title { padding: 23px 24px 9px; color: #28344a; font: 800 18px 'Manrope', sans-serif; }
-.dialog-copy { margin: 0 0 16px; color: #7f899b; font-size: 12px; line-height: 1.5; }
+.dialog-title { padding: 23px 24px 9px; color: #28344a; font-family: 'Manrope', sans-serif; font-size: 1.125rem; font-weight: 800; }
+.dialog-copy { margin: 0 0 16px; color: #7f899b; font-size: 0.75rem; line-height: 1.5; }
 
 /* ==========================================================================
    Universal Page Heading & Section Typography Sync
@@ -20,7 +20,7 @@
 .page-heading .text-overline,
 .eyebrow {
   color: #8792a5 !important;
-  font-size: 11px !important;
+  font-size: 0.75rem !important;
   font-weight: 700 !important;
   letter-spacing: 1px !important;
   text-transform: uppercase !important;
@@ -29,14 +29,16 @@
 .page-heading h1 {
   margin: 6px 0 5px !important;
   color: #202a3d !important;
-  font: 800 26px 'Manrope', sans-serif !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 1.625rem !important;
+  font-weight: 800 !important;
   letter-spacing: -1px !important;
 }
 
 .page-heading p {
   margin: 0 !important;
   color: #7c889b !important;
-  font-size: 13px !important;
+  font-size: 0.875rem !important;
 }
 
 .page-heading .heading-actions,
@@ -92,7 +94,8 @@
 .icon-rose { background: #fceeee; color: #bb7070; }
 
 .summary-card > div {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 4px;
   min-width: 0;
 }
@@ -126,7 +129,7 @@
 
 @media (max-width: 600px) {
   .summary-cards-row {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
   .table-toolbar {
     flex-direction: column;

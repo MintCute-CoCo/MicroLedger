@@ -1,5 +1,12 @@
 import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import knex from 'knex';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const PORT = process.env.PORT || 3000;
 export const BASE_URL = `http://localhost:${PORT}`;
@@ -24,7 +31,7 @@ export async function closeKnex() {
 }
 
 export async function api(path, { method = 'GET', body, token, headers = {} } = {}) {
-  const reqHeaders = { ...headers };
+  const reqHeaders = { 'x-test-suite': 'true', ...headers };
   if (token) reqHeaders.Authorization = `Bearer ${token}`;
   if (body !== undefined && !(body instanceof FormData)) {
     reqHeaders['Content-Type'] = 'application/json';

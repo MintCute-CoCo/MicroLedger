@@ -16,7 +16,7 @@
     "db:reset": "node src/db/reset.js",
     "backup": "node scripts/backup-restore.js",
     "backup:schedule": "node scripts/backup-restore.js --schedule",
-    "test": "node --test tests/**/*.test.js && npm run seed:pc"
+    "test": "node --test --test-concurrency=1 tests/**/*.test.js && npm run seed:pc"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
