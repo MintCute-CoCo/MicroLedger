@@ -126,7 +126,7 @@ const props = defineProps({
             </template>
             <template #append>
               <div class="text-right">
-                <div class="text-body-1 font-weight-bold">{{ product.stock }}</div>
+                <div class="text-body-2 font-weight-bold">{{ product.stock }}</div>
                 <div class="text-caption text-medium-emphasis">left</div>
               </div>
             </template>
