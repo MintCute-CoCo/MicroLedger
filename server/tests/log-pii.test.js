@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { describe, it, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { api, closeKnex, getAdminToken } from './helpers.js';
+import { errorHandler } from '../src/middleware/error-handler.js';
 
 describe('Log & Response Inspection: No Secrets or PII Leaks (SRS-NFR-11, T-067)', () => {
   after(async () => {
@@ -39,7 +40,7 @@ describe('Log & Response Inspection: No Secrets or PII Leaks (SRS-NFR-11, T-067)
     assert.ok(!jsonStr.includes('password'), 'Response must not contain database password');
   });
 
-  it('Actively intercepts server stdout/stderr logs and verifies zero passwords or PII are logged', async () => {
+  it('Actively intercepts server stdout/stderr logs and verifies zero passwords, tokens, or customer PII are logged', async () => {
     const loggedChunks = [];
     const originalConsoleLog = console.log;
     const originalConsoleError = console.error;
@@ -55,16 +56,59 @@ describe('Log & Response Inspection: No Secrets or PII Leaks (SRS-NFR-11, T-067)
     };
 
     try {
+      // 1. Password probing on login
       const secretProbe = 'probeSecretPwd_98765';
       await api('/api/v1/auth/login', {
         method: 'POST',
         body: { username: 'admin', password: secretProbe },
       });
 
+      // 2. Customer operations probing (names, phone numbers, addresses, tokens)
+      const adminToken = await getAdminToken();
+      const customerPhone = '0987654321';
+      const customerName = 'Nguyen Van Sensitive';
+      await api('/api/v1/customers', {
+        method: 'POST',
+        token: adminToken,
+        body: {
+          name: customerName,
+          phone: customerPhone,
+          address: '456 Confidential Ave',
+        },
+      });
+
+      // 3. Customer directory query
+      await api(`/api/v1/customers?search=${customerPhone}`, {
+        token: adminToken,
+      });
+
+      // 4. Server-error path: simulate 500 error containing sensitive DB URI and JWT
+      const mockDbSecret = 'supersecretpass123';
+      const mockDbUrl = `postgres://app_user:${mockDbSecret}@localhost:5432/microledger_prod`;
+      const mockSensitiveError = new Error(`Connection failed for target: ${mockDbUrl}`);
+      mockSensitiveError.stack = `Error: Connection failed for target: ${mockDbUrl}\n    at connect (file:///fake/path.js:10:5)\n    token: ${adminToken}`;
+      const mockRes = {
+        headersSent: false,
+        statusCode: 200,
+        status(code) {
+          this.statusCode = code;
+          return this;
+        },
+        json(payload) {
+          this.body = payload;
+          return this;
+        },
+      };
+      errorHandler(mockSensitiveError, {}, mockRes, () => {});
+
       const joinedLogs = loggedChunks.join('\n');
       assert.ok(!joinedLogs.includes(secretProbe), 'Console logs must never contain user submitted password');
+      assert.ok(!joinedLogs.includes(customerPhone), 'Console logs must never leak customer phone numbers');
+      assert.ok(!joinedLogs.includes(customerName), 'Console logs must never leak customer names');
       assert.ok(!joinedLogs.includes('password_hash'), 'Console logs must not leak password_hash keys');
-      assert.ok(!joinedLogs.includes('postgres://'), 'Console logs must not print database connection URLs');
+      assert.ok(!joinedLogs.includes('postgres://app_user:supersecretpass123@'), 'Console logs must sanitize database auth credentials');
+      assert.ok(!joinedLogs.includes(mockDbSecret), 'Console logs must never contain raw database passwords');
+      assert.ok(!joinedLogs.includes(adminToken), 'Console logs must never leak authorization bearer tokens');
     } finally {
       console.log = originalConsoleLog;
       console.error = originalConsoleError;

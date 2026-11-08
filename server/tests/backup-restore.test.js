@@ -42,5 +42,18 @@ describe('Database Operations: Backup, 7-Day Retention & Restore Drill (SRS-NFR-
     assert.equal(restoreRes.tablesRestored, 16);
     assert.ok(restoreRes.totalRows >= 0);
   });
+
+  it('supports cryptographic snapshot encryption (AES-256-GCM) and verified tamper-evident checksums', async () => {
+    process.env.BACKUP_ENCRYPTION_KEY = 'test_secret_encryption_key_32bytes!!';
+    try {
+      const encBackup = await runBackup();
+      assert.ok(encBackup.checksum, 'Encrypted backup must retain SHA-256 integrity checksum');
+      const drill = await verifyRestoreDrill(encBackup.filePath);
+      assert.equal(drill.checksumValid, true, 'Decrypted snapshot checksum must match');
+      await fs.rm(encBackup.filePath, { force: true });
+    } finally {
+      delete process.env.BACKUP_ENCRYPTION_KEY;
+    }
+  });
 });
 

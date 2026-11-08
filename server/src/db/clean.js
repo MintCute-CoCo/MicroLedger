@@ -12,6 +12,7 @@
 import 'dotenv/config';
 import knex from 'knex';
 import config from '../../knexfile.js';
+import { assertDestructiveOperationAllowed } from './target-guard.js';
 
 const db = knex(config);
 
@@ -21,9 +22,7 @@ const db = knex(config);
  * @returns {Promise<void>} Resolves when truncation and sequence resets finish.
  */
 async function clean() {
-  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_DESTRUCTIVE_DB !== 'true') {
-    throw new Error('Refusing to execute destructive db:clean in production without ALLOW_DESTRUCTIVE_DB=true');
-  }
+  assertDestructiveOperationAllowed(process.env.DATABASE_URL);
 
   console.log('Cleaning MicroLedger transactional and catalog data...');
 

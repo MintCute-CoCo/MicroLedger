@@ -107,6 +107,21 @@ function handleFieldInput(fieldName) {
             @update:model-value="handleFieldInput('store_phone')"
           />
         </v-col>
+
+        <v-col cols="12">
+          <v-text-field
+            v-model="props.form.receipt_footer"
+            label="Receipt footer policy / return message"
+            placeholder="e.g. Thank you for your business! Please keep receipt for returns within 7 days."
+            maxlength="255"
+            :error-messages="props.fieldErrors.receipt_footer"
+            variant="outlined"
+            density="compact"
+            hint="Printed at the bottom of customer receipts"
+            persistent-hint
+            @update:model-value="handleFieldInput('receipt_footer')"
+          />
+        </v-col>
       </v-row>
 
       <!-- Live Thermal Receipt Slip Header Preview -->
@@ -116,7 +131,7 @@ function handleFieldInput(fieldName) {
         class="bg-grey-lighten-4 pa-4 mt-4 border text-center"
       >
         <div class="text-overline text-medium-emphasis mb-2 text-left">
-          RECEIPT HEADER PREVIEW (80MM THERMAL SLIP)
+          RECEIPT BRANDING &amp; FOOTER PREVIEW (80MM THERMAL SLIP)
         </div>
         <div class="pa-3 bg-white border rounded">
           <ReceiptHeader
@@ -125,6 +140,10 @@ function handleFieldInput(fieldName) {
             :store-address="props.form.store_address"
             :store-phone="props.form.store_phone"
           />
+          <v-divider class="my-3 border-dashed" />
+          <div class="text-caption text-medium-emphasis">
+            {{ props.form.receipt_footer || 'Please retain this physical receipt for customer service and returns.' }}
+          </div>
         </div>
       </v-card>
     </v-card-text>

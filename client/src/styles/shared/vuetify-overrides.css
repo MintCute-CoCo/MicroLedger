@@ -6,9 +6,9 @@
    Sales, Reports, Products, POS, Customers, Inventory, Users, Warranties
    ========================================================================== */
 
-/* Universal compact input field styling (readable 13px text) */
+/* Universal compact input field styling adhering to Vuetify body-2 scale */
 .v-field--density-compact {
-  font-size: 13px !important;
+  font-size: 0.875rem !important;
   min-height: 40px !important;
   border-radius: 9px !important;
 }
@@ -17,24 +17,24 @@
   min-height: 38px !important;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
-  font-size: 13px !important;
+  font-size: 0.875rem !important;
   color: #354157 !important;
 }
 
 .v-field--density-compact .v-field-label,
 .v-field--density-compact .v-label {
-  font-size: 13px !important;
+  font-size: 0.875rem !important;
   color: #8993a4 !important;
 }
 
 .v-field--density-compact .v-select__selection-text {
-  font-size: 13px !important;
+  font-size: 0.875rem !important;
   color: #354157 !important;
 }
 
 .v-field--density-compact .v-field__append-inner .v-icon,
 .v-field--density-compact .v-field__prepend-inner .v-icon {
-  font-size: 18px !important;
+  font-size: 1.125rem !important;
   color: #8993a4 !important;
 }
 

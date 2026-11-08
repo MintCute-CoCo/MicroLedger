@@ -13,6 +13,7 @@ export const displaySettings = reactive({
   store_tagline: 'Retail POS & Inventory Solutions',
   store_address: '70000 Ho Chi Minh City, Vietnam',
   store_phone: '+84 (028) 3822-9999',
+  receipt_footer: 'Please retain this physical receipt for customer service and warranty claims.',
 });
 
 /**
@@ -38,6 +39,9 @@ export function applyDisplaySettings(settings = {}) {
   }
   if (settings.store_phone !== undefined && settings.store_phone !== null) {
     displaySettings.store_phone = String(settings.store_phone).trim();
+  }
+  if (settings.receipt_footer !== undefined && settings.receipt_footer !== null) {
+    displaySettings.receipt_footer = String(settings.receipt_footer).trim();
   }
 }
 

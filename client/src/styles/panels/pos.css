@@ -52,8 +52,8 @@
     flex: 0 0 auto;
   }
   .v-card.pos-checkout-panel {
-    display: grid !important;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    display: flex !important;
+    flex-direction: column !important;
     overflow: hidden;
     min-height: 0;
   }

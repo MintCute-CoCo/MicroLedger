@@ -100,6 +100,7 @@ export function useReceipt(saleRef) {
       subtotalCents,
       discountCents,
       items,
+      footer: raw.receiptFooter || raw.footer || null,
     };
   });
 

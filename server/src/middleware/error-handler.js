@@ -24,6 +24,22 @@ export function notFoundHandler(_req, res) {
 }
 
 /**
+ * Sanitizes an error message and stack trace to scrub database credentials,
+ * connection URIs, bearer tokens, and password values before writing to server logs.
+ *
+ * @param {Error|any} val - Error object or string.
+ * @returns {string} Redacted error description safe for application logs.
+ */
+function sanitizeForLogs(val) {
+  if (!val) return '';
+  const text = typeof val === 'string' ? val : (val.stack || val.message || String(val));
+  return text
+    .replace(/postgres(?:ql)?:\/\/[^@\s]+@/gi, 'postgres://[REDACTED_AUTH]@')
+    .replace(/(?:password|pwd|secret|token|bearer)\s*[:=]\s*['"]?[^\s,'"]+['"]?/gi, '$1: [REDACTED]')
+    .replace(/Bearer\s+[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*/gi, 'Bearer [REDACTED_JWT]');
+}
+
+/**
  * Global Express error handling middleware.
  * Serializes custom HttpError instances or sanitizes internal 500 errors.
  *
@@ -44,7 +60,7 @@ export function errorHandler(error, _req, res, next) {
   const message = isServer ? 'An unexpected error occurred.' : error.message;
 
   if (isServer) {
-    console.error('[ServerError]', error);
+    console.error('[ServerError]', sanitizeForLogs(error));
   }
 
   return res.status(status).json({

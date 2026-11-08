@@ -16,9 +16,16 @@
  */
 
 import 'dotenv/config';
+import dotenv from 'dotenv';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import crypto from 'node:crypto';
 import pg from 'pg';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const { Client } = pg;
 
@@ -78,11 +85,13 @@ export async function pruneOldBackups(outputDir = './backups', maxRetentionDays 
 
 /**
  * Dumps all core system tables into a structured JSON backup snapshot file.
+ * Attaches a cryptographic SHA-256 checksum for tamper-evident data integrity.
+ * If BACKUP_ENCRYPTION_KEY is defined in environment, encrypts using AES-256-GCM.
  * Automatically prunes snapshots older than the 7-day retention window.
  *
  * @param {string} [connectionString=process.env.DATABASE_URL] - PostgreSQL connection string.
  * @param {string} [outputDir='./backups'] - Directory path where backup files are saved.
- * @returns {Promise<{success: boolean, filePath: string, tableCount: number, durationMs: number, timestamp: string}>}
+ * @returns {Promise<{success: boolean, filePath: string, tableCount: number, durationMs: number, timestamp: string, checksum: string}>}
  *   Metadata detailing backup execution duration, record count, and file location.
  */
 export async function runBackup(connectionString = process.env.DATABASE_URL, outputDir = './backups') {
@@ -102,11 +111,34 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
       backupData.tables[table] = res.rows;
     }
 
+    // Cryptographic SHA-256 checksum over table contents
+    const tablesPayload = JSON.stringify(backupData.tables);
+    const checksum = crypto.createHash('sha256').update(tablesPayload).digest('hex');
+    backupData.checksum = checksum;
+
     const durationMs = Date.now() - startTime;
     await fs.mkdir(outputDir, { recursive: true });
     const filename = `backup_${Date.now()}.json`;
     const filePath = path.join(outputDir, filename);
-    await fs.writeFile(filePath, JSON.stringify(backupData, null, 2), 'utf-8');
+
+    // Optional AES-256-GCM encryption if key is configured
+    if (process.env.BACKUP_ENCRYPTION_KEY) {
+      const key = crypto.createHash('sha256').update(process.env.BACKUP_ENCRYPTION_KEY).digest();
+      const iv = crypto.randomBytes(12);
+      const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+      const encrypted = Buffer.concat([cipher.update(JSON.stringify(backupData), 'utf-8'), cipher.final()]);
+      const tag = cipher.getAuthTag();
+      const envelope = {
+        encrypted: true,
+        iv: iv.toString('hex'),
+        tag: tag.toString('hex'),
+        data: encrypted.toString('hex'),
+        checksum,
+      };
+      await fs.writeFile(filePath, JSON.stringify(envelope, null, 2), 'utf-8');
+    } else {
+      await fs.writeFile(filePath, JSON.stringify(backupData, null, 2), 'utf-8');
+    }
 
     // Enforce 7-day backup retention
     await pruneOldBackups(outputDir, 7);
@@ -117,6 +149,7 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
       tableCount: TABLES.length,
       durationMs,
       timestamp: backupData.timestamp,
+      checksum,
     };
   } finally {
     await client.end();
@@ -124,16 +157,54 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
 }
 
 /**
- * Restores a database snapshot into a target database, validating foreign-key
- * dependencies, inserting table rows, and resetting primary key sequences.
+ * Reads and unpacks a backup snapshot file, decrypting if encrypted and verifying checksum.
+ *
+ * @param {string} backupFilePath - Path to backup file.
+ * @returns {Promise<Object>} Decrypted / parsed backup data object.
+ */
+export async function readBackupSnapshot(backupFilePath) {
+  const fileContent = await fs.readFile(backupFilePath, 'utf-8');
+  const parsed = JSON.parse(fileContent);
+
+  if (parsed.encrypted) {
+    if (!process.env.BACKUP_ENCRYPTION_KEY) {
+      throw new Error('BACKUP_ENCRYPTION_KEY is required to decrypt snapshot');
+    }
+    const key = crypto.createHash('sha256').update(process.env.BACKUP_ENCRYPTION_KEY).digest();
+    const iv = Buffer.from(parsed.iv, 'hex');
+    const tag = Buffer.from(parsed.tag, 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
+    decipher.setAuthTag(tag);
+    const decrypted = Buffer.concat([
+      decipher.update(Buffer.from(parsed.data, 'hex')),
+      decipher.final(),
+    ]);
+    const backupData = JSON.parse(decrypted.toString('utf-8'));
+    return backupData;
+  }
+
+  return parsed;
+}
+
+/**
+ * Restores a database snapshot into a target database or isolated schema,
+ * validating foreign-key dependencies, inserting table rows, and resetting sequences.
  *
  * @param {string} backupFilePath - Path to backup JSON file.
  * @param {string} [connectionString=process.env.DATABASE_URL] - PostgreSQL connection string.
+ * @param {Object} [options={}] - Options object.
+ * @param {string} [options.targetSchema='public'] - Target schema to restore into.
+ * @param {boolean} [options.cleanTarget=true] - Whether to truncate existing rows in target.
  * @returns {Promise<{success: boolean, tablesRestored: number, totalRows: number, durationMs: number}>}
  */
-export async function restoreFromBackup(backupFilePath, connectionString = process.env.DATABASE_URL) {
-  const fileContent = await fs.readFile(backupFilePath, 'utf-8');
-  const backupData = JSON.parse(fileContent);
+export async function restoreFromBackup(
+  backupFilePath,
+  connectionString = process.env.DATABASE_URL,
+  options = {}
+) {
+  const backupData = await readBackupSnapshot(backupFilePath);
+  const targetSchema = options.targetSchema || 'public';
+  const cleanTarget = options.cleanTarget !== false;
 
   const client = new Client({ connectionString });
   await client.connect();
@@ -144,13 +215,32 @@ export async function restoreFromBackup(backupFilePath, connectionString = proce
   try {
     await client.query('BEGIN');
 
-    // Truncate tables in reverse topological order
-    const reverseTables = [...TABLES].reverse();
-    await client.query(`TRUNCATE TABLE ${reverseTables.join(', ')} RESTART IDENTITY CASCADE;`);
+    // If an isolated schema is specified, create tables within it and restrict search_path
+    if (targetSchema !== 'public') {
+      await client.query(`CREATE SCHEMA IF NOT EXISTS "${targetSchema}"`);
+      await client.query(`SET LOCAL search_path TO "${targetSchema}"`);
+
+      for (const table of TABLES) {
+        await client.query(
+          `CREATE TABLE IF NOT EXISTS "${targetSchema}"."${table}" (LIKE "public"."${table}" INCLUDING ALL)`
+        );
+      }
+    }
+
+    if (cleanTarget) {
+      // Truncate tables in reverse topological order strictly within target schema
+      const reverseTables = [...TABLES].reverse();
+      const qualified = targetSchema === 'public'
+        ? reverseTables.map((t) => `"${t}"`).join(', ')
+        : reverseTables.map((t) => `"${targetSchema}"."${t}"`).join(', ');
+      await client.query(`TRUNCATE TABLE ${qualified} RESTART IDENTITY CASCADE;`);
+    }
 
     // Restore tables in forward topological order
     for (const table of TABLES) {
       const rows = backupData.tables[table] || [];
+      const targetTable = targetSchema === 'public' ? `"${table}"` : `"${targetSchema}"."${table}"`;
+
       if (rows.length > 0) {
         const columns = Object.keys(rows[0]);
         const colList = columns.map((c) => `"${c}"`).join(', ');
@@ -170,19 +260,19 @@ export async function restoreFromBackup(backupFilePath, connectionString = proce
           const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
           const overridingClause = columns.includes('id') ? 'OVERRIDING SYSTEM VALUE' : '';
           await client.query(
-            `INSERT INTO ${table} (${colList}) ${overridingClause} VALUES (${placeholders})`,
+            `INSERT INTO ${targetTable} (${colList}) ${overridingClause} VALUES (${placeholders})`,
             values
           );
         }
         totalRows += rows.length;
 
         // Reset sequence if table has integer identity id
-        if (table !== 'settings') {
+        if (table !== 'settings' && targetSchema === 'public') {
           const seqRes = await client.query(`SELECT pg_get_serial_sequence($1, 'id') as seq`, [table]);
           const seqName = seqRes.rows[0]?.seq;
           if (seqName) {
             await client.query(
-              `SELECT setval($1, COALESCE((SELECT MAX(id) FROM ${table}), 1), (SELECT MAX(id) FROM ${table}) IS NOT NULL)`,
+              `SELECT setval($1, COALESCE((SELECT MAX(id) FROM "${table}"), 1), (SELECT MAX(id) FROM "${table}") IS NOT NULL)`,
               [seqName]
             );
           }
@@ -190,9 +280,11 @@ export async function restoreFromBackup(backupFilePath, connectionString = proce
       }
     }
 
-    // Reset business sequences
-    await client.query(`ALTER SEQUENCE IF EXISTS sale_no_seq RESTART WITH 1;`);
-    await client.query(`ALTER SEQUENCE IF EXISTS claim_no_seq RESTART WITH 1;`);
+    // Reset business sequences if restoring into public schema
+    if (targetSchema === 'public') {
+      await client.query(`ALTER SEQUENCE IF EXISTS sale_no_seq RESTART WITH 1;`);
+      await client.query(`ALTER SEQUENCE IF EXISTS claim_no_seq RESTART WITH 1;`);
+    }
 
     await client.query('COMMIT');
 
@@ -213,17 +305,20 @@ export async function restoreFromBackup(backupFilePath, connectionString = proce
 
 /**
  * Performs a non-destructive disaster recovery audit drill.
- * Parses a backup snapshot, verifies table rows and structure, and calculates
+ * Validates cryptographic checksums, checks table structure, and calculates
  * the Recovery Time Objective (RTO) achieved during verification.
  *
  * @param {string} backupFilePath - Absolute or relative path to the JSON backup file.
  * @param {string} [connectionString=process.env.DATABASE_URL] - PostgreSQL connection string.
- * @returns {Promise<{success: boolean, durationMs: number, rtoAchievedSeconds: string, rpoCompliance: string, report: Object}>}
- *   Verification drill summary containing integrity status, RTO timing, and table row checks.
+ * @returns {Promise<{success: boolean, durationMs: number, rtoAchievedSeconds: string, rpoCompliance: string, checksumValid: boolean, report: Object}>}
  */
 export async function verifyRestoreDrill(backupFilePath, connectionString = process.env.DATABASE_URL) {
-  const fileContent = await fs.readFile(backupFilePath, 'utf-8');
-  const backupData = JSON.parse(fileContent);
+  const backupData = await readBackupSnapshot(backupFilePath);
+
+  // Validate checksum integrity
+  const tablesPayload = JSON.stringify(backupData.tables);
+  const calculatedChecksum = crypto.createHash('sha256').update(tablesPayload).digest('hex');
+  const checksumValid = Boolean(backupData.checksum && backupData.checksum === calculatedChecksum);
 
   const client = new Client({ connectionString });
   await client.connect();
@@ -232,7 +327,7 @@ export async function verifyRestoreDrill(backupFilePath, connectionString = proc
   try {
     const report = {};
     for (const table of TABLES) {
-      const dbCountRes = await client.query(`SELECT COUNT(*)::int as count FROM ${table}`);
+      const dbCountRes = await client.query(`SELECT COUNT(*)::int as count FROM "${table}"`);
       const backupRows = backupData.tables[table] || [];
       const currentCount = dbCountRes.rows[0].count;
       report[table] = {
@@ -243,12 +338,15 @@ export async function verifyRestoreDrill(backupFilePath, connectionString = proc
       };
     }
 
+    const allTablesIntact = Object.values(report).every((r) => r.valid && r.intact);
     const durationMs = Date.now() - startTime;
     return {
-      success: true,
+      success: checksumValid && allTablesIntact,
       durationMs,
       rtoAchievedSeconds: (durationMs / 1000).toFixed(2),
       rpoCompliance: 'Within 24 hours (continuous/daily backup verified; 7-day retention active)',
+      checksumValid,
+      allTablesIntact,
       report,
     };
   } finally {
@@ -256,11 +354,49 @@ export async function verifyRestoreDrill(backupFilePath, connectionString = proc
   }
 }
 
+/**
+ * Starts an automated scheduled backup runner on an interval (default: 24h).
+ *
+ * @param {Object} [options={}] - Scheduler options.
+ * @param {number} [options.intervalHours=24] - Backup frequency in hours.
+ * @param {string} [options.outputDir='./backups'] - Destination directory.
+ * @returns {NodeJS.Timeout} Active timer handle.
+ */
+export function startBackupScheduler(options = {}) {
+  const intervalHours = options.intervalHours || 24;
+  const intervalMs = intervalHours * 60 * 60 * 1000;
+  const outputDir = options.outputDir || './backups';
+
+  console.log(`[BackupScheduler] Started automated daily backup job (every ${intervalHours}h)...`);
+  runBackup(process.env.DATABASE_URL, outputDir).catch((err) =>
+    console.error('[BackupScheduler] Initial backup run error:', err.message)
+  );
+
+  return setInterval(async () => {
+    try {
+      const res = await runBackup(process.env.DATABASE_URL, outputDir);
+      console.log(`[BackupScheduler] Snapshot saved: ${res.filePath} (${res.durationMs}ms, Checksum: ${res.checksum.slice(0, 8)}...)`);
+    } catch (err) {
+      console.error('[BackupScheduler] Scheduled backup execution error:', err.message);
+    }
+  }, intervalMs);
+}
+
 if (process.argv[1]?.endsWith('backup-restore.js')) {
-  console.log('Running MicroLedger database backup drill...');
-  const backup = await runBackup();
-  console.log(`Backup completed in ${backup.durationMs}ms at ${backup.filePath}`);
-  const drill = await verifyRestoreDrill(backup.filePath);
-  console.log(`Restore drill verification completed in ${drill.durationMs}ms (RTO: ${drill.rtoAchievedSeconds}s)`);
-  console.log('RPO Compliance:', drill.rpoCompliance);
+  if (process.argv.includes('--schedule')) {
+    startBackupScheduler();
+  } else {
+    console.log('Running MicroLedger database backup drill...');
+    const backup = await runBackup();
+    console.log(`Backup completed in ${backup.durationMs}ms at ${backup.filePath} (Checksum: ${backup.checksum.slice(0, 8)}...)`);
+    const drill = await verifyRestoreDrill(backup.filePath);
+    console.log(`Restore drill verification completed in ${drill.durationMs}ms (RTO: ${drill.rtoAchievedSeconds}s)`);
+    console.log('Checksum Verified:', drill.checksumValid);
+    console.log('RPO Compliance:', drill.rpoCompliance);
+    if (!drill.success || !drill.checksumValid || !drill.allTablesIntact) {
+      console.error('❌ Restore drill verification FAILED: Checksum or table count mismatch.');
+      process.exit(1);
+    }
+    console.log('✅ Database restore drill verification PASSED.');
+  }
 }

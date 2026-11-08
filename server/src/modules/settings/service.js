@@ -18,6 +18,7 @@ const defaults = {
   store_tagline: 'Retail POS & Inventory Solutions',
   store_address: '70000 Ho Chi Minh City, Vietnam',
   store_phone: '+84 (028) 3822-9999',
+  receipt_footer: 'Please retain this physical receipt for customer service and warranty claims.',
 };
 
 /**

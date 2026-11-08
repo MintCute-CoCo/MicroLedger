@@ -48,6 +48,11 @@ export const settingsSchema = z
       .trim()
       .max(50, 'Store phone cannot exceed 50 characters.')
       .optional(),
+    receipt_footer: z
+      .string()
+      .trim()
+      .max(255, 'Receipt footer cannot exceed 255 characters.')
+      .optional(),
   })
   .strict()
   .refine(

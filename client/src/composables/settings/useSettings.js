@@ -44,6 +44,7 @@ export function useSettings() {
     store_tagline: 'Retail POS & Inventory Solutions',
     store_address: '70000 Ho Chi Minh City, Vietnam',
     store_phone: '+84 (028) 3822-9999',
+    receipt_footer: 'Please retain this physical receipt for customer service and warranty claims.',
   });
 
   const initialCurrencyCode = ref('USD');
@@ -52,6 +53,7 @@ export function useSettings() {
   const initialStoreTagline = ref('Retail POS & Inventory Solutions');
   const initialStoreAddress = ref('70000 Ho Chi Minh City, Vietnam');
   const initialStorePhone = ref('+84 (028) 3822-9999');
+  const initialReceiptFooter = ref('Please retain this physical receipt for customer service and warranty claims.');
 
   const busy = ref(false);
   const message = ref('');
@@ -107,6 +109,7 @@ export function useSettings() {
     form.store_tagline = initialStoreTagline.value;
     form.store_address = initialStoreAddress.value;
     form.store_phone = initialStorePhone.value;
+    form.receipt_footer = initialReceiptFooter.value;
     fieldErrors.value = {};
     confirmDialogOpen.value = false;
   }
@@ -126,6 +129,7 @@ export function useSettings() {
       if (data.store_tagline) form.store_tagline = data.store_tagline;
       if (data.store_address) form.store_address = data.store_address;
       if (data.store_phone) form.store_phone = data.store_phone;
+      if (data.receipt_footer) form.receipt_footer = data.receipt_footer;
 
       initialCurrencyCode.value = form.currency_code;
       initialCurrencyDecimals.value = form.currency_decimals;
@@ -133,6 +137,7 @@ export function useSettings() {
       initialStoreTagline.value = form.store_tagline;
       initialStoreAddress.value = form.store_address;
       initialStorePhone.value = form.store_phone;
+      initialReceiptFooter.value = form.receipt_footer;
     } catch (e) {
       error.value = e.message;
     }
@@ -167,6 +172,7 @@ export function useSettings() {
         store_tagline: form.store_tagline.trim(),
         store_address: form.store_address.trim(),
         store_phone: form.store_phone.trim(),
+        receipt_footer: (form.receipt_footer || '').trim(),
       };
 
       const updated = await apiRequest('/settings', {
@@ -183,6 +189,7 @@ export function useSettings() {
       if (updated.store_tagline) form.store_tagline = updated.store_tagline;
       if (updated.store_address) form.store_address = updated.store_address;
       if (updated.store_phone) form.store_phone = updated.store_phone;
+      if (updated.receipt_footer) form.receipt_footer = updated.receipt_footer;
 
       initialCurrencyCode.value = form.currency_code;
       initialCurrencyDecimals.value = form.currency_decimals;
@@ -190,6 +197,7 @@ export function useSettings() {
       initialStoreTagline.value = form.store_tagline;
       initialStoreAddress.value = form.store_address;
       initialStorePhone.value = form.store_phone;
+      initialReceiptFooter.value = form.receipt_footer;
 
       applyDisplaySettings(updated);
       message.value = 'Store settings saved successfully.';

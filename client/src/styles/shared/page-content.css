@@ -57,13 +57,14 @@
    Universal Metric Cards & Table Toolbar Sync (SalesView.vue Parity)
    ========================================================================== */
 .summary-cards-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 16px;
 }
 
 .summary-card {
+  flex: 1 1 200px;
   display: flex;
   align-items: center;
   gap: 11px;
@@ -75,8 +76,9 @@
 }
 
 .summary-icon {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 36px;
   height: 36px;
   border-radius: 11px;

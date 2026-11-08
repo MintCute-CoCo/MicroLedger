@@ -2,8 +2,9 @@
 
 .auth-page {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 30px 18px;
   background: #f5f7fb;
 }
@@ -29,15 +30,17 @@
 .auth-brand-mark {
   width: 39px;
   height: 39px;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 13px;
   background: #253d90;
   color: #ffffff;
 }
 
 .auth-form {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 

@@ -44,6 +44,7 @@ try {
   await client.connect();
   const role = await client.query("SELECT 1 FROM pg_catalog.pg_roles WHERE rolname = 'app_user'");
   await client.query(`${role.rowCount ? 'ALTER' : 'CREATE'} ROLE app_user LOGIN PASSWORD ${quoteLiteral(password)}`);
+  await client.query('ALTER ROLE app_user WITH NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS INHERIT');
   await client.query(`GRANT CONNECT ON DATABASE ${quoteIdentifier(databaseName)} TO app_user`);
   await client.query('GRANT USAGE ON SCHEMA public TO app_user');
   await client.query('GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app_user');

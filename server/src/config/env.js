@@ -22,10 +22,10 @@ const envSchema = z
   })
   .superRefine((data, ctx) => {
     if (data.NODE_ENV === 'production') {
-      if (!data.APP_DATABASE_URL && !process.env.DATABASE_URL) {
+      if (!data.APP_DATABASE_URL) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'DATABASE_URL or APP_DATABASE_URL is required in production',
+          message: 'APP_DATABASE_URL is strictly required in production to ensure unprivileged role isolation',
           path: ['APP_DATABASE_URL'],
         });
       }

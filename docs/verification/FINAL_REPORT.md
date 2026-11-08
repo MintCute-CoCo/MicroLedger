@@ -134,7 +134,7 @@ UAT was conducted using the 500-product sample catalogue with three designated p
 
 1. **Client Distribution Build:** Generated via Vite into `MicroLedger/client/dist`, fully bundle-optimized.
 2. **Database Migrations & Seeds:** Knex migration scripts cover the full lifecycle up to Phase 2; idempotent UAT seeding script (`npm run seed:uat`).
-3. **Automated Backup & Restore Tooling:** Shell and Node operational scripts (`server/scripts/backup-restore.js`) for automated snapshotting and point-in-time recovery.
+3. **Automated Backup & Restore Tooling:** Node operational scripts (`server/scripts/backup-restore.js`) supporting automated scheduled snapshots, tamper-evident SHA-256 checksums, optional AES-256-GCM encryption, 7-day retention pruning, and verified disaster recovery restoration drills (RTO < 1 s).
 4. **Continuous Integration Pipeline:** Configured in `.github/workflows/ci.yml` running Node 20, a PostgreSQL 16 container, client build, database migrations, full test suite, and load benchmarks on every pull request.
 5. **Comprehensive Documentation Suite:** 25 markdown documentation files covering architecture, database schemas, test cases, wireframes, and presentation guides.
 
@@ -142,5 +142,5 @@ UAT was conducted using the 500-product sample catalogue with three designated p
 
 ## 8. Conclusion
 
-MicroLedger satisfies all academic requirements for the Final Year Project and all functional and non-functional requirements set forth by the project charter. By combining strict transactional integrity, role-based security, intuitive responsive interfaces, and automated test coverage, MicroLedger provides a reliable, production-ready solution for modern retail management.
+MicroLedger satisfies all academic requirements for the Final Year Project and all functional and non-functional requirements set forth by the project charter. By combining strict transactional integrity, role-based database least-privilege, intuitive responsive interfaces, and automated test coverage, MicroLedger is verified and ready for the final degree presentation and university committee defense, with cloud hosting and HTTPS deployment staged for oral presentation (T-099).
 

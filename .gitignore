@@ -11,4 +11,9 @@ dist/
 coverage/
 *.log
 
+# Database Backup Snapshots
+backups/
+server/backups/*
+!server/backups/.gitkeep
+
 

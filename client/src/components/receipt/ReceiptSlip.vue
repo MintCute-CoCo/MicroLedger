@@ -14,6 +14,7 @@ import ReceiptHeader from './ReceiptHeader.vue';
 import ReceiptMeta from './ReceiptMeta.vue';
 import ReceiptItems from './ReceiptItems.vue';
 import ReceiptTotals from './ReceiptTotals.vue';
+import { displaySettings } from '../../utils/format.js';
 
 const props = defineProps({
   receiptData: {
@@ -51,7 +52,7 @@ const props = defineProps({
         THANK YOU FOR YOUR BUSINESS!
       </div>
       <div class="text-caption text-medium-emphasis">
-        Please retain this physical receipt for customer service and warranty claims.
+        {{ props.receiptData.footer || displaySettings.receipt_footer || 'Please retain this physical receipt for customer service and returns.' }}
       </div>
       <div class="text-body-2 font-weight-bold mt-2 letter-spacing-2">
         *{{ props.receiptData.saleNo }}*
