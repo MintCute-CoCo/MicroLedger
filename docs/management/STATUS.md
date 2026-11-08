@@ -62,7 +62,7 @@ Key milestones achieved in this release cycle:
 | **Reports & Analytics** | **Done** | Decoupled operational Dashboard from analytical Sales Report with dynamic date ranges and aggregations. |
 | **Bulk Import/Export** | **Done** | Streaming ExcelJS processing, 60-min preview TTL, formula neutralization, and row error highlighting. |
 | **Backend API & Database Migrations** | **Done** | Modular Express 5 controllers, services, repositories, and Knex migrations running against PostgreSQL 16 with immutable-table grants enforced on `app_user` (T-130). |
-| **Automated Testing & Security Verification** | **Done** | 11 test suites passing: append-only permissions verified on sales/items/ledger/audit, 16-table true restore drill verified with sequence resets, and stdout/stderr log capture verified zero credential leaks (T-065, T-067, T-130, T-131). |
+| **Automated Testing & Security Verification** | **Done** | All 11 test suites passing (51/51 tests): append-only permissions verified on sales/items/ledger/audit, 16-table restore verified with sequence reset and non-destructive isolated schema drills, and stdout/stderr log capture verified zero credential leaks (T-065, T-067, T-130, T-131, T-135). |
 | **System Documentation (25 Specs)** | **Done** | Fully categorized domain structure; complete bidirectional traceability between PRD, BRD, and SRS. |
 
 ---

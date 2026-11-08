@@ -305,3 +305,9 @@ MicroLedger/
 #### 7. Authentication: App-Managed JWT & Cookies vs. Cloud Identity Providers (Firebase / Auth0)
 - **Why App-Managed Authentication Was Chosen**:
   The system manages its own user identities, bcrypt password hashes, and rotating refresh tokens in httpOnly cookies. This guarantees that cashier terminals and warehouse devices can authenticate locally on the local network even during external internet service interruptions, with zero recurring vendor subscription fees.
+
+#### 8. Disaster Recovery: Application-Level JSON Snapshots vs. Raw pg_dump / Cloud Backups
+- **Why Application-Level JSON Snapshots Were Chosen**:
+  The backup utility (`server/scripts/backup-restore.js`) extracts all 16 tables in deterministic foreign-key topological order. It produces self-contained, human-auditable JSON snapshots protected by SHA-256 tamper-evident checksums and optional AES-256-GCM encryption (`BACKUP_ENCRYPTION_KEY`). This architecture enables true non-destructive disaster recovery drills into temporary isolated sandbox schemas without truncating or locking live store tables.
+- **Why Raw Cloud / Proprietary Dumps Were Rejected as Sole DR**:
+  Raw `pg_dump` binary archives require PostgreSQL superuser access, external host binaries, and full database truncation to test recovery, preventing non-destructive restore drills during live store hours.

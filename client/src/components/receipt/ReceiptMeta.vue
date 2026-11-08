@@ -16,7 +16,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="receipt-meta-grid my-2">
+  <div class="receipt-meta-list my-2">
     <div class="d-flex justify-space-between text-caption">
       <span class="text-medium-emphasis">Receipt No:</span>
       <span class="font-weight-bold">{{ props.receiptData.saleNo }}</span>
@@ -41,7 +41,7 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.receipt-meta-grid {
+.receipt-meta-list {
   display: flex;
   flex-direction: column;
   gap: 4px;

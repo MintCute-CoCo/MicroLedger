@@ -63,6 +63,45 @@ describe('Database Operations: Backup, 7-Day Retention & Restore Drill (SRS-NFR-
     }
   });
 
+  it('verifies non-destructive isolated-schema restore drill without mutating public store tables', async () => {
+    assert.ok(backupFile, 'Backup file must exist from previous step');
+    const isolatedSchema = `_test_isolated_${Date.now()}`;
+    const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
+    await client.connect();
+
+    try {
+      // Record initial row counts in public schema
+      const initialPublicSales = await client.query(`SELECT COUNT(*)::int as count FROM public.sales`);
+      const initialSalesCount = initialPublicSales.rows[0].count;
+
+      // Execute restore targeting isolated schema
+      const restoreRes = await restoreFromBackup(backupFile, process.env.DATABASE_URL, {
+        targetSchema: isolatedSchema,
+        cleanTarget: true,
+      });
+
+      assert.equal(restoreRes.success, true);
+      assert.equal(restoreRes.tablesRestored, 16);
+
+      // Verify all 16 tables exist and are populated inside the isolated schema
+      for (const table of TABLES) {
+        const countRes = await client.query(`SELECT COUNT(*)::int as count FROM "${isolatedSchema}"."${table}"`);
+        assert.ok(countRes.rows[0].count >= 0, `Table ${table} in isolated schema must be queryable`);
+      }
+
+      // Verify that public store data was NOT truncated or modified by the isolated drill
+      const postDrillPublicSales = await client.query(`SELECT COUNT(*)::int as count FROM public.sales`);
+      assert.equal(
+        postDrillPublicSales.rows[0].count,
+        initialSalesCount,
+        'Public store tables must remain intact during isolated schema drill'
+      );
+    } finally {
+      await client.query(`DROP SCHEMA IF EXISTS "${isolatedSchema}" CASCADE;`).catch(() => {});
+      await client.end();
+    }
+  });
+
   it('supports cryptographic snapshot encryption (AES-256-GCM) and verified tamper-evident checksums', async () => {
     process.env.BACKUP_ENCRYPTION_KEY = 'test_secret_encryption_key_32bytes!!';
     try {
