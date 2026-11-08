@@ -5,15 +5,12 @@
  * PURPOSE:
  * Serves as the primary security gateway for MicroLedger retail store staff.
  * Validates credentials, handles account lockout states (5 failed attempts -> 15 min lock),
- * and provides one-click account loading for local evaluation/demo modes.
+ * and presents the standard credential sign-in form.
  *
  * WIREFRAME SPECIFICATION:
  * Adheres strictly to UI_UX_WIREFRAMES.md §4.1 layout and typography.
  */
-import { computed } from 'vue';
 import { useLogin } from '../composables/auth/useLogin.js';
-
-const isDemoMode = computed(() => import.meta.env.VITE_DEMO_MODE === 'true');
 
 /**
  * Login view composable providing authentication sign-in routines,
@@ -28,10 +25,6 @@ const {
   submit,
 } = useLogin();
 
-function fillDemoAccount(user, pass) {
-  username.value = user;
-  password.value = pass;
-}
 </script>
 
 <template>
@@ -47,36 +40,6 @@ function fillDemoAccount(user, pass) {
       <p class="text-body-2 text-medium-emphasis mb-6">
         Point of Sale, Inventory Ledger &amp; Warranty System
       </p>
-
-      <div
-        v-if="isDemoMode"
-        class="auth-alert mb-4 text-caption"
-        style="background: #eff2fc; color: #253d90; border-color: #d4dce8; display: block;"
-        role="status"
-      >
-        <div class="mb-2 d-flex align-center ga-1">
-          <v-icon icon="mdi-flash" size="16" />
-          <strong>Standalone Demo Mode Active</strong>
-        </div>
-        <div class="d-flex ga-2">
-          <v-btn
-            size="x-small"
-            color="primary"
-            variant="tonal"
-            @click="fillDemoAccount('admin', 'adminpassword123')"
-          >
-            Admin (Full Access)
-          </v-btn>
-          <v-btn
-            size="x-small"
-            color="secondary"
-            variant="tonal"
-            @click="fillDemoAccount('minhanh', 'staffpassword123')"
-          >
-            Staff (Minh Anh)
-          </v-btn>
-        </div>
-      </div>
 
       <div
         v-if="auth.sessionError"

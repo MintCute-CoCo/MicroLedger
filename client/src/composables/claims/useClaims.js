@@ -29,6 +29,7 @@ export function useClaims() {
   const auth = useAuthStore();
   const isAdmin = computed(() => auth.user?.role === 'admin');
   const tableError = ref('');
+  const optionLoadError = ref('');
 
   /**
    * Table sub-composable.
@@ -151,6 +152,7 @@ export function useClaims() {
   const error = computed(() => {
     return (
       tableError.value ||
+      optionLoadError.value ||
       claimForm.formError.value ||
       transitions.transitionError.value ||
       detail.detailError.value ||
@@ -171,6 +173,7 @@ export function useClaims() {
 
   onMounted(async () => {
     load();
+    optionLoadError.value = '';
     try {
       const suppliersPromise = apiRequest('/suppliers').then((result) => {
         filtersState.suppliers.value = result.items || [];
@@ -182,7 +185,7 @@ export function useClaims() {
         suppliersPromise,
       ]);
     } catch (requestError) {
-      // Retain defaults if offline
+      optionLoadError.value = requestError.message;
     }
   });
 

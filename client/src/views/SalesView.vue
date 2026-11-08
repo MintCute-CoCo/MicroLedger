@@ -20,7 +20,6 @@ import { useSales } from '../composables/sales/useSales.js';
  */
 const {
   apiError,
-  apiMode,
   apiPage,
   apiSales,
   apiTotal,
@@ -84,7 +83,7 @@ const headers = [
 
       <div class="d-flex flex-wrap ga-2">
         <v-btn
-          v-if="isAdmin && apiMode"
+          v-if="isAdmin"
           variant="outlined"
           rounded="lg"
           class="w-100 w-sm-auto"
@@ -162,7 +161,6 @@ const headers = [
       v-model:to-date="toDate"
       v-model:min-total="minTotal"
       v-model:max-total="maxTotal"
-      :api-mode="apiMode"
       :total-count="apiTotal"
       :users="users"
       :customer-options="customerOptions"
@@ -181,7 +179,6 @@ const headers = [
       v-model:open="detailOpen"
       v-model:void-reason="voidReason"
       :sale="selectedSale"
-      :api-mode="apiMode"
       :is-admin="isAdmin"
       @close="selectedSale = null"
       @void="voidSelectedSale"

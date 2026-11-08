@@ -20,10 +20,10 @@ export const SALES_TABLE_HEADERS = [
  * Composable managing paginated sales records, server-side data fetching, and revenue total calculations.
  *
  * @param {Object} options - Configuration parameters.
- * @param {import('vue').Ref<boolean>} options.apiMode - Boolean ref indicating API mode.
- * @param {Object} options.filters - Reactive filter object from useSalesFilters. * @returns {Object} Table reactive state, pagination controls, and loader function.
+ * @param {Object} options.filters - Reactive filter object from useSalesFilters.
+ * @returns {Object} Table reactive state, pagination controls, and loader function.
  */
-export function useSalesTable({ apiMode, filters }) {
+export function useSalesTable({ filters }) {
   /**
    * Paginated list of sales returned from live server.
    */
@@ -184,10 +184,6 @@ export function useSalesTable({ apiMode, filters }) {
    * @param {Object} options - Vuetify data table options.
    */
   function onTableOptions(options) {
-    if (!apiMode.value) {
-      return;
-    }
-
     const nextPage = options.page || 1;
     const nextPageSize = options.itemsPerPage || pageSize.value;
 

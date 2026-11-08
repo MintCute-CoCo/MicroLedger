@@ -19,14 +19,15 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E5 — POS & Sales** | POS terminal, checkout, receipts, voids, idempotency | 10 | 10 / 10 | **Done** |
 | **E6 — Import & Export** | Excel streaming parser, CSV export, formula safety | 10 | 10 / 10 | **Done** |
 | **E7 — Reports & Audit** | Dashboard KPIs, sales reports, audit trail view | 5 | 5 / 5 | **Done** |
-| **E8 — Hardening** | Append-only security, backup/restore, RBAC tests | 5 | 5 / 5 | **Done** |
+| **E8 — Hardening** | Append-only security, backup/restore, RBAC tests | 5 | 3 / 5 | **In Progress** |
 | **E9 — Low Stock & Suppliers** | Low stock alerts, supplier directory | 2 | 2 / 2 | **Done** |
-| **E10 — Warranty & Claims** | Warranty records, 7-stage RMA machine, overdue calc | 10 | 10 / 10 | **Done** |
+| **E10 — Warranty & Claims** | Warranty records, 7-stage RMA machine, overdue calc | 11 | 11 / 11 | **Done** |
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
-| **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 7 | 7 / 7 | **Done** |
-| **E13 — Frontend Quality** | Composables, Vuetify primitives, demo mode, anti-slop | 17 | 17 / 17 | **Done** |
+| **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 8 | 8 / 8 | **Done** |
+| **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 20 | 20 / 20 | **Done** |
 | **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 15 | 14 / 15 | **In Progress** |
-| **Total** | **Full System Implementation Backlog** | **124** | **123 / 124** | **99% Complete** |
+| **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 6 | 0 / 6 | **Todo** |
+| **Total** | **Full System Implementation Backlog** | **134** | **125 / 134** | **93% Complete** |
 
 ---
 
@@ -154,9 +155,9 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | ID | Task | Size | Pri | Depends | Req | Status |
 |---|---|:---:|:---:|---|---|:---:|
 | T-064 | Endpoint role security test suite | M | Must | T-063 | NFR-06 | Done |
-| T-065 | Database backup & restore drill | M | Must | T-005 | NFR-10 | Done |
+| T-065 | Database backup & restore drill | M | Must | T-005 | NFR-10 | Todo |
 | T-066 | Append-only permission tests | S | Must | T-007 | NFR-12 | Done |
-| T-067 | Log inspection & PII masking tests | S | Must | T-063 | NFR-11 | Done |
+| T-067 | Log inspection & PII masking tests | S | Must | T-063 | NFR-11 | Todo |
 | T-068 | Phase 1 acceptance run (AC-001 to AC-033) | M | Must | all above | M1 | Done |
 
 ---
@@ -184,6 +185,7 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-078 | Void guards for active warranty claims | M | Should | T-044, T-074 | SRS-VOID-05 | Done |
 | T-079 | Client warranty & claim detail views | L | Should | T-075 | FR-022, FR-023 | Done |
 | T-080 | Warranty transition & date tests | L | Should | T-077 | BR-14 to BR-17 | Done |
+| T-126 | Surface claim form option load failures | S | Should | T-079 | NFR-03, NFR-04 | Done |
 
 ---
 
@@ -208,7 +210,8 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-088 | Execute UAT with 1 Admin & 2 Staff | L | Must | T-087 | BRD §12 | Done |
 | T-089 | UAT defect remediation & retest | L | Must | T-088 | M3 | Done |
 | T-090 | PRD/BRD & SRS Appendix alignment | M | Must | — | — | Done |
-| T-091 | Final report & defense rehearsal | L | Must | T-089 | M4 | Done |
+| T-091 | Final academic report & defense presentation prep | L | Must | T-089 | M4 | Done |
+| T-128 | Reconcile final defense rehearsal status with M4 gate | S | Must | T-091 | M4 | Done |
 
 ---
 
@@ -229,11 +232,13 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-109 | Fix 7-day dashboard chart rendering | S | Should | T-092 | Dashboard | Done |
 | T-110 | Encapsulate dialog form validations | M | Must | T-092 | SRS-PRD-01, SRS-INV-03 | Done |
 | T-111 | Surface claims list request failures | M | Should | T-092 | NFR-03, NFR-04 | Done |
-| T-112 | In-browser offline demo mode engine | M | Should | T-004 | Offline Demo | Done |
+| T-112 | Legacy in-browser demo engine (historical) | M | Should | T-004 | Offline Demo | Done |
 | T-113 | Anti-slop UI audit (tasteskill v2) | M | Should | T-093 | UI Design | Done |
 | T-114 | Refactor ResponsiveTable to Vuetify primitives | M | Should | T-093 | Rule 15, §11 | Done |
 | T-115 | Full-stack CI pipeline (Postgres 16) | M | Must | T-009 | NFR-13 | Done |
 | T-116 | Interactive system explainer HTML | M | Should | T-004 | Defense Guide | Done |
+| T-125 | Remove out-of-scope client demo engine | S | Must | T-112 | SRS §1.2 | Done |
+| T-127 | Remove legacy demo from architecture diagram | S | Should | T-125 | SRS §1.2 | Done |
 
 ---
 
@@ -256,3 +261,16 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-122 | Configurable store address/phone on receipt & general domain docs | S | Must | T-121 | SRS-SET-01, BSR §4.6 | Done |
 | T-123 | Decompose SettingsView and enforce architectural rules | S | Must | T-122 | SRS-SET-01, SRS-SAL-01 | Done |
 | T-124 | Codify system design consultation, task completion marking & defect tracking | S | Must | T-123 | AGENTS.md, AI_CONTEXT.md | Done |
+
+---
+
+## E15 — Security & Operations Audit
+
+| ID | Task | Size | Pri | Depends | Req | Status |
+|---|---|:---:|:---:|---|---|:---:|
+| T-129 | Guard destructive database scripts | M | Must | T-005 | NFR-05, NFR-11 | Todo |
+| T-130 | Enforce immutable-table DB grants | M | Must | T-007 | SRS-SAL-12, SRS-AUD-03, NFR-12 | Todo |
+| T-131 | Implement verified backup recovery | L | Must | T-065 | NFR-10 | Todo |
+| T-132 | Harden production API configuration | M | Must | T-099 | NFR-05, NFR-13 | Todo |
+| T-133 | Resolve uuid dependency advisory | S | Should | T-096 | NFR-11 | Todo |
+| T-134 | Correct verification documentation claims | M | Must | T-129, T-130, T-131, T-132 | SRS, M1, M3, M4 | Todo |

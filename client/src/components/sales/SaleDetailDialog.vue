@@ -13,7 +13,6 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  apiMode: Boolean,
   isAdmin: Boolean,
   voidReason: {
     type: String,

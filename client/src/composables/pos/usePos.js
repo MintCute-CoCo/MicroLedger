@@ -1,5 +1,4 @@
 import { computed, ref } from 'vue';
-import { useAuthStore } from '../../stores/auth.js';
 import {
   usePosCatalog,
   usePosCart,
@@ -19,8 +18,6 @@ import {
  * @returns {Object} Unified POS register state and handler methods.
  */
 export function usePos() {
-  const auth = useAuthStore();
-  const apiMode = computed(() => true);
 
   /**
    * Sale object passed to ReceiptDialog upon successful checkout.
@@ -97,8 +94,6 @@ export function usePos() {
   });
 
   return {
-    auth,
-    apiMode,
     errorMessage,
     registerLoading,
 

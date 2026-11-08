@@ -64,7 +64,6 @@ const props = defineProps({
     type: Number,
     default: 2,
   },
-  apiMode: Boolean,
   busy: Boolean,
   errorMessage: {
     type: String,

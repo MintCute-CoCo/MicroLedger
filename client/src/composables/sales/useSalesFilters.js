@@ -48,11 +48,10 @@ export function toPaymentMethodParam(label) {
  * and reference options (staff members, customers) for sales filtering.
  *
  * @param {Object} options - Configuration options.
- * @param {import('vue').Ref<boolean>} options.apiMode - Indicates if running against live API.
  * @param {Function} options.onFilterChange - Callback invoked when filter inputs change.
  * @returns {Object} Reactive filter state and reference lists.
  */
-export function useSalesFilters({ apiMode, onFilterChange }) {
+export function useSalesFilters({ onFilterChange }) {
   /**
    * Text search query matching receipt number, customer name, or staff member.
    */
@@ -136,9 +135,6 @@ export function useSalesFilters({ apiMode, onFilterChange }) {
       selectedCustomerId,
     ],
     () => {
-      if (!apiMode.value) {
-        return;
-      }
       if (filterTimer) {
         clearTimeout(filterTimer);
       }
@@ -151,10 +147,6 @@ export function useSalesFilters({ apiMode, onFilterChange }) {
   );
 
   watch(customerSearch, (keyword) => {
-    if (!apiMode.value) {
-      return;
-    }
-
     if (customerTimer) {
       clearTimeout(customerTimer);
     }
@@ -180,10 +172,6 @@ export function useSalesFilters({ apiMode, onFilterChange }) {
    * Fetches initial customer and staff reference options from backend API.
    */
   async function loadFilterReferences() {
-    if (!apiMode.value) {
-      return;
-    }
-
     try {
       const [customerRes, userRes] = await Promise.all([
         apiRequest('/customers?page_size=100'),

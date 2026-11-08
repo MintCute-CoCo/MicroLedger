@@ -9,7 +9,6 @@ import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime, formatMoney } from '../../utils/format.js';
 
 const props = defineProps({
-  apiMode: Boolean,
   totalCount: {
     type: Number,
     default: 0,
@@ -169,7 +168,7 @@ function getCustomerInitials(customer) {
             @update:model-value="emit('update:search', $event)"
           />
         </v-col>
-        <v-col v-if="props.apiMode" cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="4">
           <v-select
             :model-value="props.selectedUserId"
             :items="[
@@ -183,7 +182,7 @@ function getCustomerInitials(customer) {
             @update:model-value="emit('update:selectedUserId', $event)"
           />
         </v-col>
-        <v-col v-if="props.apiMode" cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="4">
           <v-autocomplete
             :model-value="props.selectedCustomerId"
             :search="props.customerSearch"
@@ -291,7 +290,7 @@ function getCustomerInitials(customer) {
     <ResponsiveTable
       :headers="props.headers"
       :items="props.items"
-      :server="props.apiMode"
+      :server="true"
       :items-length="props.totalCount"
       :page="props.page"
       :items-per-page="props.pageSize"

@@ -2,7 +2,7 @@
 
 > **Responsive Web POS, Transactional Inventory Ledger & Warranty Tracking System for Retail**  
 > *Designed for small retail stores and PC hardware/electronics merchants.*  
-> **Release (v1.0-fullstack):** Complete Full-Stack Retail Operations System featuring Vue 3 Client (`client/`), Modular Express 5 API (`server/`), Standalone In-Browser Demo Engine, and Living Documentation (`docs/`). See [`STATUS.md`](docs/management/STATUS.md).
+> **Release (v1.0-fullstack):** Full-Stack Retail Operations System featuring the Vue 3 Client (`client/`), Modular Express 5 API (`server/`), PostgreSQL database, and Living Documentation (`docs/`). The client requires the API; standalone offline mode is out of scope per SRS §1.2. See [`STATUS.md`](docs/management/STATUS.md).
 
 [![CI Pipeline](https://github.com/MintCute-CoCo/MicroLedger/actions/workflows/ci.yml/badge.svg)](https://github.com/MintCute-CoCo/MicroLedger/actions/workflows/ci.yml)
 ![Vue 3](https://img.shields.io/badge/Vue_3.5-4FC08D?style=flat-square&logo=vue.js&logoColor=white)
@@ -31,8 +31,7 @@ Unlike typical POS prototypes, MicroLedger enforces **transactional financial-gr
 - [Tech Stack](#-tech-stack)
 - [Repository Structure](#-repository-structure)
 - [Quick Start](#-quick-start)
-  - [Option A: Standalone Demo Mode (Zero DB Setup)](#option-a-standalone-demo-mode-instant-preview)
-  - [Option B: Full-Stack Setup with PostgreSQL](#option-b-full-stack-setup-with-postgresql)
+  - [Full-Stack Setup with PostgreSQL](#full-stack-setup-with-postgresql)
 - [Default Seed Accounts](#-default-seed-accounts)
 - [Available Scripts](#-available-scripts)
 - [Automated Testing & Benchmarks](#-automated-testing--benchmarks)
@@ -175,7 +174,7 @@ MicroLedger/
 │       └── ci.yml             # GitHub Actions CI pipeline configuration
 ├── client/                    # Vue 3 Frontend Application
 │   ├── src/
-│   │   ├── api/               # API clients & Standalone Demo Mode engine (client.js, demoEngine.js)
+│   │   ├── api/               # API client and request handling
 │   │   ├── components/        # Reusable Vuetify components (tables, dialogs, charts)
 │   │   ├── composables/       # 17 domain composables (cart, POS, inventory, claims, auth)
 │   │   ├── router/            # Routes, navigation metadata, and role guard guards
@@ -230,34 +229,11 @@ MicroLedger/
 ### Prerequisites
 - **Node.js**: v20 LTS or higher (`node -v`)
 - **npm**: v10 or higher (`npm -v`)
-- **PostgreSQL**: v16 or higher (required for Full-Stack mode; not required for Demo mode)
+- **PostgreSQL**: v16 or higher
 
 ---
 
-### Option A: Standalone Demo Mode (Instant Preview)
-
-Experience MicroLedger immediately without configuring a database or backend server. The frontend includes a fully functional in-memory mock engine.
-
-```powershell
-# 1. Navigate to the client directory
-cd client
-
-# 2. Copy the environment configuration
-Copy-Item .env.example .env
-
-# 3. Enable demo mode in client/.env:
-# Ensure VITE_DEMO_MODE=true
-
-# 4. Install dependencies and start the development server
-npm install
-npm run dev
-```
-
-Open your browser to `http://localhost:5173`. You can immediately interact with the POS terminal, create products, trigger stock movements, and test responsive layouts.
-
----
-
-### Option B: Full-Stack Setup with PostgreSQL
+### Full-Stack Setup with PostgreSQL
 
 #### 1. Setup Backend Server & Database
 
@@ -314,7 +290,6 @@ Copy-Item .env.example .env
 Ensure `client/.env` connects to the live API:
 ```ini
 VITE_API_BASE_URL=http://localhost:3000/api/v1
-VITE_DEMO_MODE=false
 ```
 
 Install and launch the client:

@@ -9,7 +9,6 @@ import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatMoney } from '../../utils/format.js';
 
 const props = defineProps({
-  apiMode: Boolean,
   canEdit: Boolean,
   categories: {
     type: Array,
@@ -95,7 +94,7 @@ const emit = defineEmits([
         <div>
           <h2 class="text-h6 font-weight-bold">All products</h2>
           <p class="text-caption text-medium-emphasis mb-0">
-            {{ props.apiMode ? props.itemsLength : props.items.length }} products found
+            {{ props.itemsLength }} products found
           </p>
         </div>
         <div class="d-flex align-center flex-wrap ga-2">

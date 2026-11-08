@@ -421,7 +421,7 @@
         <div class="arch-box selected" onclick="selectComponent('fe')">
           <span class="badge badge-ui">Presentation Layer</span>
           <h3 style="margin-top: 8px;">Single Page App (Vue 3)</h3>
-          <p class="muted" style="font-size: 0.85rem;">Vuetify 3 component primitives, Pinia auth store, in-browser offline demo engine.</p>
+          <p class="muted" style="font-size: 0.85rem;">Vuetify 3 component primitives, Pinia auth store, and Express API integration.</p>
           <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);">client/src/views/ & composables/</div>
         </div>
 
@@ -698,7 +698,7 @@
       files: "client/src/views/PosView.vue<br>client/src/composables/pos/usePosCheckout.js",
       inputs: "Cashier clicks, barcode scanner inputs, customer search queries",
       outputs: "JWT-authenticated JSON REST requests, printed thermal receipts",
-      rationale: "Provides a zero-jump, responsive UI that lets cashiers build carts in under 3 seconds with offline demo fallback."
+      rationale: "Provides a zero-jump, responsive UI that lets cashiers build carts in under 3 seconds while the client reads catalog data from the Express API."
     },
     api: {
       title: "Express 5 API Server & Routing Chrome",

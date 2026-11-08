@@ -7,7 +7,7 @@
  * Provides a resilient, centralized fetch wrapper for all client-to-server HTTP
  * interactions. Manages JSON request serialization, timeout cancellation via
  * AbortController, Bearer token injection, automatic token refresh rotation on
- * HTTP 401 Unauthorized, and transparent fallback to the in-browser Demo Engine.
+ * HTTP 401 Unauthorized.
  *
  * ACADEMIC / ARCHITECTURAL NOTES (FYP):
  * - Implements silent JWT renewal: when an access token expires (15 min TTL),
@@ -16,10 +16,7 @@
  * - Respects the local on-premise single-store network topology (VITE_API_BASE_URL).
  */
 
-import { handleDemoRequest, handleDemoDownload } from './demoEngine.js';
-
 const baseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1').replace(/\/$/, '');
-const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
 const DEFAULT_REQUEST_TIMEOUT_MS = 35_000;
 const DOWNLOAD_TIMEOUT_MS = 60_000;
 let tokenProvider = () => null;
@@ -152,7 +149,7 @@ function responseError(response, payload) {
 
 /**
  * Primary API request dispatcher with timeout management, authentication handling,
- * automatic token rotation, and in-browser demo engine delegation.
+ * automatic token rotation.
  *
  * @param {string} path - Endpoint path (e.g., '/products', '/sales').
  * @param {Object} [options={}] - Request configuration options.
@@ -171,10 +168,6 @@ export async function apiRequest(path, {
   signal,
   timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
 } = {}) {
-  if (isDemoMode) {
-    return handleDemoRequest(path, { method, body, headers });
-  }
-
   const timeout = createRequestTimeout(signal, timeoutMs);
   const options = { method, body, headers, signal: timeout.signal };
 
@@ -229,10 +222,6 @@ export async function apiRequest(path, {
  * @returns {Promise<void>} Resolves when download initiates.
  */
 export async function apiDownload(path, filename, { signal, timeoutMs = DOWNLOAD_TIMEOUT_MS } = {}) {
-  if (isDemoMode) {
-    return handleDemoDownload(path, filename);
-  }
-
   const timeout = createRequestTimeout(signal, timeoutMs);
   const options = { method: 'GET', signal: timeout.signal };
 

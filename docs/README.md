@@ -2,7 +2,7 @@
 
 > **Responsive Web POS, Transactional Inventory Ledger & Warranty Tracking System**  
 > Comprehensive documentation suite organized by domain for academic reviewers, developers, and system evaluators.  
-> **Release (v1.0-fullstack):** Complete Full-Stack Retail Operations System featuring Vue 3 Client (`client/`), Modular Express 5 API (`server/`), In-Browser Standalone Demo Engine, and Living Documentation (`docs/`). See [`management/STATUS.md`](management/STATUS.md).
+> **Release (v1.0-fullstack):** Full-Stack Retail Operations System featuring the Vue 3 Client (`client/`), Modular Express 5 API (`server/`), PostgreSQL database, and Living Documentation (`docs/`). The client requires the API; standalone offline mode is out of scope per SRS §1.2. See [`management/STATUS.md`](management/STATUS.md).
 
 ---
 

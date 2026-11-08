@@ -21,7 +21,7 @@ See `OBJECTIVES.md`. In short: one responsive app; Admin/Staff roles; safe POS w
 
 ## 4. Scope summary
 
-- **In:** Phase 1 Core (Must), Phase 2 Warranty (Should), In-Browser Standalone Demo Engine.
+- **In:** Phase 1 Core (Must), Phase 2 Warranty (Should). The client uses the API; offline mode is out of scope per SRS §1.2.
 - **Out:** full accounting / double-entry bookkeeping, tax calculation, external payment gateways, multi-branch/multi-warehouse, component-level repair servicing, AI forecasting.
 
 Details in `SCOPE.md`.
@@ -31,7 +31,7 @@ Details in `SCOPE.md`.
 | # | Deliverable |
 |---|---|
 | 1 | Working full-stack web application (Phase 1 and Phase 2) with automated CI/CD pipeline |
-| 2 | In-browser standalone demo engine enabling 100% offline evaluator demonstration |
+| 2 | API-connected Vue client supporting the full-stack evaluation environment |
 | 3 | Source code in Git with automated test suites and live PostgreSQL CI execution |
 | 4 | Complete living documentation set: BRD, PRD, SRS, architecture specs, and markdown hub |
 | 5 | Interactive standalone HTML architecture, workflow, sequence, and dataflow diagrams |

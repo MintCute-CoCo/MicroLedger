@@ -21,14 +21,12 @@ import {
 export function useSales() {
   const auth = useAuthStore();
 
-  const apiMode = computed(() => true);
   const isAdmin = computed(() => auth.user?.role === 'admin');
 
   /**
    * Filter sub-composable.
    */
   const filters = useSalesFilters({
-    apiMode,
     onFilterChange: () => {
       table.apiPage.value = 1;
       table.loadSales();
@@ -39,7 +37,6 @@ export function useSales() {
    * Table and pagination sub-composable.
    */
   const table = useSalesTable({
-    apiMode,
     filters,
   });
 
@@ -47,7 +44,6 @@ export function useSales() {
    * Transaction detail modal and void management sub-composable.
    */
   const detail = useSaleDetail({
-    apiMode,
     onVoidSuccess: async () => {
       await table.loadSales();
     },
@@ -72,7 +68,6 @@ export function useSales() {
   });
 
   return {
-    apiMode,
     isAdmin,
 
     // Filters state

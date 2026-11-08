@@ -23,7 +23,7 @@
   - **Window A (Desktop view)**: Chrome Incognito for **Admin** (`admin` / `adminpassword123`)
   - **Window B (Mobile Device Emulation - 360 px width)**: Chrome Device Mode for **Staff** (`minhanh` / `staffpassword123`)
 - [ ] Terminal window open to run automated test verification.
-- [ ] **Zero-Setup Offline Fallback**: In the event that PostgreSQL or the Node.js server cannot be started on the presentation machine, the frontend automatically falls back to **In-Browser Standalone Demo Mode** with pre-seeded demo accounts and simulated reactive localStorage transactions.
+- [ ] **API Availability**: Verify PostgreSQL and the Node.js API are running before presenting. The client requires the API; standalone/offline mode is out of scope (SRS §1.2).
 - [ ] **Interactive Explainer Window**: `MicroLedger_Explainer.html` open in a separate browser tab to visually walk through architectural tiers, request lifecycles, and dataflow mutations during Q&A.
 
 ---

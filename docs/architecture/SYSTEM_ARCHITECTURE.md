@@ -253,7 +253,7 @@ MicroLedger/
 | **Relational Database** | **PostgreSQL 16** | Strict ACID transactions, atomic row-level locks (`FOR UPDATE`), disk-level `CHECK (stock_qty >= 0)`, role permissions | MongoDB 7, MySQL 8, SQLite 3 | Lack of strict relational ledger invariants, missing append-only role security, and multi-document consistency risks |
 | **Query & Migration Layer**| **Knex 3** + **pg** | Programmatic transaction control, automated sequential migrations, 100% parameterized SQL injection defense | Prisma 5, TypeORM, Sequelize | Heavy ORM abstractions generating opaque queries; inability to execute fine-grained conditional atomic updates |
 | **Spreadsheet Processing**| **ExcelJS 4** (Server-Streaming) | Ephemeral in-memory streaming, formula injection sanitization, zero disk bloat | PapaParse, SheetJS (xlsx) | Client tampering risks, browser tab memory exhaustion on 50,000-row files, security vulnerabilities |
-| **Authentication Engine** | **Self-Managed JWT + Rotating Cookie** | Fully offline/LAN operational, zero external SaaS dependency, Argon2id/bcrypt security, automatic lockout | Firebase Auth, Auth0, Supabase | Inability to operate during local store internet outages, recurring vendor subscription costs |
+| **Authentication Engine** | **Self-Managed JWT + Rotating Cookie** | LAN-operable without an external identity provider, Argon2id/bcrypt security, automatic lockout | Firebase Auth, Auth0, Supabase | Recurring vendor subscription costs and external identity-provider dependency |
 | **Continuous Integration**| **GitHub Actions** | Automated end-to-end testing with containerized PostgreSQL service container on every commit/PR | Jenkins, CircleCI, GitLab CI | Complex self-hosted maintenance, external infrastructure overhead |
 
 ---
@@ -276,9 +276,9 @@ MicroLedger/
 
 #### 3. Architecture: Pure Client SPA (Vite) vs. SSR / Full-Stack Frameworks (Next.js / Nuxt)
 - **Why Vite SPA Was Chosen**:
-  MicroLedger is designed for on-premise single-store operations (cashier terminals, manager desks, warehouse tablets). A pure Single Page Application built by Vite compiles in under 1 second (700 ms) into static HTML/JS/CSS assets that can be served from any lightweight web server (or run offline via the embedded demo engine).
+  MicroLedger is designed for single-store operations (cashier terminals, manager desks, warehouse tablets). A pure Single Page Application built by Vite compiles into static HTML/JS/CSS assets that can be served from a lightweight web server and connects to the Express API for application data. Standalone offline operation is out of scope (SRS §1.2).
 - **Why Next.js / Nuxt Was Rejected**:
-  Server-Side Rendering (SSR) requires running a persistent Node.js server to render frontend HTML, doubling the infrastructure footprint, introducing hydration mismatch bugs, and complicating local offline store operation.
+  Server-Side Rendering (SSR) requires a persistent rendering runtime, increasing the infrastructure footprint and introducing hydration complexity without a requirement for server-rendered pages.
 
 #### 4. Backend: Node.js + Express 5 vs. NestJS, Python (Django), & Java (Spring Boot)
 - **Why Express 5 on Node.js Was Chosen**:

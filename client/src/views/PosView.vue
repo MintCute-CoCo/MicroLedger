@@ -14,7 +14,6 @@ import { categoryIcon } from '../composables/products/useProductsTable.js';
  * category filtering, real-time cart manipulation, customer assignment, and instant checkout.
  */
 const {
-  apiMode,
   busy,
   registerLoading,
   errorMessage,
@@ -110,7 +109,6 @@ onMounted(() => {
           :total="total"
           :currency-code="displaySettings.currency_code"
           :currency-decimals="displaySettings.currency_decimals"
-          :api-mode="apiMode"
           :busy="busy"
           :parse-serial-numbers="parseSerialNumbers"
           @update:selected-customer-id="selectedCustomerId = $event"

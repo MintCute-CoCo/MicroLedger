@@ -10,7 +10,6 @@ import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDateTime } from '../../utils/format.js';
 
 const props = defineProps({
-  apiMode: Boolean,
   items: {
     type: Array,
     default: () => [],
@@ -124,7 +123,7 @@ function formatChange(value) {
     <ResponsiveTable
       :headers="props.headers"
       :items="props.items"
-      :server="props.apiMode"
+      :server="true"
       :items-length="props.itemsLength"
       :page="props.page"
       :items-per-page="props.pageSize"

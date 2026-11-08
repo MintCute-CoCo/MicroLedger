@@ -5264,7 +5264,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </g>
         <g data-graph-role="automatic-crossover" style="--step:1">
           <path data-graph-role="automatic-crossover-underlay" d="M 305 260 L 305 170" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="spa" data-edge-to="demo_engine" data-edge-label="fallback" data-edge-key="1" data-edge-id="spa-demo" data-composition-points="305,260;305,170" data-composition-crossover="halo" data-composition-independent="true" d="M 305 260 L 305 170" class="a-dashed" data-animate="edge" style="--step:1" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+          <path data-edge-from="spa" data-edge-to="client_config" data-edge-label="API base URL" data-edge-key="1" data-edge-id="spa-config" data-composition-points="305,260;305,170" data-composition-crossover="halo" data-composition-independent="true" d="M 305 260 L 305 170" class="a-dashed" data-animate="edge" style="--step:1" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:2">
           <path data-graph-role="automatic-crossover-underlay" d="M 380 290 L 450 290" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
@@ -5324,8 +5324,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <text data-detail="fine" x="305" y="312" class="t-frontend" font-size="7" text-anchor="middle">client/src</text>
         </g>
 
-        <g id="node-demo_engine" data-node-id="demo_engine" data-node-label="Demo Engine" tabindex="0" role="button" aria-label="Focus Demo Engine, In-Memory Simulation, Retail Store Local Network (LAN)" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="In-Memory Simulation" data-node-tag="Offline Fallback" data-node-context="Retail Store Local Network (LAN)">
-          <title>Demo Engine · In-Memory Simulation · Retail Store Local Network (LAN) · Offline Fallback</title>
+        <g id="node-client_config" data-node-id="client_config" data-node-label="API Configuration" tabindex="0" role="button" aria-label="Focus API Configuration, Configured Base URL, Retail Store Local Network (LAN)" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Configured Base URL" data-node-tag="client/.env" data-node-context="Retail Store Local Network (LAN)">
+          <title>API Configuration · Configured Base URL · Retail Store Local Network (LAN) · client/.env</title>
           <rect x="230" y="110" width="150" height="60" rx="8" class="c-mask"/>
           <rect x="230" y="110" width="150" height="60" rx="8" class="c-frontend" data-animate="node" style="--step:2" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(236 116) scale(0.6875)">
@@ -5334,9 +5334,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="305" y="138" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Demo Engine</text>
-        <text data-detail="context" x="305" y="154" class="t-muted" font-size="9" text-anchor="middle">In-Memory Simulation</text>
-        <text data-detail="fine" x="305" y="162" class="t-frontend" font-size="7" text-anchor="middle">Offline Fallback</text>
+          <text data-node-label="" data-detail-anchor="" x="305" y="138" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">API Configuration</text>
+        <text data-detail="context" x="305" y="154" class="t-muted" font-size="9" text-anchor="middle">Configured Base URL</text>
+        <text data-detail="fine" x="305" y="162" class="t-frontend" font-size="7" text-anchor="middle">client/.env</text>
         </g>
 
         <g id="node-gateway" data-node-id="gateway" data-node-label="Express 5 Gateway" tabindex="0" role="button" aria-label="Focus Express 5 Gateway, REST API :3000, Node.js 20 Backend Runtime Environment" aria-pressed="false" data-node-kind="backend" data-node-sublabel="REST API :3000" data-node-tag="server/src/app.js" data-node-context="Node.js 20 Backend Runtime Environment">
@@ -5431,9 +5431,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <rect x="175.8" y="270" width="48.4" height="14" rx="3" class="c-mask"/>
           <text x="200" y="280" class="t-edge-emphasis" font-size="8" text-anchor="middle">Local UI</text>
         </g>
-        <g data-detail="context" data-edge-from="spa" data-edge-to="demo_engine" data-edge-label="fallback" data-edge-key="1" data-edge-id="spa-demo">
+        <g data-detail="context" data-edge-from="spa" data-edge-to="client_config" data-edge-label="API base URL" data-edge-key="1" data-edge-id="spa-config">
           <rect x="280.8" y="240" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="305" y="250" class="t-edge-dashed" font-size="8" text-anchor="middle">fallback</text>
+          <text x="305" y="250" class="t-edge-dashed" font-size="8" text-anchor="middle">API base URL</text>
         </g>
         <g data-detail="context" data-edge-from="spa" data-edge-to="gateway" data-edge-label="HTTPS REST" data-edge-key="2" data-edge-id="spa-gateway">
           <rect x="386" y="270" width="58" height="14" rx="3" class="c-mask"/>
@@ -5689,7 +5689,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <ul>
           <li>Vue 3 Single Page Application with strict Vuetify 3 UI primitives</li>
           <li>Reactive Pinia store managing token rotation and cashier session</li>
-          <li>Client-side demo engine provides full offline exploration without backend</li>
+          <li>Client reads application data from the configured Express API base URL</li>
         </ul>
       </div>
 

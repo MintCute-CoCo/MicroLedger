@@ -7,11 +7,10 @@ import { formatPaymentMethod } from './useSalesFilters.js';
  * and administrative transaction voiding operations.
  *
  * @param {Object} options - Configuration options.
- * @param {import('vue').Ref<boolean>} options.apiMode - Indicates if running live API mode.
  * @param {Function} options.onVoidSuccess - Callback invoked after a sale is voided to refresh records.
  * @returns {Object} Selected sale reactive state and action handlers.
  */
-export function useSaleDetail({ apiMode, onVoidSuccess }) {
+export function useSaleDetail({ onVoidSuccess }) {
   /**
    * Currently inspected sale object including line items.
    */
@@ -42,10 +41,6 @@ export function useSaleDetail({ apiMode, onVoidSuccess }) {
     detailOpen.value = true;
     voidReason.value = '';
     detailError.value = '';
-
-    if (!apiMode.value) {
-      return;
-    }
 
     try {
       const sale = await apiRequest(`/sales/${item.id}`);

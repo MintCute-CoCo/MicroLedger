@@ -9,7 +9,6 @@
 import ResponsiveTable from '../ResponsiveTable.vue';
 
 const props = defineProps({
-  apiMode: Boolean,
   items: {
     type: Array,
     default: () => [],
@@ -107,7 +106,7 @@ const emit = defineEmits([
     <ResponsiveTable
       :headers="props.headers"
       :items="props.items"
-      :server="props.apiMode"
+      :server="true"
       :items-length="props.itemsLength"
       :page="props.page"
       :items-per-page="props.pageSize"
