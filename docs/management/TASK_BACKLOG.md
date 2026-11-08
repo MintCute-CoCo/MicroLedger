@@ -25,8 +25,8 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 7 | 7 / 7 | **Done** |
 | **E13 — Frontend Quality** | Composables, Vuetify primitives, demo mode, anti-slop | 17 | 17 / 17 | **Done** |
-| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 11 | 10 / 11 | **In Progress** |
-| **Total** | **Full System Implementation Backlog** | **122** | **121 / 122** | **99% Complete** |
+| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 15 | 14 / 15 | **In Progress** |
+| **Total** | **Full System Implementation Backlog** | **124** | **123 / 124** | **99% Complete** |
 
 ---
 
@@ -255,3 +255,4 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-121 | Normalize receipt monetary cents parsing & fix double scaling | S | Must | T-119 | SRS-SAL-01, AC-016 | Done |
 | T-122 | Configurable store address/phone on receipt & general domain docs | S | Must | T-121 | SRS-SET-01, BSR §4.6 | Done |
 | T-123 | Decompose SettingsView and enforce architectural rules | S | Must | T-122 | SRS-SET-01, SRS-SAL-01 | Done |
+| T-124 | Codify system design consultation, task completion marking & defect tracking | S | Must | T-123 | AGENTS.md, AI_CONTEXT.md | Done |

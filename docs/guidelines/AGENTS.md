@@ -52,25 +52,32 @@ Use the following categorized documents according to the task:
 3. Do not invent requirements, roles, permissions, database relationships, or business rules when they are already documented.
 4. If documents conflict, identify the conflict before implementing the change.
 5. Follow `docs/foundation/SCOPE.md` and `docs/requirements/SRS.md` when determining whether functionality belongs in the project.
-6. For database changes, consult `docs/architecture/DATABASE_DESIGN.md` and `docs/architecture/SYSTEM_ARCHITECTURE.md`.
-7. For authentication, authorization, or role-related changes, consult `docs/requirements/USER_ROLES.md` and the relevant requirements in `docs/requirements/SRS.md`.
-8. For UI changes, consult `docs/architecture/UI_UX_WIREFRAMES.md` and relevant requirements.
-9. For feature implementation, check `docs/requirements/USER_STORIES.md` and `docs/requirements/ACCEPTANCE_CRITERIA.md`.
-10. Check `docs/management/STATUS.md` and `docs/management/TASK_BACKLOG.md` before starting substantial work so existing progress and planned work are not duplicated.
-11. Follow `docs/management/DEFINITION_OF_DONE.md` when completing implementation work, including the required evidence in the Frontend Checklist for every UI task.
-12. **Mandatory Management Synchronization:** Whenever you implement a feature, resolve a bug, refactor code, apply UI/taste fixes, or adjust CI pipelines, you MUST immediately update the management records in `docs/management/` (`STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, `DEFINITION_OF_DONE.md`). Never leave management documentation out of sync with actual code reality.
+6. **System Design Grounding First:** Before planning or modifying any module, always read the system design and architecture specifications (`docs/architecture/SYSTEM_ARCHITECTURE.md`, `docs/architecture/DATABASE_DESIGN.md`, `docs/architecture/UI_UX_WIREFRAMES.md`). Ground your changes in the overall architecture, component hierarchy, and data flows so you never get lost in the codebase or build disjointed implementations.
+7. For database changes, consult `docs/architecture/DATABASE_DESIGN.md` and `docs/architecture/SYSTEM_ARCHITECTURE.md`.
+8. For authentication, authorization, or role-related changes, consult `docs/requirements/USER_ROLES.md` and the relevant requirements in `docs/requirements/SRS.md`.
+9. For UI changes, consult `docs/architecture/UI_UX_WIREFRAMES.md` and relevant requirements.
+10. For feature implementation, check `docs/requirements/USER_STORIES.md` and `docs/requirements/ACCEPTANCE_CRITERIA.md`.
+11. Check `docs/management/STATUS.md` and `docs/management/TASK_BACKLOG.md` before starting substantial work so existing progress and planned work are not duplicated.
+12. Follow `docs/management/DEFINITION_OF_DONE.md` when completing implementation work, including the required evidence in the Frontend Checklist for every UI task.
+13. **Mark Completed Work Immediately:** Whenever you finish any task, subtask, bug fix, or refactoring, immediately mark it as `Done` (or check its box) in `docs/management/TASK_BACKLOG.md`, `STATUS.md`, and `DEVELOPMENT_ROADMAP.md`. Never leave completed work unmarked.
+14. **Explicit Defect Disclosure & Tracking:** Whenever you discover a bug, defect, visual inconsistency, calculation anomaly, or substandard pattern:
+    - **Call it out immediately** with complete transparency in your response to the user.
+    - **Log and track it as an explicit task or open item** in `TASK_BACKLOG.md` and `STATUS.md`.
+    - Continue to remind the user and track the item in subsequent tasks until it is verified and marked `Done`, so everyone clearly knows whether it is finished or still open.
+15. **Mandatory Management Synchronization:** Whenever you implement a feature, resolve a bug, refactor code, apply UI/taste fixes, or adjust CI pipelines, you MUST immediately update the management records in `docs/management/` (`STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, `DEFINITION_OF_DONE.md`). Never leave management documentation out of sync with actual code reality.
 
 ## Change Discipline
 
-Before implementing a significant feature:
+Before implementing a feature, fix, or refactor:
 
-1. Identify the relevant requirements.
-2. Identify the relevant architecture/design documents.
-3. Check the current project status and backlog.
-4. Implement the smallest change that satisfies the documented requirements.
-5. Validate the implementation against the relevant acceptance criteria.
-6. Update documentation when the implementation changes an established project decision, requirement, architecture, or status.
-7. Synchronize `docs/management/` files immediately to reflect the completed work.
+1. Identify the relevant requirements in `SRS.md` and business rules in `BSR.md`.
+2. **Review the System Design:** Consult `docs/architecture/SYSTEM_ARCHITECTURE.md`, `docs/architecture/DATABASE_DESIGN.md`, and `docs/architecture/UI_UX_WIREFRAMES.md` to see the complete structural picture, interfaces, and component hierarchy before writing code so you never lose orientation.
+3. Check the current project status and backlog in `STATUS.md` and `TASK_BACKLOG.md`.
+4. If any bug, defect, or discrepancy is discovered, immediately call it out to the user and log a backlog task to track it.
+5. Implement the smallest change that satisfies the documented requirements while maintaining strict separation of concerns.
+6. Validate the implementation against the relevant acceptance criteria and automated tests.
+7. Update documentation when the implementation changes an established project decision, requirement, architecture, or status.
+8. **Mark Completed Work Immediately:** Synchronize `docs/management/` files (`STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, `DEFINITION_OF_DONE.md`) immediately to mark completed tasks as `Done`.
 
 ## Conflict Handling
 

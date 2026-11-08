@@ -34,6 +34,7 @@ MicroLedger: a responsive web POS, inventory and warranty-tracking app for **one
 14. Seeds and test fixtures use authentic PC hardware catalog data (Intel, MSI, Corsair, WD, Kingston). This is reference data only. Application code, UI labels, icons, validation and error messages must be retail-neutral and must not assume PC hardware. Faker.js and random hash strings are prohibited.
 15. Frontend strictly uses Vuetify 3 components (`v-container`, `v-row`, `v-col`, `v-card`, `v-data-table` / `ResponsiveTable`, `v-btn`, `v-select`, `v-chip`, etc.) for all layouts, grids, and UI elements. Raw HTML tables (`<table>`, `<tr>`, `<td>`) and custom scoped CSS for layout purposes are strictly prohibited.
 16. **Reporting Scope & Profit/Margin:** The Dashboard is strictly a static "Today / 7-Day" operational performance snapshot. Dynamic date-range boundaries and multidimensional groupings (`day`, `product`, `category`, `user`, `payment`) are exclusively handled by the dedicated Sales Report module (`/reports/sales`, `SalesReportView.vue`). Profit and margin calculations and cost-price tracking in sales reports are out of scope (Could Have); sales reports evaluate units sold, subtotal, discounts, and net revenue.
+17. **System Design Grounding, Immediate Task Marking & Defect Transparency:** Always review the system design and architecture specifications (`docs/architecture/SYSTEM_ARCHITECTURE.md`, `docs/architecture/DATABASE_DESIGN.md`, `docs/architecture/UI_UX_WIREFRAMES.md`) before writing code so you never lose orientation in the codebase or build incompatible designs. When any task or sub-item is completed, immediately mark it as `Done` in `STATUS.md`, `TASK_BACKLOG.md`, and `DEVELOPMENT_ROADMAP.md`. When any bug, defect, visual inconsistency, or substandard code pattern is discovered, explicitly call it out to the user and log it into `TASK_BACKLOG.md` / `STATUS.md` as an open task, reminding the user until it is verified and finished.
 
 ## 4. Business rules in one place
 
@@ -62,13 +63,14 @@ MicroLedger: a responsive web POS, inventory and warranty-tracking app for **one
 
 ## 6. How to work on a task
 
-1. Find the task in `TASK_BACKLOG.md` and its requirement IDs in `SRS.md`.
-2. Read the matching acceptance criteria in `ACCEPTANCE_CRITERIA.md`.
-3. Write or update tests first for the business rule.
-4. Implement service → repository → controller → route → client.
-5. Check against `DEFINITION_OF_DONE.md`.
-6. Update `STATUS.md` (task status, decisions, open items).
-7. **Mandatory Management Synchronization:** Update `docs/management/STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, and `DEFINITION_OF_DONE.md` immediately upon completing or refining any task. Management documentation must never lag behind code reality.
+1. Find the task in `TASK_BACKLOG.md` and its requirement IDs in `SRS.md` / `BSR.md`.
+2. **Consult System Design & Architecture:** Read `docs/architecture/SYSTEM_ARCHITECTURE.md`, `docs/architecture/DATABASE_DESIGN.md`, and `docs/architecture/UI_UX_WIREFRAMES.md` to ground the change in the existing topology, interfaces, and component hierarchy before writing code so you never lose context or invent conflicting designs.
+3. Read the matching acceptance criteria in `ACCEPTANCE_CRITERIA.md`.
+4. Write or update tests first for the business rule.
+5. Implement service → repository → controller → route → client (strictly adhering to module decoupling).
+6. **Defect Callout & Tracking:** If any bug, defect, visual inconsistency, or substandard code pattern is detected during development or auditing, immediately report it to the user and log a backlog task in `TASK_BACKLOG.md` / `STATUS.md` to track its resolution.
+7. Check against `DEFINITION_OF_DONE.md`.
+8. **Mark Done Immediately:** Update `docs/management/STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, and `DEFINITION_OF_DONE.md` immediately, explicitly marking completed items as `Done`. Management documentation must never lag behind code reality.
 
 ## 7. When unsure
 

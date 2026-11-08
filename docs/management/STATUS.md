@@ -40,6 +40,7 @@ Key milestones achieved in this release cycle:
 | **Receipt Cents Normalization & Scale Fix** | Frontend & POS | **Done** | Unified monetary parsing in `ReceiptDialog.vue` and `useSaleDetail.js` to eliminate double-scaling of integer cents (resolved $69 $\to$ $6900 display discrepancy). |
 | **Configurable Store Profile & Domain Flexibility** | Full-Stack & Specs | **Done** | Enabled customizable store name, address, telephone, and tagline in `SettingsView.vue` and `ReceiptDialog.vue`; updated documentation to formalize general retail platform scope with PC hardware as the concrete reference fixture. |
 | **Settings Decomposition & Architectural Rules Enforcement** | Frontend Architecture & Specs | **Done** | Decomposed `SettingsView.vue` into focused subcomponents; extracted receipt state to `useReceipt.js`; restored DM Sans / Manrope font stack per UI_UX §2.1; removed off-palette hex colors; aligned Login with wireframe 4.1; established Frontend Checklist in `DEFINITION_OF_DONE.md`. |
+| **System Design Grounding, Task Marking & Defect Transparency** | Guidelines & Governance | **Done** | Codified rules in `AGENTS.md`, `AI_CONTEXT.md` (Rule 17, §6) and `DEFINITION_OF_DONE.md` requiring system architecture consultation upfront, immediate task completion marking, and explicit defect disclosure & tracking. |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
 
 ---

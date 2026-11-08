@@ -10,7 +10,7 @@
 The **Frontend Single-Page Application (`client/`)** is considered **Done** and ready for GitHub presentation when every criterion below is verified:
 
 ## Frontend Checklist (required evidence for every UI task)
-- [ ] Docs read: AGENTS.md, AI_CONTEXT.md, UI_UX_WIREFRAMES.md, and the SRS/AC IDs for this task (list the IDs).
+- [ ] Docs & System Design read: AGENTS.md, AI_CONTEXT.md, UI_UX_WIREFRAMES.md, SYSTEM_ARCHITECTURE.md, and the SRS/AC IDs for this task (list the IDs). Grounded in the system architecture to prevent disconnected code.
 - [ ] grep output attached, zero violations (or each hit justified with a doc section) for:
       - font-size with px
       - <table, <tr, <td
@@ -25,7 +25,8 @@ The **Frontend Single-Page Application (`client/`)** is considered **Done** and 
 - [ ] Every function has a block comment; no one-liners or chained array methods; one statement per line (AI_CONTEXT §10-11).
 - [ ] Typography uses only text-h5, text-h6, text-overline, text-body-2, text-caption; fonts per UI_UX §2.1 (DM Sans, Manrope).
 - [ ] Touch targets are at least 44px; layout works at 360px width.
-- [ ] STATUS.md, TASK_BACKLOG.md, DEVELOPMENT_ROADMAP.md and DEFINITION_OF_DONE.md are updated (AGENTS.md rule 12).
+- [ ] Defect transparency & tracking: Any bugs, defects, visual glitches, or substandard patterns discovered during the work are explicitly stated in the response and recorded in TASK_BACKLOG.md / STATUS.md.
+- [ ] Task completion marked: STATUS.md, TASK_BACKLOG.md, DEVELOPMENT_ROADMAP.md and DEFINITION_OF_DONE.md are updated, with completed items explicitly marked Done (AGENTS.md rules 13, 14, 15).
 - [ ] No suppression comments without a cited doc section.
 
 ### 1.1 UI/UX & Component Architecture
