@@ -10,6 +10,7 @@ export const CLAIM_TABLE_HEADERS = [
   { title: 'CLAIM DATE', key: 'claim_date', sortable: false },
   { title: 'SUPPLIER', key: 'supplier_name', sortable: false },
   { title: 'STATUS', key: 'status', sortable: false },
+  { title: 'RESOLUTION', key: 'resolution', sortable: false },
   { title: 'DUE', key: 'due', sortable: false },
   { title: '', key: 'actions', sortable: false },
 ];

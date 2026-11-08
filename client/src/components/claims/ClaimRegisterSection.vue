@@ -8,6 +8,7 @@
  */
 import ResponsiveTable from '../ResponsiveTable.vue';
 import { formatDate } from '../../utils/format.js';
+import { formatResolution, getResolutionColor } from '../../composables/claims/index.js';
 
 const props = defineProps({
   rows: {
@@ -201,6 +202,17 @@ const emit = defineEmits([
           </template>
           <template #item.claim_date="{ item }">
             <span class="text-body-2">{{ formatDate(item.claim_date) }}</span>
+          </template>
+          <template #item.resolution="{ item }">
+            <v-chip
+              v-if="item.resolution"
+              :color="getResolutionColor(item.resolution)"
+              variant="tonal"
+              size="small"
+            >
+              {{ formatResolution(item.resolution) }}
+            </v-chip>
+            <span v-else class="text-medium-emphasis">—</span>
           </template>
           <template #item.due="{ item }">
             <v-chip

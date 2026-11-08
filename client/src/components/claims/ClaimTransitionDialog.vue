@@ -6,6 +6,8 @@
  * Enforces valid state machine moves (e.g., dispatching to supplier, recording
  * actual return dates, logging transition notes) with dynamic form requirements.
  */
+import { CLAIM_RESOLUTIONS } from '../../composables/claims/index.js';
+
 const props = defineProps({
   open: Boolean,
   busy: Boolean,
@@ -40,12 +42,7 @@ const emit = defineEmits([
   'submit',
 ]);
 
-const resolutionOptions = [
-  { title: 'Repaired', value: 'repaired' },
-  { title: 'Replaced', value: 'replaced' },
-  { title: 'Cannot repair', value: 'cannot_repair' },
-  { title: 'Other', value: 'other' },
-];
+const resolutionOptions = CLAIM_RESOLUTIONS;
 </script>
 
 <template>

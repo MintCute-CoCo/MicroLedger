@@ -263,6 +263,7 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-124 | Codify system design consultation, task completion marking & defect tracking | S | Must | T-123 | AGENTS.md, AI_CONTEXT.md | Done |
 | T-136 | Align frontend logic and design rules | M | Must | T-123 | SRS-SET-01, SRS-UI-07, AGENTS §Quality, AI_CONTEXT §11 | Done |
 | T-137 | Split POS and sales register sections | M | Should | T-092, T-094 | AGENTS §Quality, AI_CONTEXT §3, §11 | Done |
+| T-138 | Display claim resolution status, badges and timeline notes | S | Must | T-095 | SRS-WAR-03, AC-038 | Done |
 
 ---
 

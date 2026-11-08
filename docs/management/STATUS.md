@@ -45,6 +45,7 @@ Key milestones achieved in this release cycle:
 | **Claims Form Option Load Errors** | Defect / UX | **Done** | Claims option request failures now surface through the view error state (T-126). |
 | **Final Defense Rehearsal Status** | Documentation / Governance | **Done** | Reconciled T-091 to report and presentation preparation (Done); live committee rehearsal is tracked under M4 (T-128). |
 | **Backend Security & Operations Audit** | Security / Data Safety | **Done** | Guarded destructive DB scripts against remote/production targets; enforced immutable-table grants on `app_user`; verified 16-table backup, isolated-schema restore drill, and 7-day retention; sanitized 500 error logs; hardened fail-closed production env schema; converted remaining CSS grid layouts to Vuetify flex primitives (T-065, T-067, T-129–T-135). |
+| **Claim Resolution Visibility & Timeline Tracking** | Full-Stack Claims / UX | **Done** | Surfaced repair/replacement resolution badges in claims table and detail modal; recorded transition resolution in status timeline note (T-138). |
 | **Dependency Advisory Review** | Dependencies / Security | **Done** | Overrode ExcelJS transitive `uuid` to `^11.1.1` in `server/package.json`; verified `npm audit --omit=dev` reports 0 vulnerabilities with full API test compatibility (T-133). |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
 

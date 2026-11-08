@@ -7,6 +7,7 @@
  * and immutable status audit logs.
  */
 import { formatDate, formatDateTime } from '../../utils/format.js';
+import { formatResolution, getResolutionColor } from '../../composables/claims/index.js';
 
 const props = defineProps({
   open: Boolean,
@@ -63,6 +64,32 @@ const emit = defineEmits(['update:open']);
           <v-col cols="12" sm="6">
             <div class="text-caption text-medium-emphasis">Claim date</div>
             <div class="text-body-2 font-weight-medium">{{ formatDate(props.detail.claim_date) }}</div>
+          </v-col>
+          <v-col
+            v-if="props.detail.resolution || props.selected?.resolution"
+            cols="12"
+            sm="6"
+          >
+            <div class="text-caption text-medium-emphasis">Resolution</div>
+            <div class="text-body-2 font-weight-medium mt-1">
+              <v-chip
+                :color="getResolutionColor(props.detail.resolution || props.selected?.resolution)"
+                variant="tonal"
+                size="small"
+              >
+                {{ formatResolution(props.detail.resolution || props.selected?.resolution) }}
+              </v-chip>
+            </div>
+          </v-col>
+          <v-col
+            v-if="props.detail.supplier_name || props.selected?.supplier_name"
+            cols="12"
+            sm="6"
+          >
+            <div class="text-caption text-medium-emphasis">Supplier</div>
+            <div class="text-body-2 font-weight-medium">
+              {{ props.detail.supplier_name || props.selected?.supplier_name }}
+            </div>
           </v-col>
         </v-row>
 

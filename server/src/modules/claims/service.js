@@ -555,12 +555,25 @@ export async function transitionClaim(actor, id, input) {
     await updateClaim(trx, id, updatePayload);
 
     // 7. Insert status transition history
+    let historyNote = change.reason?.trim() ?? null;
+    if (!historyNote && (change.resolution || updatePayload.resolution)) {
+      const activeResolution = change.resolution || updatePayload.resolution;
+      const resolutionLabels = {
+        repaired: 'Repaired',
+        replaced: 'Replaced',
+        cannot_repair: 'Cannot repair',
+        other: 'Other',
+      };
+      const label = resolutionLabels[activeResolution] || activeResolution;
+      historyNote = `Resolution: ${label}`;
+    }
+
     const historyPayload = {
       claim_id: id,
       from_status: claim.status,
       to_status: input.status,
       user_id: actor.id,
-      note: change.reason ?? null,
+      note: historyNote,
     };
     await insertClaimStatusHistory(trx, historyPayload);
 

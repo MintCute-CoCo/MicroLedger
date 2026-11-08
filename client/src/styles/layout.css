@@ -7,6 +7,21 @@
 
 .app-drawer .v-navigation-drawer__content {
   padding: 0 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.app-drawer .v-navigation-drawer__content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.app-drawer .v-navigation-drawer__content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-drawer .v-navigation-drawer__content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
 }
 
 .brand-lockup {

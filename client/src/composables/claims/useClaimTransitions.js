@@ -13,6 +13,49 @@ export const CLAIM_RESOLUTIONS = [
 ];
 
 /**
+ * Human-readable labels for claim resolution codes.
+ */
+export const RESOLUTION_LABELS = {
+  repaired: 'Repaired',
+  replaced: 'Replaced',
+  cannot_repair: 'Cannot repair',
+  other: 'Other',
+};
+
+/**
+ * Formats a claim resolution enum value into a user-facing string.
+ *
+ * @param {string|null|undefined} resolution - Resolution code.
+ * @returns {string} Formatted label.
+ */
+export function formatResolution(resolution) {
+  if (!resolution) {
+    return '';
+  }
+  return RESOLUTION_LABELS[resolution] || resolution;
+}
+
+/**
+ * Maps a claim resolution enum value to an appropriate contextual Vuetify color.
+ *
+ * @param {string|null|undefined} resolution - Resolution code.
+ * @returns {string} Vuetify theme color token.
+ */
+export function getResolutionColor(resolution) {
+  switch (resolution) {
+    case 'repaired':
+      return 'success';
+    case 'replaced':
+      return 'primary';
+    case 'cannot_repair':
+      return 'warning';
+    case 'other':
+    default:
+      return 'secondary';
+  }
+}
+
+/**
  * Composable managing claim status transitions, supplier dispatch fields,
  * and irreversible terminal confirmations (Rejected, Cancelled).
  *
@@ -110,7 +153,7 @@ export function useClaimTransitions({ isAdmin, onTransitionSuccess }) {
       expectedReturnDate: '',
       actualReturnDate: '',
       collectedDate: '',
-      resolution: '',
+      resolution: row.resolution || '',
       reason: '',
     });
     transitionOpen.value = true;
