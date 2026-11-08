@@ -2,11 +2,12 @@
 /**
  * SalesRegisterCard.vue
  *
- * Sales history log table featuring server-side search, filtering by cashier/customer/date,
- * pagination, export triggers, and item-level receipt drilldowns.
+ * Coordinator component assembling the sales register:
+ * - SalesFilterToolbar: Multidimensional search, user, customer, status, date and total filters.
+ * - SalesTable: Paginated data table with responsive customer, staff, and status chips.
  */
-import ResponsiveTable from '../ResponsiveTable.vue';
-import { formatDateTime, formatMoney } from '../../utils/format.js';
+import SalesFilterToolbar from './SalesFilterToolbar.vue';
+import SalesTable from './SalesTable.vue';
 
 const props = defineProps({
   totalCount: {
@@ -106,41 +107,6 @@ const emit = defineEmits([
   'options',
   'show-sale',
 ]);
-
-/**
- * Resolves a payment label to the icon displayed in the sales register.
- *
- * @param {string} method - Payment method label.
- * @returns {string} Material Design icon name.
- */
-function getPaymentIcon(method) {
-  if (method === 'Cash') {
-    return 'mdi-cash';
-  }
-
-  if (method === 'Card') {
-    return 'mdi-credit-card-outline';
-  }
-
-  return 'mdi-bank-outline';
-}
-
-/**
- * Creates compact initials for a customer table row.
- *
- * @param {string} customer - Customer's display name.
- * @returns {string} Customer initials or the walk-in marker.
- */
-function getCustomerInitials(customer) {
-  if (customer === 'Walk-in') {
-    return 'W';
-  }
-
-  const nameParts = (customer || '').split(' ').filter(Boolean);
-  const initials = nameParts.map((part) => part[0]).join('').toUpperCase();
-
-  return initials || '?';
-}
 </script>
 
 <template>
@@ -155,199 +121,58 @@ function getCustomerInitials(customer) {
         </div>
       </div>
 
-      <v-row dense>
-        <v-col cols="12" sm="6" md="4">
-          <v-text-field
-            :model-value="props.search"
-            placeholder="Search sale, customer or staff"
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:search', $event)"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-select
-            :model-value="props.selectedUserId"
-            :items="[
-              { title: 'All staff', value: null },
-              ...props.users.map((user) => ({ title: user.fullName, value: user.id }))
-            ]"
-            label="Staff"
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:selectedUserId', $event)"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-autocomplete
-            :model-value="props.selectedCustomerId"
-            :search="props.customerSearch"
-            :items="[
-              { id: null, name: 'All customers' },
-              ...props.customerOptions
-            ]"
-            item-title="name"
-            item-value="id"
-            label="Customer"
-            no-filter
-            clearable
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:selectedCustomerId', $event)"
-            @update:search="emit('update:customerSearch', $event)"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-select
-            :model-value="props.payment"
-            :items="props.payments"
-            label="Payment"
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:payment', $event)"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-select
-            :model-value="props.status"
-            :items="props.statuses"
-            label="Status"
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:status', $event)"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-text-field
-            :model-value="props.fromDate"
-            type="date"
-            label="From date"
-            :max="props.toDate || undefined"
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:fromDate', $event)"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-text-field
-            :model-value="props.toDate"
-            type="date"
-            label="To date"
-            :min="props.fromDate || undefined"
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:toDate', $event)"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-text-field
-            :model-value="props.minTotal"
-            type="number"
-            min="0"
-            step="0.01"
-            label="Min total"
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:minTotal', $event)"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-text-field
-            :model-value="props.maxTotal"
-            type="number"
-            min="0"
-            step="0.01"
-            label="Max total"
-            variant="outlined"
-            density="compact"
-            hide-details
-            @update:model-value="emit('update:maxTotal', $event)"
-          />
-        </v-col>
-      </v-row>
+      <!-- Section 1: Multidimensional Filters -->
+      <SalesFilterToolbar
+        :search="props.search"
+        :selected-user-id="props.selectedUserId"
+        :users="props.users"
+        :selected-customer-id="props.selectedCustomerId"
+        :customer-search="props.customerSearch"
+        :customer-options="props.customerOptions"
+        :payment="props.payment"
+        :payments="props.payments"
+        :status="props.status"
+        :statuses="props.statuses"
+        :from-date="props.fromDate"
+        :to-date="props.toDate"
+        :min-total="props.minTotal"
+        :max-total="props.maxTotal"
+        @update:search="emit('update:search', $event)"
+        @update:selected-user-id="emit('update:selectedUserId', $event)"
+        @update:selected-customer-id="emit('update:selectedCustomerId', $event)"
+        @update:customer-search="emit('update:customerSearch', $event)"
+        @update:payment="emit('update:payment', $event)"
+        @update:status="emit('update:status', $event)"
+        @update:from-date="emit('update:fromDate', $event)"
+        @update:to-date="emit('update:toDate', $event)"
+        @update:min-total="emit('update:minTotal', $event)"
+        @update:max-total="emit('update:maxTotal', $event)"
+      />
+
+      <v-divider class="my-3" />
+
+      <!-- Feedback Error Banner -->
+      <v-alert
+        v-if="props.error"
+        type="error"
+        variant="tonal"
+        density="compact"
+        class="mb-3"
+      >
+        {{ props.error }}
+      </v-alert>
+
+      <!-- Section 2: Data Table -->
+      <SalesTable
+        :headers="props.headers"
+        :items="props.items"
+        :loading="props.loading"
+        :page="props.page"
+        :page-size="props.pageSize"
+        :total-count="props.totalCount"
+        @options="emit('options', $event)"
+        @show-sale="emit('show-sale', $event)"
+      />
     </v-card-text>
-
-    <v-alert
-      v-if="props.error"
-      type="error"
-      variant="tonal"
-      density="compact"
-      class="mx-4"
-    >
-      {{ props.error }}
-    </v-alert>
-
-    <ResponsiveTable
-      :headers="props.headers"
-      :items="props.items"
-      :server="true"
-      :items-length="props.totalCount"
-      :page="props.page"
-      :items-per-page="props.pageSize"
-      :loading="props.loading"
-      @update:options="emit('options', $event)"
-    >
-      <template #item.number="{ item }">
-        <strong class="text-body-2 font-weight-bold">{{ item.number }}</strong>
-      </template>
-      <template #item.customer="{ item }">
-        <div class="d-flex align-center ga-2">
-          <v-avatar color="primary" variant="tonal" size="32">
-            <span class="text-caption">{{ getCustomerInitials(item.customer) }}</span>
-          </v-avatar>
-          <span class="text-body-2">{{ item.customer }}</span>
-        </div>
-      </template>
-      <template #item.createdAt="{ item }">
-        <span class="text-body-2 text-medium-emphasis">{{ formatDateTime(item.createdAt) }}</span>
-      </template>
-      <template #item.staff="{ item }">
-        <span class="text-body-2 text-medium-emphasis">{{ item.staff }}</span>
-      </template>
-      <template #item.payment="{ item }">
-        <span class="d-flex align-center ga-1 text-body-2">
-          <v-icon :icon="getPaymentIcon(item.payment)" size="small" />
-          {{ item.payment }}
-        </span>
-      </template>
-      <template #item.total="{ item }">
-        <strong class="text-body-2 font-weight-bold">{{ formatMoney(item.total) }}</strong>
-      </template>
-      <template #item.status="{ item }">
-        <v-chip
-          :color="item.status === 'Voided' ? 'error' : 'success'"
-          variant="tonal"
-          size="small"
-        >
-          {{ item.status }}
-        </v-chip>
-      </template>
-      <template #item.actions="{ item }">
-        <v-btn
-          icon="mdi-chevron-right"
-          variant="text"
-          size="small"
-          aria-label="View sale details"
-          @click="emit('show-sale', item)"
-        />
-      </template>
-      <template #no-data>
-        <v-empty-state
-          icon="mdi-receipt-text-remove-outline"
-          title="No sales match those filters"
-          text="Try a different search or status."
-        />
-      </template>
-    </ResponsiveTable>
   </v-card>
 </template>

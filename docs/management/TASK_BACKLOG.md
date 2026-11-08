@@ -24,10 +24,10 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E10 — Warranty & Claims** | Warranty records, 7-stage RMA machine, overdue calc | 11 | 11 / 11 | **Done** |
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 8 | 8 / 8 | **Done** |
-| **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 21 | 20 / 21 | **In Progress** |
+| **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 22 | 22 / 22 | **Done** |
 | **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 15 | 14 / 15 | **In Progress** |
 | **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 7 | 7 / 7 | **Done** |
-| **Total** | **Full System Implementation Backlog** | **136** | **134 / 136** | **99% Complete** |
+| **Total** | **Full System Implementation Backlog** | **137** | **136 / 137** | **99% Complete** |
 
 ---
 
@@ -261,7 +261,8 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-122 | Configurable store address/phone on receipt & general domain docs | S | Must | T-121 | SRS-SET-01, BSR §4.6 | Done |
 | T-123 | Decompose SettingsView and enforce architectural rules | S | Must | T-122 | SRS-SET-01, SRS-SAL-01 | Done |
 | T-124 | Codify system design consultation, task completion marking & defect tracking | S | Must | T-123 | AGENTS.md, AI_CONTEXT.md | Done |
-| T-136 | Align frontend logic and design rules | M | Must | T-123 | SRS-SET-01, SRS-UI-07, AGENTS §Quality, AI_CONTEXT §11 | Doing |
+| T-136 | Align frontend logic and design rules | M | Must | T-123 | SRS-SET-01, SRS-UI-07, AGENTS §Quality, AI_CONTEXT §11 | Done |
+| T-137 | Split POS and sales register sections | M | Should | T-092, T-094 | AGENTS §Quality, AI_CONTEXT §3, §11 | Done |
 
 ---
 
@@ -276,4 +277,3 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-133 | Resolve uuid dependency advisory | S | Should | T-096 | NFR-11 | Done |
 | T-134 | Correct verification documentation claims | M | Must | T-129, T-130, T-131, T-132 | SRS, M1, M3, M4 | Done |
 | T-135 | Disaster recovery isolated schema safety, error log scrubbing & Vuetify flex layout parity | M | Must | T-131, T-132, T-093 | NFR-10, NFR-11, Rule 15 | Done |
-| T-136 | Report data grid decoupling, integer minor-unit math, and view state composable extraction | M | Must | T-135 | Rule 15, SRS-RPT-02, AGENTS.md | Done |

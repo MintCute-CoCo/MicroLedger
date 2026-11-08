@@ -45,6 +45,8 @@
 - Updated the architecture diagram to show API configuration instead of the removed demo engine (T-127).
 - Reconciled T-091 (report & presentation preparation) with the active M4 oral defense milestone (T-128).
 - Codified system design consultation, task completion marking, and defect disclosure tracking rules (T-124).
+- Completed frontend rule alignment: report calculations and view state now live in composables, product icons remain retail-neutral, and date formatting follows the store timezone (T-136).
+- Completed POS checkout and sales register component decomposition into focused sub-components (T-137).
 - Addressed all backend findings: guarded destructive scripts (`clean.js`, `reset.js`; T-129); enforced immutable grants on runtime role for `sales`, `sale_items`, `audit_logs`, `inventory_transactions` (T-130); verified 16-table backup, true restore drill, and 7-day retention (T-065, T-131); added OWASP security headers and fail-closed env validation (T-132); resolved uuid vulnerability advisory (T-133); corrected documentation claims in README, UAT script, and final report (T-134).
 
 ## 5. Dependencies (Resolved)

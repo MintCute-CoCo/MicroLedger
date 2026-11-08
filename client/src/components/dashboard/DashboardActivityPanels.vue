@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * Dashboard Recent Sales Activity & Store Feed Panel
  *

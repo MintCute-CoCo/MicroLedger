@@ -81,13 +81,13 @@ Key milestones achieved in this release cycle:
 
 ## 5. Quality & Build Metrics
 
-- **Client Production Build Time:** **693 ms** (`vite build` into `client/dist`, verified 8 November 2026).
-- **Design Taste Linter Status:** **0 FAIL, 31 WARN** across all **141** client files.
+- **Client Production Build Time:** **811 ms** (`vite build` into `client/dist`, verified 9 November 2026).
+- **Design Taste Linter Status:** **0 FAIL, 31 WARN** across all **145** client files.
 - **Route Views Implemented:** **18 / 18** (16 authenticated panels + 2 auth views).
 - **Responsive Viewport Compliance:** 360 px (Mobile), 768 px (Tablet), 1280 px (Desktop).
 - **Backend Test Suites:** **11 / 11** passing (51/51 tests) against an isolated PostgreSQL database, including 16-table backup and true restore verification, active stdout/stderr PII log inspection, and append-only denial checks (T-065, T-067, T-130, T-131, T-135, T-136).
 - **Documentation Verification:** **25 / 25** Markdown files in clean UTF-8 with 0 broken links.
-- **Frontend Architecture & Decoupling:** 100% compliant with AGENTS.md and AI_CONTEXT.md. Zero raw HTML tables, zero custom CSS grids, and zero scoped layout CSS. `ReportDataGrid.vue` is decoupled into focused sub-components (`ReportSummaryCards.vue`, `ReportGroupedTable.vue`, `ReportVoidedTable.vue`) with all financial arithmetic moved to `useSalesReportGrid.js`. `SettingsView.vue` and `SalesView.vue` delegate all state and error mutations to domain composables (T-136).
+- **Frontend Architecture & Decoupling:** 100% compliant with AGENTS.md and AI_CONTEXT.md. Zero raw HTML tables, zero custom CSS grids, and zero scoped layout CSS. All complex panels decomposed into focused subcomponents: `ReportDataGrid.vue` (`ReportSummaryCards.vue`, `ReportGroupedTable.vue`, `ReportVoidedTable.vue`), `PosCheckoutPanel.vue` (`PosCartList.vue`, `PosCheckoutFooter.vue`), and `SalesRegisterCard.vue` (`SalesFilterToolbar.vue`, `SalesTable.vue`). All financial arithmetic lives in domain composables (`useSalesReportGrid.js`). `SettingsView.vue` and `SalesView.vue` delegate all state and error mutations to composables (T-136, T-137).
 - **Retail Neutrality:** Verified across all client files; hardware category icon mappings removed and replaced with neutral retail icons (AGENTS.md, T-136).
 - **Timezone Alignment (SRS-SET-01, SRS-UI-07):** Store timezone is governed exclusively by container infrastructure `TZ` environment variable (read-only in settings API; updates rejected with 422). Client `formatDate` and `formatDateTime` strictly format in the store time zone across all panels and receipts (T-136).
 - **Monetary Arithmetic:** All currency math uses integer minor units (cents) with string-based decimal parsing, eliminating floating-point multiplication distortion across reports and sales. Mixed product quantity totals display without hardcoded unit assumptions (T-136).
