@@ -104,6 +104,9 @@ export function useSales() {
     // Detail & Void state & methods
     selectedSale: detail.selectedSale,
     detailOpen: detail.detailOpen,
+    receiptDialogOpen: detail.receiptDialogOpen,
+    openReceipt: detail.openReceipt,
+    closeReceipt: detail.closeReceipt,
     voidReason: detail.voidReason,
     showSale: detail.showSale,
     voidSelectedSale: detail.voidSelectedSale,

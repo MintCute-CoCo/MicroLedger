@@ -13,14 +13,24 @@ export const VOIDED_SALES_HEADERS = [
 ];
 
 /**
- * Converts a decimal dollar amount to integer cents.
+ * Converts a decimal monetary amount string or number to integer cents without floating point distortion.
  *
- * @param {string|number} amount - Dollar amount.
- * @returns {number} Value in cents.
+ * @param {string|number} amount - Decimal monetary amount (e.g. "12.50").
+ * @returns {number} Value in integer cents.
  */
 export function toCents(amount) {
-  const numericVal = Number(amount || 0);
-  return Math.round(numericVal * 100);
+  if (amount === null || amount === undefined || amount === '') {
+    return 0;
+  }
+  const str = String(amount).trim();
+  const isNegative = str.startsWith('-');
+  const cleanStr = isNegative ? str.slice(1) : str;
+  const tokens = cleanStr.split('.');
+  const wholePart = Number.parseInt(tokens[0] || '0', 10);
+  const fractionPart = (tokens[1] || '').padEnd(2, '0').slice(0, 2);
+  const fractionCents = Number.parseInt(fractionPart || '0', 10);
+  const totalCents = wholePart * 100 + fractionCents;
+  return isNegative ? -totalCents : totalCents;
 }
 
 /**

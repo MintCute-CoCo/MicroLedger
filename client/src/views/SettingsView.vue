@@ -35,19 +35,11 @@ const {
   presets,
   previewAmount,
   applyPreset,
+  clearFieldError,
   revertSettings,
   handleSaveClick,
   executeSave,
 } = useSettings();
-
-/**
- * Clears validation error for a specific field when updated by child components.
- *
- * @param {string} fieldName - Field name key.
- */
-function handleClearError(fieldName) {
-  fieldErrors.value[fieldName] = undefined;
-}
 
 /**
  * Applies selected regional currency preset.
@@ -104,7 +96,7 @@ function handleApplyPreset(preset) {
         <StoreProfileCard
           :form="form"
           :field-errors="fieldErrors"
-          @clear-error="handleClearError"
+          @clear-error="clearFieldError"
         />
 
         <!-- Single Domestic Currency Policy Callout (BSR §4.6) -->
@@ -136,7 +128,7 @@ function handleApplyPreset(preset) {
           :busy="busy"
           :preview-amount="previewAmount"
           @apply-preset="handleApplyPreset"
-          @clear-error="handleClearError"
+          @clear-error="clearFieldError"
           @save="handleSaveClick"
           @revert="revertSettings"
         />

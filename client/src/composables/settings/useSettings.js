@@ -100,6 +100,20 @@ export function useSettings() {
   }
 
   /**
+   * Clears validation error for a specific field.
+   *
+   * @param {string} fieldName - Field key to clear error for.
+   */
+  function clearFieldError(fieldName) {
+    if (fieldErrors.value[fieldName] !== undefined) {
+      fieldErrors.value = {
+        ...fieldErrors.value,
+        [fieldName]: undefined,
+      };
+    }
+  }
+
+  /**
    * Reverts current form changes back to the saved database settings.
    */
   function revertSettings() {
@@ -225,6 +239,7 @@ export function useSettings() {
     presets: CURRENCY_PRESETS,
     previewAmount,
     applyPreset,
+    clearFieldError,
     revertSettings,
     handleSaveClick,
     executeSave,

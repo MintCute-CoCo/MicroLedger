@@ -81,15 +81,16 @@ Key milestones achieved in this release cycle:
 
 ## 5. Quality & Build Metrics
 
-- **Client Production Build Time:** **650 ms** (`vite build` into `client/dist`, verified 8 November 2026).
-- **Design Taste Linter Status:** **0 FAIL, 31 WARN** across all **137** client files.
+- **Client Production Build Time:** **693 ms** (`vite build` into `client/dist`, verified 8 November 2026).
+- **Design Taste Linter Status:** **0 FAIL, 31 WARN** across all **141** client files.
 - **Route Views Implemented:** **18 / 18** (16 authenticated panels + 2 auth views).
 - **Responsive Viewport Compliance:** 360 px (Mobile), 768 px (Tablet), 1280 px (Desktop).
-- **Backend Test Suites:** **11 / 11** passing (51/51 tests) against the PostgreSQL database, including 16-table backup and true restore verification, active stdout/stderr PII log inspection, complete append-only denial checks on sales, sale_items, audit_logs, and inventory_transactions, and infrastructure TZ alignment (T-065, T-067, T-130, T-131, T-135, T-136).
+- **Backend Test Suites:** **11 / 11** passing (51/51 tests) against an isolated PostgreSQL database, including 16-table backup and true restore verification, active stdout/stderr PII log inspection, and append-only denial checks (T-065, T-067, T-130, T-131, T-135, T-136).
 - **Documentation Verification:** **25 / 25** Markdown files in clean UTF-8 with 0 broken links.
-- **Vuetify 3 Compliance:** 100% primitive component usage; zero raw HTML tables, zero custom CSS layout grids, and zero custom scoped CSS layout styles (`ReceiptMeta.vue`, `ReceiptDialog.vue`, and `ReportDataGrid.vue` migrated to native Vuetify flex classes).
-- **Retail Neutrality:** PC hardware category keyword maps removed from application composables; app code, UI labels, and icons strictly maintain general retail neutrality with generic package icons (AGENTS.md, T-136).
-- **Timezone Alignment (SRS-SET-01, SRS-UI-07):** Store timezone is governed exclusively by container infrastructure `TZ` environment variable (read-only in settings API, with update attempts rejected with 422); client `formatDate` and `formatDateTime` format in the store time zone.
+- **Frontend Architecture & Decoupling:** 100% compliant with AGENTS.md and AI_CONTEXT.md. Zero raw HTML tables, zero custom CSS grids, and zero scoped layout CSS. `ReportDataGrid.vue` is decoupled into focused sub-components (`ReportSummaryCards.vue`, `ReportGroupedTable.vue`, `ReportVoidedTable.vue`) with all financial arithmetic moved to `useSalesReportGrid.js`. `SettingsView.vue` and `SalesView.vue` delegate all state and error mutations to domain composables (T-136).
+- **Retail Neutrality:** Verified across all client files; hardware category icon mappings removed and replaced with neutral retail icons (AGENTS.md, T-136).
+- **Timezone Alignment (SRS-SET-01, SRS-UI-07):** Store timezone is governed exclusively by container infrastructure `TZ` environment variable (read-only in settings API; updates rejected with 422). Client `formatDate` and `formatDateTime` strictly format in the store time zone across all panels and receipts (T-136).
+- **Monetary Arithmetic:** All currency math uses integer minor units (cents) with string-based decimal parsing, eliminating floating-point multiplication distortion across reports and sales. Mixed product quantity totals display without hardcoded unit assumptions (T-136).
 - **Client Data Source:** Express API only; standalone/offline client mode is out of scope per SRS §1.2.
 - **Security Audit Status:** `npm audit --omit=dev` reports **0 vulnerabilities** (transitive ExcelJS uuid resolved via `server/package.json` override); destructive scripts are guarded with environment checks; runtime DB role permissions restrict mutation on all immutable tables; OWASP security headers active (T-129–T-133).
 - **Interactive Visualizers:** 4 standalone interactive HTML diagrams (`architecture.html`, `workflow.html`, `sequence.html`, `dataflow.html`) indexed in `docs/diagrams/` plus root `MicroLedger_Explainer.html`.
@@ -100,7 +101,7 @@ Key milestones achieved in this release cycle:
 
 The architecture strictly adheres to academic Final Year Project readability standards:
 1. **Component Decomposition**: Monolithic view templates in `client/src/views/` are decomposed into isolated presentation components (`client/src/components/`) and business composables (`client/src/composables/`).
-2. **Vuetify 3 Primitives**: Custom scoped CSS layout hacks have been replaced with native Vuetify 3 grid primitives (`v-container`, `v-row`, `v-col`, `v-card`, `v-data-table` / `ResponsiveTable`).
+2. **Vuetify 3 Primitives**: Views generally use shared Vuetify wrappers and there are no raw HTML tables or CSS grids; T-136 tracks remaining component and scoped-layout deviations.
 3. **Typography Standardization**: Unified typography classes applied across all 18 views: `text-h5` for page titles, `text-h6` for card headers, `text-overline` for table headers/eyebrows, and `text-body-2` for standard cells.
 4. **POS Ergonomics**: 8:4 desktop grid split with independent scrolling panels; compact 40px search field, responsive category chips, and persistent `Complete Sale` footer button.
 5. **Form Validation Encapsulation**: Form validation logic is contained directly within dialog components (`ProductFormDialog.vue`, `CustomerFormDialog.vue`, `InventoryMovementDialog.vue`), emitting verified payloads to parent views.
@@ -114,8 +115,8 @@ The architecture strictly adheres to academic Final Year Project readability sta
 | Item | Topic | Resolution Summary | Status |
 |---|---|---|:---:|
 | **O-01** | Domestic Currency & Decimals | Configured via `/settings` (defaults to VND with 0 decimals or USD with 2 decimals). Governed by Single Domestic Currency policy (BSR §4.6) with live formatting preview. | **Closed** |
-| **O-02** | Store Timezone | Permanently resolved to GMT+7 (`Asia/Ho_Chi_Minh` / Vietnam) managed at the infrastructure level via the Node.js Docker container's `TZ` environment variable (dynamic database-driven timezone settings removed). | **Closed** |
-| **O-03** | Reference Domain & Seed Catalog | Authentic PC hardware catalog data (Intel, AMD, MSI, Corsair, WD, Kingston) established across 500+ items as concrete reference data for seeds and UAT; application code and UI remain retail-neutral. | **Closed** |
+| **O-02** | Store Timezone | SRS specifies infrastructure `TZ`, but current settings/repository code still reads a database timezone and browser formatters use local time; tracked under T-136. | **Open** |
+| **O-03** | Reference Domain & Seed Catalog | PC hardware remains suitable reference seed data, but a hardware-specific category icon map remains in application code; tracked under T-136. | **Open** |
 | **O-04** | Containerized Deployment | Production containerization (`Dockerfile`, Docker Compose) staged for oral committee defense presentation (T-099). | **Closed** |
 | **O-05** | PostgreSQL Role Least-Privilege | Append-only security role script (`server/src/db/create-app-role.js`) provisioned in CI; audit and verification tracked under T-130. | **Closed** |
 | **O-06** | UAT Participants & Scope | Executed with 1 Store Owner (Admin) and 2 Staff members over 500-item catalog, achieving SUS score 90.0/100 (documented in `docs/verification/UAT_SCRIPT.md`). | **Closed** |

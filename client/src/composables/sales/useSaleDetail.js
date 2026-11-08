@@ -22,6 +22,19 @@ export function useSaleDetail({ onVoidSuccess }) {
   const detailOpen = ref(false);
 
   /**
+   * Printable receipt dialog visibility flag.
+   */
+  const receiptDialogOpen = ref(false);
+
+  function openReceipt() {
+    receiptDialogOpen.value = true;
+  }
+
+  function closeReceipt() {
+    receiptDialogOpen.value = false;
+  }
+
+  /**
    * Admin-provided justification note required when voiding a sale.
    */
   const voidReason = ref('');
@@ -139,6 +152,9 @@ export function useSaleDetail({ onVoidSuccess }) {
   return {
     selectedSale,
     detailOpen,
+    receiptDialogOpen,
+    openReceipt,
+    closeReceipt,
     voidReason,
     detailError,
     showSale,
