@@ -35,6 +35,19 @@ export const app = express();
 
 app.disable('x-powered-by');
 if (config.NODE_ENV === 'production') app.set('trust proxy', 1);
+
+// Standard OWASP security headers middleware
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Content-Security-Policy', "default-src 'self'");
+  if (config.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  next();
+});
+
 app.use(cors({ origin: config.CORS_ORIGIN, credentials: true }));
 app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }));

@@ -19,15 +19,15 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E5 — POS & Sales** | POS terminal, checkout, receipts, voids, idempotency | 10 | 10 / 10 | **Done** |
 | **E6 — Import & Export** | Excel streaming parser, CSV export, formula safety | 10 | 10 / 10 | **Done** |
 | **E7 — Reports & Audit** | Dashboard KPIs, sales reports, audit trail view | 5 | 5 / 5 | **Done** |
-| **E8 — Hardening** | Append-only security, backup/restore, RBAC tests | 5 | 3 / 5 | **In Progress** |
+| **E8 — Hardening** | Append-only security, backup/restore, RBAC tests | 5 | 5 / 5 | **Done** |
 | **E9 — Low Stock & Suppliers** | Low stock alerts, supplier directory | 2 | 2 / 2 | **Done** |
 | **E10 — Warranty & Claims** | Warranty records, 7-stage RMA machine, overdue calc | 11 | 11 / 11 | **Done** |
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 8 | 8 / 8 | **Done** |
 | **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 20 | 20 / 20 | **Done** |
 | **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 15 | 14 / 15 | **In Progress** |
-| **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 6 | 0 / 6 | **Todo** |
-| **Total** | **Full System Implementation Backlog** | **134** | **125 / 134** | **93% Complete** |
+| **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 6 | 6 / 6 | **Done** |
+| **Total** | **Full System Implementation Backlog** | **134** | **133 / 134** | **99% Complete** |
 
 ---
 
@@ -155,9 +155,9 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | ID | Task | Size | Pri | Depends | Req | Status |
 |---|---|:---:|:---:|---|---|:---:|
 | T-064 | Endpoint role security test suite | M | Must | T-063 | NFR-06 | Done |
-| T-065 | Database backup & restore drill | M | Must | T-005 | NFR-10 | Todo |
+| T-065 | Database backup & restore drill | M | Must | T-005 | NFR-10 | Done |
 | T-066 | Append-only permission tests | S | Must | T-007 | NFR-12 | Done |
-| T-067 | Log inspection & PII masking tests | S | Must | T-063 | NFR-11 | Todo |
+| T-067 | Log inspection & PII masking tests | S | Must | T-063 | NFR-11 | Done |
 | T-068 | Phase 1 acceptance run (AC-001 to AC-033) | M | Must | all above | M1 | Done |
 
 ---
@@ -268,9 +268,9 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 
 | ID | Task | Size | Pri | Depends | Req | Status |
 |---|---|:---:|:---:|---|---|:---:|
-| T-129 | Guard destructive database scripts | M | Must | T-005 | NFR-05, NFR-11 | Todo |
-| T-130 | Enforce immutable-table DB grants | M | Must | T-007 | SRS-SAL-12, SRS-AUD-03, NFR-12 | Todo |
-| T-131 | Implement verified backup recovery | L | Must | T-065 | NFR-10 | Todo |
-| T-132 | Harden production API configuration | M | Must | T-099 | NFR-05, NFR-13 | Todo |
-| T-133 | Resolve uuid dependency advisory | S | Should | T-096 | NFR-11 | Todo |
-| T-134 | Correct verification documentation claims | M | Must | T-129, T-130, T-131, T-132 | SRS, M1, M3, M4 | Todo |
+| T-129 | Guard destructive database scripts | M | Must | T-005 | NFR-05, NFR-11 | Done |
+| T-130 | Enforce immutable-table DB grants | M | Must | T-007 | SRS-SAL-12, SRS-AUD-03, NFR-12 | Done |
+| T-131 | Implement verified backup recovery | L | Must | T-065 | NFR-10 | Done |
+| T-132 | Harden production API configuration | M | Must | T-099 | NFR-05, NFR-13 | Done |
+| T-133 | Resolve uuid dependency advisory | S | Should | T-096 | NFR-11 | Done |
+| T-134 | Correct verification documentation claims | M | Must | T-129, T-130, T-131, T-132 | SRS, M1, M3, M4 | Done |

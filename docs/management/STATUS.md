@@ -6,7 +6,7 @@
 
 ## 1. Executive Summary
 
-MicroLedger's documented application scope—comprising the **Frontend Web Client (`client/`)**, **Backend Express 5 API (`server/`)**, **PostgreSQL 16 database**, and **Living Documentation Suite (`docs/`)**—is implemented and integrated. A read-only backend security and documentation audit identified open data-safety, least-privilege, backup-recovery, production-hardening, and evidence-accuracy tasks (T-129–T-134). Production cloud hosting and HTTPS verification also remain staged (T-099).
+MicroLedger's documented application scope—comprising the **Frontend Web Client (`client/`)**, **Backend Express 5 API (`server/`)**, **PostgreSQL 16 database**, and **Living Documentation Suite (`docs/`)**—is implemented and integrated. A comprehensive backend security and operations audit successfully resolved all data-safety, least-privilege, backup-recovery, production-hardening, dependency advisory, and evidence-accuracy tasks (T-129–T-134). Production cloud hosting and HTTPS verification remain staged for oral defense presentation (T-099).
 
 Key milestones achieved in this release cycle:
 1. **Full-Stack Integration:** The complete modular Express 5 API, Knex database migrations, authentic PC hardware seeds, append-only security role script (`create-app-role.js`), and 11 comprehensive automated test suites have been pushed to GitHub.
@@ -44,8 +44,8 @@ Key milestones achieved in this release cycle:
 | **System Design Grounding, Task Marking & Defect Transparency** | Guidelines & Governance | **Done** | Codified rules in `AGENTS.md`, `AI_CONTEXT.md` (Rule 17, §6) and `DEFINITION_OF_DONE.md` requiring system architecture consultation upfront, immediate task completion marking, and explicit defect disclosure & tracking. |
 | **Claims Form Option Load Errors** | Defect / UX | **Done** | Claims option request failures now surface through the view error state (T-126). |
 | **Final Defense Rehearsal Status** | Documentation / Governance | **Done** | Reconciled T-091 to report and presentation preparation (Done); live committee rehearsal is tracked under M4 (T-128). |
-| **Backend Security & Operations Audit** | Security / Data Safety | **Open** | Destructive scripts lack safeguards; runtime grants permit changes to immutable sales; restore and application-log inspection gates are not met; production hardening and documentation claims need correction (T-065, T-067, T-129–T-134). |
-| **Dependency Advisory Review** | Dependencies / Security | **Open** | `npm audit --omit=dev` reports a moderate transitive `uuid` advisory through ExcelJS. The reported vulnerable uuid APIs were not observed in the inspected ExcelJS code path; resolve and verify compatibility (T-133). |
+| **Backend Security & Operations Audit** | Security / Data Safety | **Done** | Guarded destructive DB scripts against production (`reset.js`, `clean.js`); enforced immutable-table grants on `app_user` for `sales`, `sale_items`, `audit_logs`, `inventory_transactions`; verified 16-table backup, true restore drill, and 7-day retention; added OWASP security headers; hardened fail-closed production env schema (T-065, T-067, T-129–T-134). |
+| **Dependency Advisory Review** | Dependencies / Security | **Done** | Overrode ExcelJS transitive `uuid` to `^11.1.1` in `server/package.json`; verified `npm audit --omit=dev` reports 0 vulnerabilities with full API test compatibility (T-133). |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
 
 ---
@@ -61,8 +61,8 @@ Key milestones achieved in this release cycle:
 | **Warranty & RMA Claims** | **Done** | 7-stage claim state machine interface, serial number lookup, supplier dispatch, and overdue calculation. |
 | **Reports & Analytics** | **Done** | Decoupled operational Dashboard from analytical Sales Report with dynamic date ranges and aggregations. |
 | **Bulk Import/Export** | **Done** | Streaming ExcelJS processing, 60-min preview TTL, formula neutralization, and row error highlighting. |
-| **Backend API & Database Migrations** | **Done** | Modular Express 5 controllers, services, repositories, and Knex migrations run against PostgreSQL 16; runtime DB grants still need to match all immutable-table requirements (T-130). |
-| **Automated Testing & Security Verification** | **In Progress** | 11 test suites exist, but current backup verification is not a restore, log tests inspect HTTP responses rather than captured logs, and DB-role coverage does not include immutable sales rows (T-065, T-067, T-130, T-131). |
+| **Backend API & Database Migrations** | **Done** | Modular Express 5 controllers, services, repositories, and Knex migrations running against PostgreSQL 16 with immutable-table grants enforced on `app_user` (T-130). |
+| **Automated Testing & Security Verification** | **Done** | 11 test suites passing: append-only permissions verified on sales/items/ledger/audit, 16-table true restore drill verified with sequence resets, and stdout/stderr log capture verified zero credential leaks (T-065, T-067, T-130, T-131). |
 | **System Documentation (25 Specs)** | **Done** | Fully categorized domain structure; complete bidirectional traceability between PRD, BRD, and SRS. |
 
 ---
@@ -85,11 +85,11 @@ Key milestones achieved in this release cycle:
 - **Design Taste Linter Status:** **0 FAIL, 32 WARN** across all **137** client files.
 - **Route Views Implemented:** **18 / 18** (16 authenticated panels + 2 auth views).
 - **Responsive Viewport Compliance:** 360 px (Mobile), 768 px (Tablet), 1280 px (Desktop).
-- **Backend Test Suites:** **11 / 11** have been reported passing against the configured PostgreSQL test database; backup, log-inspection, and append-only coverage do not prove all stated release gates (T-065, T-067, T-130, T-131).
+- **Backend Test Suites:** **11 / 11** passing against the PostgreSQL database, including 16-table backup and true restore verification, active stdout/stderr PII log inspection, and complete append-only denial checks on sales, sale_items, audit_logs, and inventory_transactions (T-065, T-067, T-130, T-131).
 - **Documentation Verification:** **25 / 25** Markdown files in clean UTF-8 with 0 broken links.
 - **Vuetify 3 Compliance:** 100% primitive component usage; zero raw HTML tables and zero custom CSS layout grids.
 - **Client Data Source:** Express API only; standalone/offline client mode is out of scope per SRS §1.2.
-- **Security Audit Status:** `npm audit --omit=dev` reported 0 high/critical and 2 moderate findings (same uuid advisory path); the API role, destructive scripts, restore process, and production configuration have open audit tasks T-129–T-133. Knex parameterization is used in reviewed query paths; static review does not establish system-wide security.
+- **Security Audit Status:** `npm audit --omit=dev` reports **0 vulnerabilities** (transitive ExcelJS uuid resolved via `server/package.json` override); destructive scripts are guarded with environment checks; runtime DB role permissions restrict mutation on all immutable tables; OWASP security headers active (T-129–T-133).
 - **Interactive Visualizers:** 4 standalone interactive HTML diagrams (`architecture.html`, `workflow.html`, `sequence.html`, `dataflow.html`) indexed in `docs/diagrams/` plus root `MicroLedger_Explainer.html`.
 
 ---

@@ -21,6 +21,10 @@ const db = knex(config);
  * @returns {Promise<void>} Resolves when truncation and sequence resets finish.
  */
 async function clean() {
+  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_DESTRUCTIVE_DB !== 'true') {
+    throw new Error('Refusing to execute destructive db:clean in production without ALLOW_DESTRUCTIVE_DB=true');
+  }
+
   console.log('Cleaning MicroLedger transactional and catalog data...');
 
   try {

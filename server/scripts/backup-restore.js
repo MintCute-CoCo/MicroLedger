@@ -23,26 +23,62 @@ import pg from 'pg';
 const { Client } = pg;
 
 /**
- * List of database tables included in the backup snapshot.
+ * Complete list of all 16 database tables included in the backup snapshot
+ * in topological foreign-key dependency order for safe restoration.
  */
-const TABLES = [
-  'users',
+export const TABLES = [
   'settings',
+  'users',
   'categories',
+  'suppliers',
+  'customers',
   'products',
   'inventory_transactions',
-  'customers',
   'sales',
   'sale_items',
-  'suppliers',
+  'sale_item_serials',
   'warranties',
   'warranty_claims',
   'claim_status_history',
   'audit_logs',
+  'import_logs',
+  'refresh_tokens',
 ];
 
 /**
+ * Prunes backup files older than the retention threshold (SRS-NFR-10: 7-day retention).
+ *
+ * @param {string} [outputDir='./backups'] - Directory containing backup files.
+ * @param {number} [maxRetentionDays=7] - Maximum age in days before pruning.
+ * @returns {Promise<number>} Number of pruned files.
+ */
+export async function pruneOldBackups(outputDir = './backups', maxRetentionDays = 7) {
+  try {
+    const files = await fs.readdir(outputDir);
+    const now = Date.now();
+    const maxAgeMs = maxRetentionDays * 24 * 60 * 60 * 1000;
+    let prunedCount = 0;
+
+    for (const file of files) {
+      if (file.startsWith('backup_') && file.endsWith('.json')) {
+        const filePath = path.join(outputDir, file);
+        const stats = await fs.stat(filePath);
+        if (now - stats.mtimeMs > maxAgeMs) {
+          await fs.unlink(filePath);
+          prunedCount++;
+        }
+      }
+    }
+    return prunedCount;
+  } catch (err) {
+    if (err.code === 'ENOENT') return 0;
+    throw err;
+  }
+}
+
+/**
  * Dumps all core system tables into a structured JSON backup snapshot file.
+ * Automatically prunes snapshots older than the 7-day retention window.
  *
  * @param {string} [connectionString=process.env.DATABASE_URL] - PostgreSQL connection string.
  * @param {string} [outputDir='./backups'] - Directory path where backup files are saved.
@@ -72,6 +108,9 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
     const filePath = path.join(outputDir, filename);
     await fs.writeFile(filePath, JSON.stringify(backupData, null, 2), 'utf-8');
 
+    // Enforce 7-day backup retention
+    await pruneOldBackups(outputDir, 7);
+
     return {
       success: true,
       filePath,
@@ -85,9 +124,97 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
 }
 
 /**
+ * Restores a database snapshot into a target database, validating foreign-key
+ * dependencies, inserting table rows, and resetting primary key sequences.
+ *
+ * @param {string} backupFilePath - Path to backup JSON file.
+ * @param {string} [connectionString=process.env.DATABASE_URL] - PostgreSQL connection string.
+ * @returns {Promise<{success: boolean, tablesRestored: number, totalRows: number, durationMs: number}>}
+ */
+export async function restoreFromBackup(backupFilePath, connectionString = process.env.DATABASE_URL) {
+  const fileContent = await fs.readFile(backupFilePath, 'utf-8');
+  const backupData = JSON.parse(fileContent);
+
+  const client = new Client({ connectionString });
+  await client.connect();
+
+  const startTime = Date.now();
+  let totalRows = 0;
+
+  try {
+    await client.query('BEGIN');
+
+    // Truncate tables in reverse topological order
+    const reverseTables = [...TABLES].reverse();
+    await client.query(`TRUNCATE TABLE ${reverseTables.join(', ')} RESTART IDENTITY CASCADE;`);
+
+    // Restore tables in forward topological order
+    for (const table of TABLES) {
+      const rows = backupData.tables[table] || [];
+      if (rows.length > 0) {
+        const columns = Object.keys(rows[0]);
+        const colList = columns.map((c) => `"${c}"`).join(', ');
+
+        for (const row of rows) {
+          const values = columns.map((c) => {
+            const val = row[c];
+            if (val === null || val === undefined) return null;
+            if (table === 'settings' && c === 'value') {
+              return typeof val === 'string' && val.startsWith('"') ? val : JSON.stringify(val);
+            }
+            if (typeof val === 'object' && !(val instanceof Date)) {
+              return JSON.stringify(val);
+            }
+            return val;
+          });
+          const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
+          const overridingClause = columns.includes('id') ? 'OVERRIDING SYSTEM VALUE' : '';
+          await client.query(
+            `INSERT INTO ${table} (${colList}) ${overridingClause} VALUES (${placeholders})`,
+            values
+          );
+        }
+        totalRows += rows.length;
+
+        // Reset sequence if table has integer identity id
+        if (table !== 'settings') {
+          const seqRes = await client.query(`SELECT pg_get_serial_sequence($1, 'id') as seq`, [table]);
+          const seqName = seqRes.rows[0]?.seq;
+          if (seqName) {
+            await client.query(
+              `SELECT setval($1, COALESCE((SELECT MAX(id) FROM ${table}), 1), (SELECT MAX(id) FROM ${table}) IS NOT NULL)`,
+              [seqName]
+            );
+          }
+        }
+      }
+    }
+
+    // Reset business sequences
+    await client.query(`ALTER SEQUENCE IF EXISTS sale_no_seq RESTART WITH 1;`);
+    await client.query(`ALTER SEQUENCE IF EXISTS claim_no_seq RESTART WITH 1;`);
+
+    await client.query('COMMIT');
+
+    const durationMs = Date.now() - startTime;
+    return {
+      success: true,
+      tablesRestored: TABLES.length,
+      totalRows,
+      durationMs,
+    };
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    await client.end();
+  }
+}
+
+/**
  * Performs a non-destructive disaster recovery audit drill.
- * Parses a backup snapshot, compares table row counts against live database state,
- * and calculates the Recovery Time Objective (RTO) achieved during verification.
+ * Parses a backup snapshot, verifies table rows and structure, and calculates
+ * the Recovery Time Objective (RTO) achieved during verification.
  *
  * @param {string} backupFilePath - Absolute or relative path to the JSON backup file.
  * @param {string} [connectionString=process.env.DATABASE_URL] - PostgreSQL connection string.
@@ -103,15 +230,16 @@ export async function verifyRestoreDrill(backupFilePath, connectionString = proc
 
   const startTime = Date.now();
   try {
-    // Verify backup integrity by checking row counts against current database
     const report = {};
     for (const table of TABLES) {
       const dbCountRes = await client.query(`SELECT COUNT(*)::int as count FROM ${table}`);
       const backupRows = backupData.tables[table] || [];
+      const currentCount = dbCountRes.rows[0].count;
       report[table] = {
         backupRows: backupRows.length,
-        currentRows: dbCountRes.rows[0].count,
-        intact: backupRows.length <= dbCountRes.rows[0].count,
+        currentRows: currentCount,
+        valid: Array.isArray(backupRows),
+        intact: backupRows.length === currentCount,
       };
     }
 
@@ -120,7 +248,7 @@ export async function verifyRestoreDrill(backupFilePath, connectionString = proc
       success: true,
       durationMs,
       rtoAchievedSeconds: (durationMs / 1000).toFixed(2),
-      rpoCompliance: 'Within 24 hours (continuous/daily backup verified)',
+      rpoCompliance: 'Within 24 hours (continuous/daily backup verified; 7-day retention active)',
       report,
     };
   } finally {

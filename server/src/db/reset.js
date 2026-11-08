@@ -25,6 +25,10 @@ const db = knex(config);
  * @returns {Promise<void>} Resolves when reset completes.
  */
 async function reset() {
+  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_DESTRUCTIVE_DB !== 'true') {
+    throw new Error('Refusing to execute destructive db:reset in production without ALLOW_DESTRUCTIVE_DB=true');
+  }
+
   console.log('🔄 Starting complete MicroLedger database reset...');
 
   try {
@@ -42,7 +46,11 @@ async function reset() {
     const client = new Client({ connectionString: process.env.DATABASE_URL });
     await client.connect();
     try {
-      const password = process.env.APP_DB_ROLE_PASSWORD || 'microledger_app_pass_123';
+      const isProduction = process.env.NODE_ENV === 'production';
+      const password = process.env.APP_DB_ROLE_PASSWORD || (isProduction ? null : 'microledger_app_pass_123');
+      if (!password) {
+        throw new Error('APP_DB_ROLE_PASSWORD is required for production role configuration');
+      }
       // Escapes string literal for safe SQL formatting
       const quoteLiteral = (v) => `'${v.replaceAll("'", "''")}'`;
       // Escapes identifier name for safe SQL formatting
@@ -55,7 +63,10 @@ async function reset() {
       await client.query('GRANT USAGE ON SCHEMA public TO app_user');
       await client.query('GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app_user');
       await client.query('GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO app_user');
-      await client.query('REVOKE UPDATE, DELETE ON audit_logs, inventory_transactions FROM app_user');
+      await client.query('REVOKE UPDATE, DELETE ON audit_logs, inventory_transactions, sale_items FROM app_user');
+      await client.query('REVOKE DELETE ON sales FROM app_user');
+      await client.query('REVOKE UPDATE ON sales FROM app_user');
+      await client.query('GRANT UPDATE (status, voided_by, voided_at, void_reason) ON sales TO app_user');
       await client.query('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_user');
       await client.query('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO app_user');
     } finally {
@@ -78,13 +89,11 @@ async function reset() {
         status: 'active',
         must_change_password: false,
       });
-      console.log('Created default active Staff user: `minhanh` (Password: `staffpassword123`)');
+      console.log('Created default active Staff user: `minhanh`');
     }
 
     console.log('\n✅ Database reset successfully completed!');
-    console.log('Initial accounts ready:');
-    console.log('  👑 Admin: admin / adminpassword123');
-    console.log('  💼 Staff: minhanh / staffpassword123');
+    console.log('Initial accounts provisioned: `admin` and `minhanh`.');
     console.log('Tables are clean with 0 test products or sales.');
   } catch (err) {
     console.error('❌ Failed to reset database:', err);

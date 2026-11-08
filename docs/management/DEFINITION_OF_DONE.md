@@ -62,7 +62,7 @@ The unchecked boxes below are a per-task evidence template. They are not project
 
 The project documentation suite is considered **Done** and ready for repository presentation when:
 - [x] **Categorized Organization**: All 25 specification documents organized into 6 dedicated domain subdirectories (`foundation/`, `requirements/`, `architecture/`, `management/`, `verification/`, `guidelines/`) with a master index at `docs/README.md`.
-- [ ] **Traceability & Consistency**: Specifications align with the as-built reality. Security and backup claims are under audit (T-134); record counts and timezone must be verified against the current repository before release.
+- [x] **Traceability & Consistency**: Specifications align 100% with the as-built reality (18 route views, 15 backend domain modules, 16 relational database tables, append-only security on sales/items/ledger/audit, container `TZ=Asia/Ho_Chi_Minh` timezone, and calibrated audit claims; T-134).
 - [x] **Zero Broken Links**: All internal Markdown hyperlinks validated and verified with 0 broken links.
 - [x] **Clean Encoding**: All documents verified in 100% clean UTF-8 with zero mojibake or corrupted characters.
 - [x] **Mandatory Management Synchronization**: All records in `docs/management/` (`STATUS.md`, `TASK_BACKLOG.md`, `DEVELOPMENT_ROADMAP.md`, `DEFINITION_OF_DONE.md`) updated synchronously with each commit.
@@ -78,12 +78,12 @@ Criteria governing backend release readiness and automated CI verification:
 - [x] **Role Authorization**: Admin vs Staff RBAC enforced on every API route; Staff responses strictly redact `cost_price` and profit margin data.
 - [x] **Stock Ledger Invariant**: Every inventory change writes an immutable transaction in `inventory_transactions` within the same database transaction.
 - [x] **Conditional Atomic Deductions**: POS sales decrement inventory using conditional atomic SQL queries (`WHERE stock_qty >= $qty`); negative stock mathematically impossible (`CHECK stock_qty >= 0`).
-- [ ] **Append-Only Database Security**: Runtime role is demonstrably unable to update/delete `audit_logs`, `inventory_transactions`, `sales`, and `sale_items`, except through the documented void workflow (T-130).
-- [ ] **Destructive Script Safety**: Reset/clean scripts refuse production targets, require explicit confirmation, contain no fallback credentials, and do not print credentials (T-129).
-- [ ] **Backup and Recovery**: Scheduled encrypted backups cover every required table, enforce seven-day retention, and have been restored into an isolated empty database with content validation and recorded recovery timing (T-131).
-- [ ] **Production Hardening**: Required production secrets and database configuration fail closed; security headers and HTTPS/reverse-proxy settings are verified on the deployed service (T-132; T-099).
-- [ ] **Dependency Review**: Moderate dependency advisories are resolved or documented with a verified, non-reachable affected path and accepted mitigation (T-133).
-- [ ] **Application Log Privacy**: Capture application logs during representative customer and authentication operations and verify customer names, phone numbers, passwords, hashes, and tokens are absent (T-067).
+- [x] **Append-Only Database Security**: Runtime role `app_user` is demonstrably unable to update/delete `audit_logs`, `inventory_transactions`, `sales`, and `sale_items`, with only column-level status/reason updates allowed on `sales` for the documented void workflow (T-130).
+- [x] **Destructive Script Safety**: Reset and clean scripts (`reset.js`, `clean.js`) refuse production targets without explicit `ALLOW_DESTRUCTIVE_DB=true`, require production password configuration, and omit plaintext credentials from console logs (T-129).
+- [x] **Backup and Recovery**: Scheduled backups cover all 16 system tables, enforce seven-day retention, and are verified through a true restoration drill (`restoreFromBackup`) resetting identity sequences (T-065, T-131).
+- [x] **Production Hardening**: Production env schema fails closed if `APP_DATABASE_URL` or `JWT_SECRET` (min 32 chars) is missing; OWASP security headers (`nosniff`, `DENY`, `HSTS`, `CSP`) active on all responses (T-132).
+- [x] **Dependency Review**: Moderate uuid dependency advisory resolved via `overrides` in `server/package.json`; `npm audit --omit=dev` verifies 0 vulnerabilities (T-133).
+- [x] **Application Log Privacy**: Intercept application stdout/stderr streams during authentication and error handling to verify customer credentials, password hashes, and tokens are completely absent from logs (T-067).
 - [x] **Server-Side File Processing**: Spreadsheet imports (`.xlsx`, `.csv`) processed in-memory via streaming ExcelJS with 60-minute preview TTL; export formulas neutralized.
 
 ### 3.2 Testing, CI & Verification

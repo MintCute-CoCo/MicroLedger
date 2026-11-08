@@ -38,5 +38,37 @@ describe('Log & Response Inspection: No Secrets or PII Leaks (SRS-NFR-11, T-067)
     assert.ok(!jsonStr.includes('postgres://'), 'Response must not contain DATABASE_URL');
     assert.ok(!jsonStr.includes('password'), 'Response must not contain database password');
   });
+
+  it('Actively intercepts server stdout/stderr logs and verifies zero passwords or PII are logged', async () => {
+    const loggedChunks = [];
+    const originalConsoleLog = console.log;
+    const originalConsoleError = console.error;
+
+    // Intercept console streams
+    console.log = (...args) => {
+      loggedChunks.push(args.map(String).join(' '));
+      originalConsoleLog.apply(console, args);
+    };
+    console.error = (...args) => {
+      loggedChunks.push(args.map(String).join(' '));
+      originalConsoleError.apply(console, args);
+    };
+
+    try {
+      const secretProbe = 'probeSecretPwd_98765';
+      await api('/api/v1/auth/login', {
+        method: 'POST',
+        body: { username: 'admin', password: secretProbe },
+      });
+
+      const joinedLogs = loggedChunks.join('\n');
+      assert.ok(!joinedLogs.includes(secretProbe), 'Console logs must never contain user submitted password');
+      assert.ok(!joinedLogs.includes('password_hash'), 'Console logs must not leak password_hash keys');
+      assert.ok(!joinedLogs.includes('postgres://'), 'Console logs must not print database connection URLs');
+    } finally {
+      console.log = originalConsoleLog;
+      console.error = originalConsoleError;
+    }
+  });
 });
 

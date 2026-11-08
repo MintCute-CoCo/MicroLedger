@@ -55,6 +55,50 @@ describe('Database Security: Append-Only Enforcement (SRS-AUD-03, NFR-12)', () =
           return true;
         }
       );
+
+      // 5. DELETE on sales must fail
+      await assert.rejects(
+        async () => {
+          await client.query('DELETE FROM sales WHERE id = 1');
+        },
+        (err) => {
+          assert.equal(err.code, '42501', 'Must throw permission denied on sales DELETE');
+          return true;
+        }
+      );
+
+      // 6. UPDATE on sales non-void fields must fail
+      await assert.rejects(
+        async () => {
+          await client.query('UPDATE sales SET total = 0 WHERE id = 1');
+        },
+        (err) => {
+          assert.equal(err.code, '42501', 'Must throw permission denied on sales total UPDATE');
+          return true;
+        }
+      );
+
+      // 7. UPDATE on sale_items must fail
+      await assert.rejects(
+        async () => {
+          await client.query('UPDATE sale_items SET unit_price = 0 WHERE id = 1');
+        },
+        (err) => {
+          assert.equal(err.code, '42501', 'Must throw permission denied on sale_items UPDATE');
+          return true;
+        }
+      );
+
+      // 8. DELETE on sale_items must fail
+      await assert.rejects(
+        async () => {
+          await client.query('DELETE FROM sale_items WHERE id = 1');
+        },
+        (err) => {
+          assert.equal(err.code, '42501', 'Must throw permission denied on sale_items DELETE');
+          return true;
+        }
+      );
     } finally {
       await client.end();
     }

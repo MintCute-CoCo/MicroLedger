@@ -12,13 +12,32 @@
 import 'dotenv/config';
 import { z } from 'zod';
 
-const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: z.coerce.number().int().min(1).max(65535).default(3000),
-  CORS_ORIGIN: z.string().url(),
-  APP_DATABASE_URL: z.string().url().optional(),
-  JWT_SECRET: z.string().min(32).optional(),
-});
+const envSchema = z
+  .object({
+    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    PORT: z.coerce.number().int().min(1).max(65535).default(3000),
+    CORS_ORIGIN: z.string().url(),
+    APP_DATABASE_URL: z.string().url().optional(),
+    JWT_SECRET: z.string().min(32).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.NODE_ENV === 'production') {
+      if (!data.APP_DATABASE_URL && !process.env.DATABASE_URL) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'DATABASE_URL or APP_DATABASE_URL is required in production',
+          path: ['APP_DATABASE_URL'],
+        });
+      }
+      if (!data.JWT_SECRET) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'JWT_SECRET is required in production (must be at least 32 characters)',
+          path: ['JWT_SECRET'],
+        });
+      }
+    }
+  });
 
 const parsed = envSchema.safeParse(process.env);
 if (!parsed.success) {

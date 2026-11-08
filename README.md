@@ -19,7 +19,7 @@
 
 **MicroLedger** is a high-reliability, lightweight web application built to replace error-prone spreadsheets and fragmented manual workflows in small retail environments. Designed specifically around real-world retail constraints (demonstrated with authentic PC hardware and electronics inventory), MicroLedger delivers **one responsive application** optimized for desktop monitors, tablets, and mobile devices.
 
-Unlike typical POS prototypes, MicroLedger enforces **transactional financial-grade inventory accounting**: every stock movement is recorded in an immutable, append-only ledger with zero possibility of negative stock, backed by strict PostgreSQL invariants and database user privilege isolation.
+Unlike typical POS prototypes, MicroLedger enforces an **immutable transactional inventory ledger**: every stock movement is recorded in an append-only audit trail with zero possibility of negative stock, backed by strict PostgreSQL invariants and database user privilege isolation.
 
 ---
 

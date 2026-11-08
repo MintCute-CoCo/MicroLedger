@@ -48,7 +48,10 @@ try {
   await client.query('GRANT USAGE ON SCHEMA public TO app_user');
   await client.query('GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app_user');
   await client.query('GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO app_user');
-  await client.query('REVOKE UPDATE, DELETE ON audit_logs, inventory_transactions FROM app_user');
+  await client.query('REVOKE UPDATE, DELETE ON audit_logs, inventory_transactions, sale_items FROM app_user');
+  await client.query('REVOKE DELETE ON sales FROM app_user');
+  await client.query('REVOKE UPDATE ON sales FROM app_user');
+  await client.query('GRANT UPDATE (status, voided_by, voided_at, void_reason) ON sales TO app_user');
   await client.query('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_user');
   await client.query('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO app_user');
   console.log('app_user role and grants are ready');

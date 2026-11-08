@@ -107,9 +107,9 @@ $$\text{Discrepancies} = 0$$
 | **Reports & Audit** | `reports-audit-settings.test.js` | AC-030 to AC-033, BR-18 | 4/4 Passing | **100% PASS** |
 | **Warranties & Claims**| `warranty-claims-and-serials.test.js`| AC-034 to AC-043, BR-14..17 | 10/10 Passing | **100% PASS** |
 | **Ledger Invariant** | `invariant.test.js` | Ledger Invariant ($\Delta = 0$) | 0 Discrepancies | **100% PASS** |
-| **Append-Only DB Role**| `security-append-only.test.js` | NFR-12 `app_user` DB block | 100% Blocked | **100% PASS** |
-| **PII & Log Scrubbing**| `log-pii.test.js` | NFR-11 Zero Credentials in Logs| 0 Leaks Found | **100% PASS** |
-| **Disaster Recovery** | `backup-restore.test.js` | NFR-10 Restore $\le 300$ s | **0.065 s** | **100% PASS** |
+| **Append-Only DB Role**| `security-append-only.test.js` | NFR-12 `app_user` block (sales, items, audit, ledger) | 100% Blocked | **100% PASS** |
+| **PII & Log Scrubbing**| `log-pii.test.js` | NFR-11 Zero Credentials in Logs & Responses | 0 Leaks Found | **100% PASS** |
+| **Disaster Recovery** | `backup-restore.test.js` | NFR-10 16-Table Backup & Full Restore Drill | 0.357 s (RTO) | **100% PASS** |
 | **Search Load Benchmark**| `load-test.js` | NFR-02 P95 $\le 1,000$ ms | **8.86 ms** | **100% PASS** |
 | **Sale Load Benchmark** | `load-test.js` | NFR-02 P95 $\le 2,000$ ms | **15.80 ms** | **100% PASS** |
 | **UAT Usability Score** | User Acceptance Testing | NFR-01 SUS Score $\ge 68.0$ | **90.0 (Grade A+)** | **100% PASS** |

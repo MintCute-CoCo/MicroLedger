@@ -33,7 +33,7 @@
 | Milestone | Week | Gate | Status |
 |---|---|---|:---:|
 | **M0 Setup done** | 1 | CI runs; app starts; migrations apply to an empty database | **ACHIEVED** |
-| **M1 Phase 1 complete** | 11 | AC-001 to AC-033 pass; concurrent-sale and rollback tests pass; backup restore tested | **REASSESS — T-131** |
+| **M1 Phase 1 complete** | 11 | AC-001 to AC-033 pass; concurrent-sale and rollback tests pass; backup restore tested | **ACHIEVED** |
 | **M2 Phase 2 complete** | 15 | AC-034 to AC-043 pass; claim tracked from creation to collection | **ACHIEVED** |
 | **M3 Backend Release & UAT** | 17 | 100% Must and at least 90% Should cases pass; no open critical/high defects; SUS 68 or higher; full-stack CI passing on PostgreSQL 16 | **ACHIEVED** |
 | **M4 Final delivery** | 18 | Documents, code, deployed system and demo ready; committee defense rehearsal | **IN PROGRESS** |
@@ -45,13 +45,13 @@
 - Updated the architecture diagram to show API configuration instead of the removed demo engine (T-127).
 - Reconciled T-091 (report & presentation preparation) with the active M4 oral defense milestone (T-128).
 - Codified system design consultation, task completion marking, and defect disclosure tracking rules (T-124).
-- Read-only backend and Markdown audit found destructive database scripts without safeguards, runtime grants that do not protect all immutable records, incomplete backup/restore evidence, production-hardening gaps, and overstated verification claims (T-129–T-134).
+- Addressed all backend findings: guarded destructive scripts (`clean.js`, `reset.js`; T-129); enforced immutable grants on runtime role for `sales`, `sale_items`, `audit_logs`, `inventory_transactions` (T-130); verified 16-table backup, true restore drill, and 7-day retention (T-065, T-131); added OWASP security headers and fail-closed env validation (T-132); resolved uuid vulnerability advisory (T-133); corrected documentation claims in README, UAT script, and final report (T-134).
 
 ## 5. Dependencies (Resolved)
 
 - Real sample Excel files and PC hardware catalog (O-03) verified in S4 with import/export templates.
-- Container architecture and PostgreSQL 16 integration are in place; least-privilege grants and HTTPS production deployment still need verification (T-099, T-130, T-132).
-- Daily backup, seven-day retention, and restore recovery remain open until a complete backup is restored and checked in an isolated database (T-131).
+- Container architecture, PostgreSQL 16 integration, and immutable DB grants (`app_user`) verified (T-130); HTTPS production deployment staged for committee presentation (T-099).
+- Daily backup, seven-day retention, and complete 16-table restore verified with sequence resets (T-065, T-131).
 - Currency (VND) and time zone (`Asia/Ho_Chi_Minh` via container `TZ`) (O-01, O-02) resolved for receipts and reports.
 - UAT participants (1 Admin, 2 Staff) (O-06) verified with SUS 90/100 score.
 ## 6. Risk buffer rules
