@@ -1,12 +1,12 @@
 # Project Status
 
-**Last updated:** 8 November 2026 · **Current phase:** Full-Stack Integration & System Verification (v1.0-fullstack) · **Next milestone:** Final Defense Delivery & University Presentation (M4)
+**Last updated:** 10 November 2026 · **Current phase:** Full-Stack Integration & System Verification (v1.0-fullstack) · **Next milestone:** Final Defense Delivery & University Presentation (M4)
 
 ---
 
 ## 1. Executive Summary
 
-MicroLedger's documented application scope—comprising the **Frontend Web Client (`client/`)**, **Backend Express 5 API (`server/`)**, **PostgreSQL 16 database**, and **Living Documentation Suite (`docs/`)**—is implemented and integrated. The prior backend security and operations findings (T-129–T-135) were addressed; this review found additional rate-limit, CSV resource-bound, and backup recovery safeguards to track under T-145–T-149. Production cloud hosting and HTTPS verification remain staged for oral defense presentation (T-099).
+MicroLedger's documented application scope—comprising the **Frontend Web Client (`client/`)**, **Backend Express 5 API (`server/`)**, **PostgreSQL 16 database**, and **Living Documentation Suite (`docs/`)**—is implemented and integrated. The prior backend security and operations findings (T-129–T-135) and follow-ups T-145–T-151 are fully resolved and verified across 58 automated test suites. Production cloud hosting and HTTPS verification remain staged for oral defense presentation (T-099).
 
 Key milestones achieved in this release cycle:
 1. **Full-Stack Integration:** The complete modular Express 5 API, Knex database migrations, authentic PC hardware seeds, append-only security role script (`create-app-role.js`), and 11 comprehensive automated test suites have been pushed to GitHub.
@@ -44,7 +44,7 @@ Key milestones achieved in this release cycle:
 | **System Design Grounding, Task Marking & Defect Transparency** | Guidelines & Governance | **Done** | Codified rules in `AGENTS.md`, `AI_CONTEXT.md` (Rule 17, §6) and `DEFINITION_OF_DONE.md` requiring system architecture consultation upfront, immediate task completion marking, and explicit defect disclosure & tracking. |
 | **Claims Form Option Load Errors** | Defect / UX | **Done** | Claims option request failures now surface through the view error state (T-126). |
 | **Final Defense Rehearsal Status** | Documentation / Governance | **Done** | Reconciled T-091 to report and presentation preparation (Done); live committee rehearsal is tracked under M4 (T-128). |
-| **Backend Security & Operations Audit** | Security / Data Safety | **Done** | Enforced fail-closed production rate limits, streaming CSV row cap abort, pre-flight snapshot integrity validation, destructive restore guards, and backup-at-rest encryption and permissions (T-145–T-149). |
+| **Backend Security & Operations Audit** | Security / Data Safety | **Done** | Enforced fail-closed rate limits, streaming CSV parsing cap, pre-flight snapshot integrity, destructive restore guards across all schemas, strict SQL identifier validation, schema catalog column whitelisting, and HMAC snapshot authentication (T-145–T-151). |
 | **Claim Resolution Visibility & Timeline Tracking** | Full-Stack Claims / UX | **Done** | Surfaced repair/replacement resolution badges in claims table and detail modal; recorded transition resolution in status timeline note (T-138). |
 | **Dependency Advisory Review** | Dependencies / Security | **Done** | Overrode ExcelJS transitive `uuid` to `^11.1.1` in `server/package.json`; verified `npm audit --omit=dev` reports 0 vulnerabilities with full API test compatibility (T-133). |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
@@ -143,3 +143,5 @@ The architecture is being aligned with academic Final Year Project readability s
 | **T-147** | `restoreFromBackup` defaults to truncating `public` and does not use the destructive-target guard. | **Done** |
 | **T-148** | Direct restore does not verify the snapshot checksum or validate its structure before truncating and inserting data. | **Done** |
 | **T-149** | Backups are plaintext by default and include customer PII, password hashes, and refresh-token hashes; encryption and restrictive file permissions are not enforced. | **Done** |
+| **T-150** | `restoreFromBackup` applies the destructive-target guard only to a clean `public` restore; a clean restore to a custom schema can bypass it. `targetSchema` is also interpolated into quoted SQL identifiers without validation or safe identifier quoting. | **Done** |
+| **T-151** | Restore derives SQL column identifiers from the first row of the backup JSON without validating them against the expected table schema or safely quoting them. The SHA-256 checksum detects accidental changes but is not keyed authentication, so a modified plaintext snapshot can be re-checksummed. | **Done** |

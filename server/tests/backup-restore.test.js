@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { describe, it, after } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
+import crypto from 'node:crypto';
 import pg from 'pg';
 import { runBackup, verifyRestoreDrill, restoreFromBackup, pruneOldBackups, TABLES } from '../scripts/backup-restore.js';
 import { closeKnex } from './helpers.js';
@@ -168,6 +169,126 @@ describe('Database Operations: Backup, 7-Day Retention & Restore Drill (SRS-NFR-
       },
       /Refusing to execute destructive database operation against remote or cloud database target/
     );
+  });
+
+  it('rejects custom schema restore targeting remote database or with invalid schema identifiers (T-150)', async () => {
+    assert.ok(backupFile, 'Backup file must exist');
+    const remoteUrl = 'postgres://admin:secret@aws.rds.amazonaws.com:5432/microledger_prod';
+
+    // 1. Destructive clean restore to a custom schema against remote database must be rejected
+    await assert.rejects(
+      async () => {
+        await restoreFromBackup(backupFile, remoteUrl, {
+          targetSchema: 'custom_drill_schema',
+          cleanTarget: true,
+        });
+      },
+      /Refusing to execute destructive database operation against remote or cloud database target/
+    );
+
+    // 2. Malicious or invalid SQL schema identifier must be rejected before query execution
+    await assert.rejects(
+      async () => {
+        await restoreFromBackup(backupFile, process.env.DATABASE_URL, {
+          targetSchema: 'bad_schema"; DROP TABLE users; --',
+          cleanTarget: false,
+        });
+      },
+      /Invalid SQL schema name "bad_schema"; DROP TABLE users; --"/
+    );
+
+    // 3. Schema names exceeding PostgreSQL 63-byte identifier limit must be rejected
+    const tooLongSchema = 'a'.repeat(64);
+    await assert.rejects(
+      async () => {
+        await restoreFromBackup(backupFile, process.env.DATABASE_URL, {
+          targetSchema: tooLongSchema,
+          cleanTarget: false,
+        });
+      },
+      /Invalid SQL schema name/
+    );
+  });
+
+  it('validates backup row schema against database catalog and rejects untrusted column identifiers (T-151)', async () => {
+    // 1. Malicious / untrusted column identifier injection attempt in snapshot
+    const malformedColPath = './backups/test_malformed_column_snapshot.json';
+    const fakeTables1 = {};
+    for (const t of TABLES) fakeTables1[t] = [];
+    fakeTables1.settings = [{ key: 'store_name', value: 'Shop', 'malicious"; DROP TABLE users; --': 'val' }];
+    const fakePayload1 = JSON.stringify(fakeTables1);
+    const checksum1 = crypto.createHash('sha256').update(fakePayload1).digest('hex');
+
+    await fs.writeFile(
+      malformedColPath,
+      JSON.stringify({ timestamp: new Date().toISOString(), tables: fakeTables1, checksum: checksum1 }),
+      'utf-8'
+    );
+
+    try {
+      await assert.rejects(
+        async () => {
+          await restoreFromBackup(malformedColPath);
+        },
+        /Untrusted or malformed column identifier/
+      );
+    } finally {
+      await fs.rm(malformedColPath, { force: true });
+    }
+
+    // 2. Valid identifier syntax but column not existing in real database schema
+    const unknownColPath = './backups/test_unknown_column_snapshot.json';
+    const fakeTables2 = {};
+    for (const t of TABLES) fakeTables2[t] = [];
+    fakeTables2.settings = [{ key: 'store_name', value: 'Shop', unknown_nonexistent_column: 'val' }];
+    const fakePayload2 = JSON.stringify(fakeTables2);
+    const checksum2 = crypto.createHash('sha256').update(fakePayload2).digest('hex');
+
+    await fs.writeFile(
+      unknownColPath,
+      JSON.stringify({ timestamp: new Date().toISOString(), tables: fakeTables2, checksum: checksum2 }),
+      'utf-8'
+    );
+
+    try {
+      await assert.rejects(
+        async () => {
+          await restoreFromBackup(unknownColPath);
+        },
+        /Unexpected column 'unknown_nonexistent_column' in backup row 0 for table 'settings'\. Not present in database schema\./
+      );
+    } finally {
+      await fs.rm(unknownColPath, { force: true });
+    }
+
+    // 3. Forged / invalid HMAC signature verification rejection
+    const forgedHmacPath = './backups/test_forged_hmac_snapshot.json';
+    const fakeTables3 = {};
+    for (const t of TABLES) fakeTables3[t] = [];
+    const fakePayload3 = JSON.stringify(fakeTables3);
+    const checksum3 = crypto.createHash('sha256').update(fakePayload3).digest('hex');
+
+    await fs.writeFile(
+      forgedHmacPath,
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        tables: fakeTables3,
+        checksum: checksum3,
+        hmac: '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+      }),
+      'utf-8'
+    );
+
+    try {
+      await assert.rejects(
+        async () => {
+          await restoreFromBackup(forgedHmacPath);
+        },
+        /Backup snapshot HMAC verification failed/
+      );
+    } finally {
+      await fs.rm(forgedHmacPath, { force: true });
+    }
   });
 });
 

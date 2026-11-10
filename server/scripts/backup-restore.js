@@ -54,6 +54,31 @@ export const TABLES = [
 ];
 
 /**
+ * Strict regex for valid PostgreSQL identifiers (table, schema, column).
+ * Matches standard unquoted SQL identifiers: starts with a letter or underscore,
+ * followed by up to 62 alphanumeric characters or underscores (max 63 bytes in PostgreSQL).
+ */
+export const SQL_IDENTIFIER_REGEX = /^[a-zA-Z_][a-zA-Z0-9_]{0,62}$/;
+
+/**
+ * Validates and safely quotes a PostgreSQL SQL identifier (schema, table, column).
+ * Prevents SQL identifier injection and quote breakout vulnerabilities (T-150, T-151).
+ *
+ * @param {string} identifier - Identifier name to validate and quote.
+ * @param {string} [type='identifier'] - Descriptive label for error messages.
+ * @returns {string} Safely double-quoted identifier string.
+ * @throws {Error} If identifier fails regex or contains malicious characters.
+ */
+export function escapeIdentifier(identifier, type = 'identifier') {
+  if (typeof identifier !== 'string' || !SQL_IDENTIFIER_REGEX.test(identifier)) {
+    throw new Error(
+      `Invalid SQL ${type} name "${identifier}". Names must match /^[a-zA-Z_][a-zA-Z0-9_]{0,62}$/.`
+    );
+  }
+  return `"${identifier.replace(/"/g, '""')}"`;
+}
+
+/**
  * Prunes backup files older than the retention threshold (SRS-NFR-10: 7-day retention).
  *
  * @param {string} [outputDir='./backups'] - Directory containing backup files.
@@ -117,6 +142,12 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
     const checksum = crypto.createHash('sha256').update(tablesPayload).digest('hex');
     backupData.checksum = checksum;
 
+    // Keyed HMAC authentication when encryption key or secret is configured (T-151)
+    const signingKey = process.env.BACKUP_ENCRYPTION_KEY || process.env.JWT_SECRET;
+    if (signingKey) {
+      backupData.hmac = crypto.createHmac('sha256', signingKey).update(tablesPayload).digest('hex');
+    }
+
     // Enforce encryption in production to protect customer PII, password hashes, and tokens at rest (SRS-NFR-11, T-149)
     if (process.env.NODE_ENV === 'production' && !process.env.BACKUP_ENCRYPTION_KEY) {
       throw new Error(
@@ -142,6 +173,7 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
         tag: tag.toString('hex'),
         data: encrypted.toString('hex'),
         checksum,
+        hmac: backupData.hmac || null,
       };
       await fs.writeFile(filePath, JSON.stringify(envelope, null, 2), { encoding: 'utf-8', mode: 0o600 });
     } else {
@@ -206,6 +238,27 @@ export async function readBackupSnapshot(backupFilePath, verifyChecksum = false)
         `Backup snapshot checksum verification failed: snapshot checksum '${backupData.checksum}' does not match computed checksum '${calculatedChecksum}'. Snapshot may be corrupted or altered.`
       );
     }
+
+    // Keyed HMAC signature validation if snapshot contains HMAC (T-151)
+    if (backupData.hmac) {
+      const signingKey = process.env.BACKUP_ENCRYPTION_KEY || process.env.JWT_SECRET;
+      if (!signingKey) {
+        if (process.env.NODE_ENV === 'production') {
+          throw new Error(
+            'Backup snapshot contains keyed HMAC signature, but neither BACKUP_ENCRYPTION_KEY nor JWT_SECRET is configured to verify authenticity.'
+          );
+        }
+      } else {
+        const calculatedHmac = crypto.createHmac('sha256', signingKey).update(tablesPayload).digest('hex');
+        const hmacBuf = Buffer.from(backupData.hmac, 'hex');
+        const calcBuf = Buffer.from(calculatedHmac, 'hex');
+        if (hmacBuf.length !== calcBuf.length || !crypto.timingSafeEqual(hmacBuf, calcBuf)) {
+          throw new Error(
+            'Backup snapshot HMAC verification failed: signature does not match signing key. Snapshot may be forged or tampered.'
+          );
+        }
+      }
+    }
   }
 
   return backupData;
@@ -230,8 +283,12 @@ export async function restoreFromBackup(
   const targetSchema = options.targetSchema || 'public';
   const cleanTarget = options.cleanTarget !== false;
 
-  // Guard destructive operations against remote or production databases (T-147)
-  if (targetSchema === 'public' && cleanTarget) {
+  // Validate targetSchema strictly against SQL identifier rules (T-150)
+  const safeSchema = escapeIdentifier(targetSchema, 'schema');
+
+  // Guard destructive operations against remote or production databases (T-147, T-150)
+  // Clean restore truncates tables regardless of target schema; restoring to public modifies primary data.
+  if (cleanTarget || targetSchema === 'public') {
     assertDestructiveOperationAllowed(connectionString);
   }
 
@@ -256,35 +313,78 @@ export async function restoreFromBackup(
   try {
     await client.query('BEGIN');
 
-    // If an isolated schema is specified, create tables within it and restrict search_path
+    // If an isolated schema is specified, create tables within it and restrict search_path (T-150)
     if (targetSchema !== 'public') {
-      await client.query(`CREATE SCHEMA IF NOT EXISTS "${targetSchema}"`);
-      await client.query(`SET LOCAL search_path TO "${targetSchema}"`);
+      await client.query(`CREATE SCHEMA IF NOT EXISTS ${safeSchema}`);
+      await client.query(`SET LOCAL search_path TO ${safeSchema}`);
 
       for (const table of TABLES) {
+        const safeTable = escapeIdentifier(table, 'table');
         await client.query(
-          `CREATE TABLE IF NOT EXISTS "${targetSchema}"."${table}" (LIKE "public"."${table}" INCLUDING ALL)`
+          `CREATE TABLE IF NOT EXISTS ${safeSchema}.${safeTable} (LIKE "public".${safeTable} INCLUDING ALL)`
         );
       }
     }
 
     if (cleanTarget) {
-      // Truncate tables in reverse topological order strictly within target schema
+      // Truncate tables in reverse topological order strictly within target schema (T-150)
       const reverseTables = [...TABLES].reverse();
       const qualified = targetSchema === 'public'
-        ? reverseTables.map((t) => `"${t}"`).join(', ')
-        : reverseTables.map((t) => `"${targetSchema}"."${t}"`).join(', ');
+        ? reverseTables.map((t) => escapeIdentifier(t, 'table')).join(', ')
+        : reverseTables.map((t) => `${safeSchema}.${escapeIdentifier(t, 'table')}`).join(', ');
       await client.query(`TRUNCATE TABLE ${qualified} RESTART IDENTITY CASCADE;`);
+    }
+
+    // Fetch expected schema columns directly from PostgreSQL information_schema (T-151)
+    const schemaColsRes = await client.query(
+      `SELECT table_name, column_name 
+       FROM information_schema.columns 
+       WHERE table_schema = 'public' AND table_name = ANY($1::text[])`,
+      [TABLES]
+    );
+
+    const expectedTableColumns = new Map();
+    for (const colRow of schemaColsRes.rows) {
+      if (!expectedTableColumns.has(colRow.table_name)) {
+        expectedTableColumns.set(colRow.table_name, new Set());
+      }
+      expectedTableColumns.get(colRow.table_name).add(colRow.column_name);
     }
 
     // Restore tables in forward topological order
     for (const table of TABLES) {
+      const safeTable = escapeIdentifier(table, 'table');
       const rows = backupData.tables[table] || [];
-      const targetTable = targetSchema === 'public' ? `"${table}"` : `"${targetSchema}"."${table}"`;
+      const safeTargetTable = targetSchema === 'public' ? safeTable : `${safeSchema}.${safeTable}`;
 
       if (rows.length > 0) {
-        const columns = Object.keys(rows[0]);
-        const colList = columns.map((c) => `"${c}"`).join(', ');
+        const validColumns = expectedTableColumns.get(table) || new Set();
+
+        // Validate every row in the backup table against schema whitelist and identifier regex (T-151)
+        const columnSet = new Set();
+        for (let rIdx = 0; rIdx < rows.length; rIdx++) {
+          const row = rows[rIdx];
+          if (!row || typeof row !== 'object' || Array.isArray(row)) {
+            throw new Error(`Corrupted backup row ${rIdx} in table '${table}': expected row object.`);
+          }
+          const rowKeys = Object.keys(row);
+          for (const col of rowKeys) {
+            if (!SQL_IDENTIFIER_REGEX.test(col)) {
+              throw new Error(
+                `Untrusted or malformed column identifier '${col}' found in backup row ${rIdx} for table '${table}'.`
+              );
+            }
+            if (!validColumns.has(col)) {
+              throw new Error(
+                `Unexpected column '${col}' in backup row ${rIdx} for table '${table}'. Not present in database schema.`
+              );
+            }
+            columnSet.add(col);
+          }
+        }
+
+        const columns = Array.from(columnSet);
+        const colList = columns.map((c) => escapeIdentifier(c, 'column')).join(', ');
 
         for (const row of rows) {
           const values = columns.map((c) => {
@@ -301,7 +401,7 @@ export async function restoreFromBackup(
           const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
           const overridingClause = columns.includes('id') ? 'OVERRIDING SYSTEM VALUE' : '';
           await client.query(
-            `INSERT INTO ${targetTable} (${colList}) ${overridingClause} VALUES (${placeholders})`,
+            `INSERT INTO ${safeTargetTable} (${colList}) ${overridingClause} VALUES (${placeholders})`,
             values
           );
         }
@@ -313,7 +413,7 @@ export async function restoreFromBackup(
           const seqName = seqRes.rows[0]?.seq;
           if (seqName) {
             await client.query(
-              `SELECT setval($1, COALESCE((SELECT MAX(id) FROM "${table}"), 1), (SELECT MAX(id) FROM "${table}") IS NOT NULL)`,
+              `SELECT setval($1, COALESCE((SELECT MAX(id) FROM ${safeTable}), 1), (SELECT MAX(id) FROM ${safeTable}) IS NOT NULL)`,
               [seqName]
             );
           }
@@ -386,6 +486,7 @@ export async function verifyRestoreDrill(
 
   // 2. Perform authentic non-destructive isolated restore drill in temporary sandbox schema
   const drillSchema = options.targetSchema || `_drill_verify_${Date.now()}`;
+  const safeDrillSchema = escapeIdentifier(drillSchema, 'schema');
   const client = new Client({ connectionString });
   await client.connect();
 
@@ -398,8 +499,9 @@ export async function verifyRestoreDrill(
 
     const report = {};
     for (const table of TABLES) {
+      const safeTable = escapeIdentifier(table, 'table');
       const dbCountRes = await client.query(
-        `SELECT COUNT(*)::int as count FROM "${drillSchema}"."${table}"`
+        `SELECT COUNT(*)::int as count FROM ${safeDrillSchema}.${safeTable}`
       );
       const backupRows = backupData.tables[table] || [];
       const restoredCount = dbCountRes.rows[0].count;
@@ -424,7 +526,7 @@ export async function verifyRestoreDrill(
       report,
     };
   } finally {
-    await client.query(`DROP SCHEMA IF EXISTS "${drillSchema}" CASCADE;`).catch(() => {});
+    await client.query(`DROP SCHEMA IF EXISTS ${safeDrillSchema} CASCADE;`).catch(() => {});
     await client.end();
   }
 }

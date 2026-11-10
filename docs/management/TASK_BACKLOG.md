@@ -26,8 +26,8 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 8 | 8 / 8 | **Done** |
 | **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 26 | 26 / 26 | **Done** |
 | **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 18 | 17 / 18 | **In Progress** |
-| **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 11 | 11 / 11 | **Done** |
-| **Total** | **Full System Implementation Backlog** | **149** | **148 / 149** | **99% Complete** |
+| **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 13 | 13 / 13 | **Done** |
+| **Total** | **Full System Implementation Backlog** | **151** | **150 / 151** | **99% Complete** |
 
 ---
 
@@ -288,3 +288,5 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-147 | Guard destructive restore targets | S | Must | T-131 | NFR-10 | Done |
 | T-148 | Verify snapshots before restore | S | Must | T-131 | NFR-10 | Done |
 | T-149 | Protect backup snapshots at rest | M | Must | T-131 | NFR-10, NFR-11 | Done |
+| T-150 | Guard and validate restore schemas and SQL identifiers | M | Must | T-147, T-148 | NFR-05, NFR-10 | Done |
+| T-151 | Validate backup row shape and column identifiers before restore | M | Must | T-148 | NFR-10, NFR-11 | Done |
