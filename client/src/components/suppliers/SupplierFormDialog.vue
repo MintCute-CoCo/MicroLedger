@@ -14,7 +14,23 @@ const props = defineProps({
   form: { type: Object, required: true },
 });
 
-const emit = defineEmits(['update:open', 'save']);
+const emit = defineEmits([
+  'update:open',
+  'update:form',
+  'clear-error',
+  'save',
+]);
+
+/**
+ * Emits updated form state and clears field errors through composables.
+ *
+ * @param {string} field - Field property name.
+ * @param {*} value - New field value.
+ */
+function updateField(field, value) {
+  emit('update:form', { ...props.form, [field]: value });
+  emit('clear-error', field);
+}
 </script>
 
 <template>
@@ -41,48 +57,48 @@ const emit = defineEmits(['update:open', 'save']);
       </v-alert>
 
       <v-text-field
-        v-model="props.form.name"
+        :model-value="props.form.name"
         label="Supplier name"
         maxlength="150"
         :error-messages="props.fieldErrors.name"
         variant="outlined"
-        @update:model-value="props.fieldErrors.name = undefined"
+        @update:model-value="updateField('name', $event)"
       />
       <v-text-field
-        v-model="props.form.contact_person"
+        :model-value="props.form.contact_person"
         label="Contact person"
         :error-messages="props.fieldErrors.contact_person"
         variant="outlined"
-        @update:model-value="props.fieldErrors.contact_person = undefined"
+        @update:model-value="updateField('contact_person', $event)"
       />
 
       <v-row dense>
         <v-col cols="12" sm="6">
           <v-text-field
-            v-model="props.form.phone"
+            :model-value="props.form.phone"
             label="Phone"
             :error-messages="props.fieldErrors.phone"
             variant="outlined"
-            @update:model-value="props.fieldErrors.phone = undefined"
+            @update:model-value="updateField('phone', $event)"
           />
         </v-col>
         <v-col cols="12" sm="6">
           <v-text-field
-            v-model="props.form.email"
+            :model-value="props.form.email"
             label="Email"
             :error-messages="props.fieldErrors.email"
             variant="outlined"
-            @update:model-value="props.fieldErrors.email = undefined"
+            @update:model-value="updateField('email', $event)"
           />
         </v-col>
       </v-row>
 
       <v-textarea
-        v-model="props.form.notes"
+        :model-value="props.form.notes"
         label="Notes"
         :error-messages="props.fieldErrors.notes"
         variant="outlined"
-        @update:model-value="props.fieldErrors.notes = undefined"
+        @update:model-value="updateField('notes', $event)"
       />
 
       <div class="d-flex flex-wrap justify-end ga-2">

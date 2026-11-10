@@ -23,6 +23,8 @@ const {
   save,
   toggleStatus,
   load,
+  updateDraft,
+  clearFieldError,
 } = useCategories();
 </script>
 
@@ -74,6 +76,8 @@ const {
       :field-errors="fieldErrors"
       :error="error"
       :saving="saving"
+      @update:draft="updateDraft"
+      @clear-error="clearFieldError"
       @save="save"
     />
   </v-container>

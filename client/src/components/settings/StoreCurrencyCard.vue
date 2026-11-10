@@ -39,6 +39,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'apply-preset',
+  'update:form',
   'clear-error',
   'save',
   'revert',
@@ -55,11 +56,13 @@ function handlePresetClick(code, decimals) {
 }
 
 /**
- * Clears validation error for a specific field when edited.
+ * Updates form state and clears validation error for a specific field when edited.
  *
  * @param {string} fieldName - Form field key.
+ * @param {*} value - New field value.
  */
-function handleFieldInput(fieldName) {
+function handleFieldInput(fieldName, value) {
+  emit('update:form', { ...props.form, [fieldName]: value });
   emit('clear-error', fieldName);
 }
 </script>
@@ -107,7 +110,7 @@ function handleFieldInput(fieldName) {
       <v-row dense>
         <v-col cols="12" sm="6">
           <v-text-field
-            v-model="props.form.currency_code"
+            :model-value="props.form.currency_code"
             label="Currency code (ISO 4217)"
             placeholder="e.g. VND, USD, EUR"
             maxlength="3"
@@ -116,13 +119,13 @@ function handleFieldInput(fieldName) {
             density="compact"
             hint="3 uppercase letters (e.g., VND, USD)"
             persistent-hint
-            @update:model-value="handleFieldInput('currency_code')"
+            @update:model-value="handleFieldInput('currency_code', $event)"
           />
         </v-col>
 
         <v-col cols="12" sm="6">
           <v-select
-            v-model.number="props.form.currency_decimals"
+            :model-value="props.form.currency_decimals"
             :items="[0, 1, 2]"
             label="Currency decimal places"
             :error-messages="props.fieldErrors.currency_decimals"
@@ -130,7 +133,7 @@ function handleFieldInput(fieldName) {
             density="compact"
             hint="0 for VND/JPY, 2 for USD/EUR"
             persistent-hint
-            @update:model-value="handleFieldInput('currency_decimals')"
+            @update:model-value="handleFieldInput('currency_decimals', Number($event))"
           />
         </v-col>
       </v-row>

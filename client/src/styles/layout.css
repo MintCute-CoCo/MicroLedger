@@ -5,23 +5,34 @@
   background: #ffffff !important;
 }
 
+.app-drawer,
 .app-drawer .v-navigation-drawer__content {
   padding: 0 15px;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
 }
 
+.app-drawer::-webkit-scrollbar,
 .app-drawer .v-navigation-drawer__content::-webkit-scrollbar {
   width: 5px;
 }
 
+.app-drawer::-webkit-scrollbar-track,
 .app-drawer .v-navigation-drawer__content::-webkit-scrollbar-track {
   background: transparent;
 }
 
+.app-drawer::-webkit-scrollbar-thumb,
 .app-drawer .v-navigation-drawer__content::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 999px;
+}
+
+.app-drawer::-webkit-scrollbar-button,
+.app-drawer .v-navigation-drawer__content::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .brand-lockup {

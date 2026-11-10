@@ -304,6 +304,8 @@ export function useInventory() {
     fieldErrors: dialogs.fieldErrors,
     openMovement: dialogs.openMovement,
     saveMovement: dialogs.saveMovement,
+    updateDraft: dialogs.updateDraft,
+    clearFieldError: dialogs.clearFieldError,
   };
 }
 

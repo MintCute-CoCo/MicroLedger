@@ -95,6 +95,26 @@ export function useClaimTransitions({ isAdmin, onTransitionSuccess }) {
   });
 
   /**
+   * Updates transition form fields through the composable.
+   *
+   * @param {Object} nextChange - Updated transition values.
+   */
+  function updateChange(nextChange) {
+    Object.assign(change, nextChange);
+  }
+
+  /**
+   * Clears a field-level error message.
+   *
+   * @param {string} field - Field identifier.
+   */
+  function clearFieldError(field) {
+    if (field && fieldErrors.value[field]) {
+      delete fieldErrors.value[field];
+    }
+  }
+
+  /**
    * Transition validation errors.
    */
   const fieldErrors = ref({});
@@ -245,6 +265,8 @@ export function useClaimTransitions({ isAdmin, onTransitionSuccess }) {
     startTransition,
     transition,
     requestTransition,
+    updateChange,
+    clearFieldError,
   };
 }
 

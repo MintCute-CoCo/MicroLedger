@@ -50,6 +50,26 @@ export function useClaimForm({ isAdmin, onClaimCreated }) {
   });
 
   /**
+   * Updates form fields through the composable.
+   *
+   * @param {Object} nextForm - Updated form values.
+   */
+  function updateForm(nextForm) {
+    Object.assign(form, nextForm);
+  }
+
+  /**
+   * Clears a field-level error message.
+   *
+   * @param {string} field - Field identifier.
+   */
+  function clearFieldError(field) {
+    if (field && fieldErrors.value[field]) {
+      delete fieldErrors.value[field];
+    }
+  }
+
+  /**
    * Field-level validation error messages.
    */
   const fieldErrors = ref({});
@@ -341,6 +361,8 @@ export function useClaimForm({ isAdmin, onClaimCreated }) {
     loadCustomerOptions,
     openCreateClaim,
     create,
+    updateForm,
+    clearFieldError,
   };
 }
 

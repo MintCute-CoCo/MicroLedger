@@ -171,6 +171,26 @@ export function useSuppliers() {
 
   onMounted(load);
 
+  /**
+   * Updates supplier form fields through the composable.
+   *
+   * @param {Object} nextForm - Updated form values.
+   */
+  function updateForm(nextForm) {
+    Object.assign(form, nextForm);
+  }
+
+  /**
+   * Clears field error through the composable.
+   *
+   * @param {string} field - Field identifier.
+   */
+  function clearFieldError(field) {
+    if (field && fieldErrors.value[field]) {
+      delete fieldErrors.value[field];
+    }
+  }
+
   return {
     isAdmin,
     rows,
@@ -186,6 +206,8 @@ export function useSuppliers() {
     start,
     save,
     toggle,
+    updateForm,
+    clearFieldError,
   };
 }
 

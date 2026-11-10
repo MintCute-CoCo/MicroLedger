@@ -157,10 +157,10 @@ export async function countClaims(db, filters, today) {
 }
 
 /**
- * Retrieves a single claim record by ID including supplier name.
+ * Retrieves a single claim record by ID including product, customer, warranty, and supplier details.
  *
  * Purpose:
- * Fetches full claim record for detailed viewing.
+ * Fetches full enriched claim record for detailed viewing.
  *
  * @param {import('knex').Knex | import('knex').Knex.Transaction} db - Knex database or transaction instance.
  * @param {number|string} id - Claim primary key ID.
@@ -168,9 +168,23 @@ export async function countClaims(db, filters, today) {
  */
 export async function findClaimById(db, id) {
   const query = db('warranty_claims as cl');
+  query.join('warranties as w', 'w.id', 'cl.warranty_id');
+  query.join('products as p', 'p.id', 'w.product_id');
+  query.join('customers as c', 'c.id', 'cl.customer_id');
   query.leftJoin('suppliers as sp', 'sp.id', 'cl.supplier_id');
+  query.leftJoin('users as u', 'u.id', 'cl.created_by');
   query.where('cl.id', id);
-  query.select('cl.*', 'sp.name as supplier_name');
+  query.select(
+    'cl.*',
+    'w.serial_no',
+    'w.expiry_date',
+    'p.sku',
+    'p.name as product_name',
+    'c.name as customer_name',
+    'c.phone as customer_phone',
+    'sp.name as supplier_name',
+    'u.full_name as created_by_name'
+  );
 
   const row = await query.first();
   return row;

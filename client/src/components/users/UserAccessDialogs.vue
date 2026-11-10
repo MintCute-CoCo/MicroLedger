@@ -35,9 +35,22 @@ const emit = defineEmits([
   'update:createOpen',
   'update:resetOpen',
   'update:resetPassword',
+  'update:draft',
+  'clear-error',
   'create',
   'reset',
 ]);
+
+/**
+ * Emits updated draft state and clears field errors through composables.
+ *
+ * @param {string} field - Field property name.
+ * @param {*} value - New field value.
+ */
+function updateField(field, value) {
+  emit('update:draft', { ...props.draft, [field]: value });
+  emit('clear-error', field);
+}
 </script>
 
 <template>
@@ -53,23 +66,23 @@ const emit = defineEmits([
           The user will need to change this temporary password at first sign-in.
         </p>
         <v-text-field
-          v-model="props.draft.fullName"
+          :model-value="props.draft.fullName"
           label="Full name"
           :error-messages="props.fieldErrors.fullName"
           variant="outlined"
-          @update:model-value="props.fieldErrors.fullName = undefined"
+          @update:model-value="updateField('fullName', $event)"
         />
         <v-text-field
-          v-model="props.draft.username"
+          :model-value="props.draft.username"
           label="Username"
           hint="3–50 letters, numbers, dots, underscores or hyphens"
           persistent-hint
           :error-messages="props.fieldErrors.username"
           variant="outlined"
-          @update:model-value="props.fieldErrors.username = undefined"
+          @update:model-value="updateField('username', $event)"
         />
         <v-select
-          v-model="props.draft.role"
+          :model-value="props.draft.role"
           label="Role"
           :items="[
             { title: 'Staff', value: 'staff' },
@@ -77,10 +90,10 @@ const emit = defineEmits([
           ]"
           :error-messages="props.fieldErrors.role"
           variant="outlined"
-          @update:model-value="props.fieldErrors.role = undefined"
+          @update:model-value="updateField('role', $event)"
         />
         <v-text-field
-          v-model="props.draft.password"
+          :model-value="props.draft.password"
           label="Temporary password"
           type="password"
           autocomplete="new-password"
@@ -88,7 +101,7 @@ const emit = defineEmits([
           persistent-hint
           :error-messages="props.fieldErrors.password"
           variant="outlined"
-          @update:model-value="props.fieldErrors.password = undefined"
+          @update:model-value="updateField('password', $event)"
         />
         <v-alert v-if="props.errorMessage" type="error" variant="tonal">
           {{ props.errorMessage }}
@@ -136,7 +149,7 @@ const emit = defineEmits([
           persistent-hint
           :error-messages="props.fieldErrors.temporaryPassword"
           variant="outlined"
-          @update:model-value="emit('update:resetPassword', $event)"
+          @update:model-value="emit('update:resetPassword', $event); emit('clear-error', 'temporaryPassword');"
         />
         <v-alert v-if="props.errorMessage" type="error" variant="tonal">
           {{ props.errorMessage }}

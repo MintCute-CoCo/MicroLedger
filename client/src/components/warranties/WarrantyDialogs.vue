@@ -25,18 +25,30 @@ const emit = defineEmits([
   'update:productSearch',
   'update:customerSearch',
   'update:attachCustomerId',
+  'update:form',
+  'clear-error',
   'create',
   'attach',
 ]);
 
 /**
- * Updates the selected customer and clears its previous validation message.
+ * Emits updated manual form state and clears field errors through composables.
+ *
+ * @param {string} field - Field property name.
+ * @param {*} value - New field value.
+ */
+function updateField(field, value) {
+  emit('update:form', { ...props.form, [field]: value });
+  emit('clear-error', field);
+}
+
+/**
+ * Updates the selected customer and clears its validation error through composable.
  *
  * @param {number|string|null} value - Selected customer identifier.
- * @returns {void} Emits the updated customer identifier.
  */
 function updateAttachCustomerId(value) {
-  props.fieldErrors.attachCustomerId = undefined;
+  emit('clear-error', 'attachCustomerId');
   emit('update:attachCustomerId', value);
 }
 </script>
@@ -54,7 +66,7 @@ function updateAttachCustomerId(value) {
       </v-alert>
 
       <v-autocomplete
-        v-model="props.form.productId"
+        :model-value="props.form.productId"
         :search="props.productSearch"
         :items="props.products"
         :item-title="(product) => `${product.name} · ${product.sku}`"
@@ -64,10 +76,10 @@ function updateAttachCustomerId(value) {
         no-filter
         variant="outlined"
         @update:search="emit('update:productSearch', $event)"
-        @update:model-value="props.fieldErrors.productId = undefined"
+        @update:model-value="updateField('productId', $event)"
       />
       <v-autocomplete
-        v-model="props.form.customerId"
+        :model-value="props.form.customerId"
         :search="props.customerSearch"
         :items="props.customers"
         :item-title="(customer) => `${customer.name}${customer.phone ? ` · ${customer.phone}` : ''}`"
@@ -77,25 +89,25 @@ function updateAttachCustomerId(value) {
         no-filter
         variant="outlined"
         @update:search="emit('update:customerSearch', $event)"
-        @update:model-value="props.fieldErrors.customerId = undefined"
+        @update:model-value="updateField('customerId', $event)"
       />
       <v-text-field
-        v-model="props.form.startDate"
+        :model-value="props.form.startDate"
         type="date"
         label="Purchase date (defaults to today)"
         :error-messages="props.fieldErrors.startDate"
         variant="outlined"
-        @update:model-value="props.fieldErrors.startDate = undefined"
+        @update:model-value="updateField('startDate', $event)"
       />
       <v-text-field
-        v-model="props.form.warrantyMonths"
+        :model-value="props.form.warrantyMonths"
         type="number"
         min="1"
         max="120"
         label="Warranty months (product default)"
         :error-messages="props.fieldErrors.warrantyMonths"
         variant="outlined"
-        @update:model-value="props.fieldErrors.warrantyMonths = undefined"
+        @update:model-value="updateField('warrantyMonths', $event)"
       />
 
       <div class="d-flex flex-wrap justify-end ga-2">

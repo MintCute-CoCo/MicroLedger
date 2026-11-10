@@ -36,6 +36,8 @@ const {
   attach,
   onTableOptions,
   load,
+  updateForm,
+  clearFieldError,
 } = useWarranties();
 </script>
 
@@ -90,6 +92,8 @@ const {
       :customers="customerOptions"
       :field-errors="fieldErrors"
       :form="form"
+      @update:form="updateForm"
+      @clear-error="clearFieldError"
       @create="create"
       @attach="attach"
     />

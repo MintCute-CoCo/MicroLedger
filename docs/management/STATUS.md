@@ -21,8 +21,8 @@ Key milestones achieved in this release cycle:
 
 | Deliverable | Category | Status | Notes |
 |---|---|:---:|---|
-| **Universal Component Decomposition** | Frontend Architecture | **Done** | Decomposed all monolithic views into focused subcomponents (`components/`) and composables (`composables/`) per FYP academic coding standards. |
-| **Vuetify 3 Primitives & Typography Standardization** | Frontend UI | **Done** | Replaced custom layout CSS with standard Vuetify 3 primitives (`v-container`, `v-row`, `v-col`, `v-card`, `ResponsiveTable`). Enforced universal typography (`text-h5`, `text-h6`, `text-overline`, `text-body-2`). |
+| **Universal Component Decomposition** | Frontend Architecture | **Done** | All view logic is composed from domain components/composables. T-139 and T-141 completed form-state ownership and extracted all inline summary cards. |
+| **Vuetify 3 Primitives & Typography Standardization** | Frontend UI | **Done** | Core tables and page wrappers use Vuetify. T-140 standardized typography/layout tokens, removed scoped receipt styles, and aligned report surfaces. |
 | **ResponsiveTable Primitive Refactoring** | Frontend UI | **Done** | Refactored `ResponsiveTable.vue` into pure Vuetify 3 primitives (`v-card`, `v-row`, `v-col`), removing custom CSS layout grids and custom `font-size: XXpx;` rules. |
 | **Anti-Slop & Design Taste (`tasteskill v2`)** | Frontend UI / Quality | **Done** | Achieved 0 FAIL in tasteskill linter: removed resting drop shadows, radial gradients, and decorative UI emojis. Adopted flat achromatic ledger design. |
 | **API-Only Frontend Requests** | Frontend Architecture | **Done** | Removed the standalone mock engine, seeded browser dataset, demo login shortcuts, and `VITE_DEMO_MODE` switch; the client uses the API (SRS §1.2). |
@@ -55,7 +55,7 @@ Key milestones achieved in this release cycle:
 
 | Area | Status | Notes |
 |---|---|---|
-| **Frontend UI & Component Architecture** | **Done** | All 18 route views complete; Vuetify 3 primitives, modular composables, responsive tables, and standard typography applied. |
+| **Frontend UI & Component Architecture** | **Done** | All 18 route views are implemented using thin container views, domain composables, and extracted domain components (T-139–T-143). |
 | **UI/UX Design & Anti-Slop Standardization** | **Done** | Flat achromatic ledger palette; zero rest shadows, zero radial gradients, zero decorative UI emojis; 0 FAIL on tasteskill linter. |
 | **Point of Sale (POS) Interface** | **Done** | Instant search, line merging, customer assignment, discounts, touch-friendly cart sheet, and receipt dialog. |
 | **Inventory & Transactional Ledger** | **Done** | Movement history table, stock-in modal, stock adjustment dialog with mandatory reason entry, and append-only invariants. |
@@ -88,7 +88,7 @@ Key milestones achieved in this release cycle:
 - **Responsive Viewport Compliance:** 360 px (Mobile), 768 px (Tablet), 1280 px (Desktop).
 - **Backend Test Suites:** **11 / 11** passing (51/51 tests) against an isolated PostgreSQL database, including 16-table backup and true restore verification, active stdout/stderr PII log inspection, and append-only denial checks (T-065, T-067, T-130, T-131, T-135, T-136).
 - **Documentation Verification:** **25 / 25** Markdown files in clean UTF-8 with 0 broken links.
-- **Frontend Architecture & Decoupling:** 100% compliant with AGENTS.md and AI_CONTEXT.md. Zero raw HTML tables, zero custom CSS grids, and zero scoped layout CSS. All complex panels decomposed into focused subcomponents: `ReportDataGrid.vue` (`ReportSummaryCards.vue`, `ReportGroupedTable.vue`, `ReportVoidedTable.vue`), `PosCheckoutPanel.vue` (`PosCartList.vue`, `PosCheckoutFooter.vue`), and `SalesRegisterCard.vue` (`SalesFilterToolbar.vue`, `SalesTable.vue`). All financial arithmetic lives in domain composables (`useSalesReportGrid.js`). `SettingsView.vue` and `SalesView.vue` delegate all state and error mutations to composables (T-136, T-137).
+- **Frontend Architecture & Decoupling:** No raw HTML tables or CSS grids were found, and the report, POS, and sales register coordinators use focused child components. This review found form dialogs mutating parent-owned objects, remaining inline view summary cards, and scoped receipt layout styles; these are tracked by T-139–T-141. A hard-coded customer-year fallback is tracked by T-142.
 - **Retail Neutrality:** Verified across all client files; hardware category icon mappings removed and replaced with neutral retail icons (AGENTS.md, T-136).
 - **Timezone Alignment (SRS-SET-01, SRS-UI-07):** Store timezone is governed exclusively by container infrastructure `TZ` environment variable (read-only in settings API; updates rejected with 422). Client `formatDate` and `formatDateTime` strictly format in the store time zone across all panels and receipts (T-136).
 - **Monetary Arithmetic:** All currency math uses integer minor units (cents) with string-based decimal parsing, eliminating floating-point multiplication distortion across reports and sales. Mixed product quantity totals display without hardcoded unit assumptions (T-136).
@@ -100,9 +100,9 @@ Key milestones achieved in this release cycle:
 
 ## 6. Architectural Standards Record
 
-The architecture strictly adheres to academic Final Year Project readability standards:
-1. **Component Decomposition**: Monolithic view templates in `client/src/views/` are decomposed into isolated presentation components (`client/src/components/`) and business composables (`client/src/composables/`).
-2. **Vuetify 3 Primitives**: Views generally use shared Vuetify wrappers and there are no raw HTML tables or CSS grids; T-136 tracks remaining component and scoped-layout deviations.
+The architecture is being aligned with academic Final Year Project readability standards:
+1. **Component Decomposition**: Most view templates compose domain components and composables. Inline metric cards remain in Products, Inventory, Sales, and Suppliers views; T-141 tracks extraction.
+2. **Vuetify 3 Primitives**: No raw HTML tables or CSS grids were found. Shared title/heading CSS overrides documented tokens, and receipt/table components retain scoped layout rules; T-140 tracks alignment.
 3. **Typography Standardization**: Unified typography classes applied across all 18 views: `text-h5` for page titles, `text-h6` for card headers, `text-overline` for table headers/eyebrows, and `text-body-2` for standard cells.
 4. **POS Ergonomics**: 8:4 desktop grid split with independent scrolling panels; compact 40px search field, responsive category chips, and persistent `Complete Sale` footer button.
 5. **Form Validation Encapsulation**: Form validation logic is contained directly within dialog components (`ProductFormDialog.vue`, `CustomerFormDialog.vue`, `InventoryMovementDialog.vue`), emitting verified payloads to parent views.
@@ -116,9 +116,19 @@ The architecture strictly adheres to academic Final Year Project readability sta
 | Item | Topic | Resolution Summary | Status |
 |---|---|---|:---:|
 | **O-01** | Domestic Currency & Decimals | Configured via `/settings` (defaults to VND with 0 decimals or USD with 2 decimals). Governed by Single Domestic Currency policy (BSR §4.6) with live formatting preview. | **Closed** |
-| **O-02** | Store Timezone | SRS specifies infrastructure `TZ`, but current settings/repository code still reads a database timezone and browser formatters use local time; tracked under T-136. | **Open** |
-| **O-03** | Reference Domain & Seed Catalog | PC hardware remains suitable reference seed data, but a hardware-specific category icon map remains in application code; tracked under T-136. | **Open** |
+| **O-02** | Store Timezone | Store timezone is governed by infrastructure `TZ`; settings updates reject timezone changes and client formatting uses the store zone (T-136). | **Closed** |
+| **O-03** | Reference Domain & Seed Catalog | PC hardware remains reference data; product category icons use a neutral fallback (T-136). | **Closed** |
 | **O-04** | Containerized Deployment | Production containerization (`Dockerfile`, Docker Compose) staged for oral committee defense presentation (T-099). | **Closed** |
 | **O-05** | PostgreSQL Role Least-Privilege | Append-only security role script (`server/src/db/create-app-role.js`) provisioned in CI; audit and verification tracked under T-130. | **Closed** |
 | **O-06** | UAT Participants & Scope | Executed with 1 Store Owner (Admin) and 2 Staff members over 500-item catalog, achieving SUS score 90.0/100 (documented in `docs/verification/UAT_SCRIPT.md`). | **Closed** |
 | **O-07** | Staff Stock-In Permission | Staff permitted to record stock-in with positive whole quantities (`SRS-INV-03`, `AC-010`). | **Closed** |
+
+## 8. Frontend Audit Follow-ups
+
+| Task | Finding | Status |
+|---|---|:---:|
+| **T-139** | Form dialogs mutate parent-owned `form`, `change`, and `fieldErrors` objects instead of emitting changes through composables. | **Done** |
+| **T-140** | Shared CSS overrides documented heading and typography tokens; receipt/table components retain scoped layout CSS, and report summary cards use a non-Vuetify surface with a nonstandard border token. | **Done** |
+| **T-141** | Product, inventory, sales, and suppliers views still define summary metric cards inline. | **Done** |
+| **T-142** | Customer directory displays year 2026 when the creation date is missing, which can present a false date. | **Done** |
+| **T-143** | Claim resolution visibility, claim history detail join, and transition target binding. | **Done** |

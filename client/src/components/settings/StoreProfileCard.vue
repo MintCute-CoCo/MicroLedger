@@ -19,14 +19,16 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['clear-error']);
+const emit = defineEmits(['clear-error', 'update:form']);
 
 /**
- * Emits error clearing event for a specific form field when updated.
+ * Emits updated form values and clear-error event for a specific field.
  *
  * @param {string} fieldName - Field identifier to clear errors for.
+ * @param {*} value - New field value.
  */
-function handleFieldInput(fieldName) {
+function handleFieldInput(fieldName, value) {
+  emit('update:form', { ...props.form, [fieldName]: value });
   emit('clear-error', fieldName);
 }
 </script>
@@ -50,7 +52,7 @@ function handleFieldInput(fieldName) {
       <v-row dense>
         <v-col cols="12" sm="6">
           <v-text-field
-            v-model="props.form.store_name"
+            :model-value="props.form.store_name"
             label="Store name"
             placeholder="e.g. MicroLedger Store"
             maxlength="100"
@@ -59,13 +61,13 @@ function handleFieldInput(fieldName) {
             density="compact"
             hint="Appears prominently at the top of printed receipts"
             persistent-hint
-            @update:model-value="handleFieldInput('store_name')"
+            @update:model-value="handleFieldInput('store_name', $event)"
           />
         </v-col>
 
         <v-col cols="12" sm="6">
           <v-text-field
-            v-model="props.form.store_tagline"
+            :model-value="props.form.store_tagline"
             label="Business tagline / Subtitle"
             placeholder="e.g. Retail POS & Inventory Solutions"
             maxlength="150"
@@ -74,13 +76,13 @@ function handleFieldInput(fieldName) {
             density="compact"
             hint="Store category or business slogan"
             persistent-hint
-            @update:model-value="handleFieldInput('store_tagline')"
+            @update:model-value="handleFieldInput('store_tagline', $event)"
           />
         </v-col>
 
         <v-col cols="12" sm="7">
           <v-text-field
-            v-model="props.form.store_address"
+            :model-value="props.form.store_address"
             label="Store physical address"
             placeholder="e.g. 123 Hoan Kiem, Hanoi or 70000 Ho Chi Minh City"
             maxlength="255"
@@ -89,13 +91,13 @@ function handleFieldInput(fieldName) {
             density="compact"
             hint="Full retail shop address printed on transaction slips"
             persistent-hint
-            @update:model-value="handleFieldInput('store_address')"
+            @update:model-value="handleFieldInput('store_address', $event)"
           />
         </v-col>
 
         <v-col cols="12" sm="5">
           <v-text-field
-            v-model="props.form.store_phone"
+            :model-value="props.form.store_phone"
             label="Store contact telephone"
             placeholder="e.g. +84 (024) 3822-1234"
             maxlength="50"
@@ -104,13 +106,13 @@ function handleFieldInput(fieldName) {
             density="compact"
             hint="Official contact phone for customer queries"
             persistent-hint
-            @update:model-value="handleFieldInput('store_phone')"
+            @update:model-value="handleFieldInput('store_phone', $event)"
           />
         </v-col>
 
         <v-col cols="12">
           <v-text-field
-            v-model="props.form.receipt_footer"
+            :model-value="props.form.receipt_footer"
             label="Receipt footer policy / return message"
             placeholder="e.g. Thank you for your business! Please keep receipt for returns within 7 days."
             maxlength="255"
@@ -119,7 +121,7 @@ function handleFieldInput(fieldName) {
             density="compact"
             hint="Printed at the bottom of customer receipts"
             persistent-hint
-            @update:model-value="handleFieldInput('receipt_footer')"
+            @update:model-value="handleFieldInput('receipt_footer', $event)"
           />
         </v-col>
       </v-row>

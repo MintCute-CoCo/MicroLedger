@@ -31,10 +31,23 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:open',
+  'update:draft',
+  'clear-error',
   'submit',
 ]);
 
 const formRef = ref(null);
+
+/**
+ * Emits updated draft state and clears the field error through composables.
+ *
+ * @param {string} field - Field property name.
+ * @param {*} value - New field value.
+ */
+function updateField(field, value) {
+  emit('update:draft', { ...props.draft, [field]: value });
+  emit('clear-error', field);
+}
 
 /**
  * Validates the customer form before asking the page to save the draft.
@@ -91,24 +104,24 @@ async function submitForm() {
         </v-alert>
 
         <v-text-field
-          v-model="props.draft.name"
+          :model-value="props.draft.name"
           label="Full name *"
           placeholder="Customer name"
           :rules="[(value) => Boolean(String(value ?? '').trim()) || 'Enter a customer name.']"
           :error-messages="props.fieldErrors.name"
           variant="outlined"
-          @update:model-value="props.fieldErrors.name = undefined"
+          @update:model-value="updateField('name', $event)"
         />
 
         <v-text-field
-          v-model="props.draft.phone"
+          :model-value="props.draft.phone"
           label="Phone number"
           placeholder="Optional"
           hint="5–30 characters; digits and common phone punctuation."
           persistent-hint
           :error-messages="props.fieldErrors.phone"
           variant="outlined"
-          @update:model-value="props.fieldErrors.phone = undefined"
+          @update:model-value="updateField('phone', $event)"
         />
 
         <div class="d-flex flex-wrap justify-end ga-2 mt-4">

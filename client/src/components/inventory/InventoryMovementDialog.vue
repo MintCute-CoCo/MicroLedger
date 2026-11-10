@@ -31,10 +31,23 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:open',
+  'update:draft',
+  'clear-error',
   'submit',
 ]);
 
 const formRef = ref(null);
+
+/**
+ * Emits updated draft state and clears field errors through composables.
+ *
+ * @param {string} field - Field property name.
+ * @param {*} value - New field value.
+ */
+function updateField(field, value) {
+  emit('update:draft', { ...props.draft, [field]: value });
+  emit('clear-error', field);
+}
 
 /**
  * Validates the inventory movement before dispatching it to the page.
@@ -90,7 +103,7 @@ async function submitForm() {
         </v-alert>
 
         <v-select
-          v-model="props.draft.productId"
+          :model-value="props.draft.productId"
           label="Product *"
           :items="props.productOptions"
           item-title="name"
@@ -98,11 +111,11 @@ async function submitForm() {
           :rules="[(value) => Boolean(value) || 'Choose a product.']"
           :error-messages="props.fieldErrors.productId"
           variant="outlined"
-          @update:model-value="props.fieldErrors.productId = undefined"
+          @update:model-value="updateField('productId', $event)"
         />
 
         <v-text-field
-          v-model="props.draft.quantity"
+          :model-value="props.draft.quantity"
           :label="props.draft.type === 'Stock in'
             ? 'Quantity received *'
             : 'Change in quantity *'"
@@ -117,11 +130,11 @@ async function submitForm() {
           ]"
           :error-messages="props.fieldErrors.quantity"
           variant="outlined"
-          @update:model-value="props.fieldErrors.quantity = undefined"
+          @update:model-value="updateField('quantity', $event)"
         />
 
         <v-text-field
-          v-model="props.draft.reason"
+          :model-value="props.draft.reason"
           :label="props.draft.type === 'Adjustment' ? 'Reason *' : 'Note (optional)'"
           placeholder="e.g. Supplier delivery"
           :rules="props.draft.type === 'Adjustment'
@@ -129,7 +142,7 @@ async function submitForm() {
             : []"
           :error-messages="props.fieldErrors.reason || props.fieldErrors.note"
           variant="outlined"
-          @update:model-value="props.fieldErrors.reason = undefined"
+          @update:model-value="updateField('reason', $event)"
         />
 
         <div class="d-flex flex-wrap justify-end ga-2 mt-3">

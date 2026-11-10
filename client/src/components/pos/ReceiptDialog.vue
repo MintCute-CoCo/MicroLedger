@@ -83,12 +83,7 @@ function handleClose() {
 </template>
 
 <style scoped>
-.receipt-slip-wrapper {
-  background-color: #f1f5f9;
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
+/* Print Mode Optimization (@media print per AI_CONTEXT.md §11 print exception) */
 @media print {
   .no-print,
   :global(.v-overlay__scrim),

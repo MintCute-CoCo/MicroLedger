@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * Warranty Claim Registry Data Table & Filter Panel
  *

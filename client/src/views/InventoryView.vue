@@ -10,6 +10,7 @@
 import InventoryStockSection from '../components/inventory/InventoryStockSection.vue';
 import InventoryMovementSection from '../components/inventory/InventoryMovementSection.vue';
 import InventoryMovementDialog from '../components/inventory/InventoryMovementDialog.vue';
+import InventorySummaryCards from '../components/inventory/InventorySummaryCards.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { formatDateTime } from '../utils/format.js';
 import { useInventory } from '../composables/inventory/useInventory.js';
@@ -45,6 +46,8 @@ const {
   onMovementOptions,
   openMovement,
   saveMovement,
+  updateDraft,
+  clearFieldError,
   saving,
   search,
   visibleMovements,
@@ -122,53 +125,11 @@ const movementHeaders = [
     </v-alert>
 
     <!-- Overview Metric Cards -->
-    <v-row class="mb-4">
-      <v-col cols="12" sm="4">
-        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
-          <div class="d-flex align-center ga-3">
-            <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
-              <v-icon icon="mdi-package-variant-closed" />
-            </v-avatar>
-            <div>
-              <div class="text-caption text-medium-emphasis">Total units</div>
-              <div class="text-h6 font-weight-bold">
-                {{ apiMetrics.totalUnits.toLocaleString() }}
-              </div>
-            </div>
-          </div>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12" sm="4">
-        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
-          <div class="d-flex align-center ga-3">
-            <v-avatar color="secondary" variant="tonal" rounded="lg" size="40">
-              <v-icon icon="mdi-shape-outline" />
-            </v-avatar>
-            <div>
-              <div class="text-caption text-medium-emphasis">Active products</div>
-              <div class="text-h6 font-weight-bold">
-                {{ apiMetrics.total }}
-              </div>
-            </div>
-          </div>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12" sm="4">
-        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
-          <div class="d-flex align-center ga-3">
-            <v-avatar color="warning" variant="tonal" rounded="lg" size="40">
-              <v-icon icon="mdi-alert-outline" />
-            </v-avatar>
-            <div>
-              <div class="text-caption text-medium-emphasis">Below reorder level</div>
-              <div class="text-h6 font-weight-bold">{{ lowStockCount }}</div>
-            </div>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
+    <InventorySummaryCards
+      :total-units="apiMetrics.totalUnits"
+      :active-products="apiMetrics.total"
+      :low-stock-count="lowStockCount"
+    />
 
     <InventoryStockSection
       v-model:search="search"
@@ -210,6 +171,8 @@ const movementHeaders = [
       :error="error"
       :saving="saving"
       :product-options="apiProductOptions"
+      @update:draft="updateDraft"
+      @clear-error="clearFieldError"
       @submit="saveMovement"
     />
   </v-container>

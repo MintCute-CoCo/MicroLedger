@@ -35,6 +35,7 @@ const {
   presets,
   previewAmount,
   applyPreset,
+  updateForm,
   clearFieldError,
   revertSettings,
   handleSaveClick,
@@ -96,6 +97,7 @@ function handleApplyPreset(preset) {
         <StoreProfileCard
           :form="form"
           :field-errors="fieldErrors"
+          @update:form="updateForm"
           @clear-error="clearFieldError"
         />
 
@@ -127,6 +129,7 @@ function handleApplyPreset(preset) {
           :presets="presets"
           :busy="busy"
           :preview-amount="previewAmount"
+          @update:form="updateForm"
           @apply-preset="handleApplyPreset"
           @clear-error="clearFieldError"
           @save="handleSaveClick"

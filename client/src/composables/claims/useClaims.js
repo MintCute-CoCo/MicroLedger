@@ -225,15 +225,20 @@ export function useClaims() {
     create: claimForm.create,
     loadWarrantyOptions: claimForm.loadWarrantyOptions,
     loadCustomerOptions: claimForm.loadCustomerOptions,
+    updateForm: claimForm.updateForm,
+    clearCreateError: claimForm.clearFieldError,
 
     // Transitions state & methods
     transitionOpen: transitions.transitionOpen,
     finalConfirmOpen: transitions.finalConfirmOpen,
+    selectedClaim: transitions.selectedClaim,
     change: transitions.change,
     availableTransitions: transitions.availableTransitions,
     startTransition: transitions.startTransition,
     transition: transitions.transition,
     requestTransition: transitions.requestTransition,
+    updateChange: transitions.updateChange,
+    clearTransitionError: transitions.clearFieldError,
 
     // Detail state & methods
     detailOpen: detail.detailOpen,

@@ -1,6 +1,7 @@
 <script setup>
 import ProductCatalogSection from '../components/products/ProductCatalogSection.vue';
 import ProductFormDialog from '../components/products/ProductFormDialog.vue';
+import ProductSummaryCards from '../components/products/ProductSummaryCards.vue';
 import { displaySettings } from '../utils/format.js';
 import { useProducts } from '../composables/products/useProducts.js';
 
@@ -45,6 +46,8 @@ const {
   openEdit,
   toggleProductStatus,
   saveProduct,
+  updateDraft,
+  clearFieldError,
 } = useProducts();
 
 /**
@@ -117,64 +120,11 @@ const required = [
       {{ error }}
     </v-alert>
 
-    <!-- Top Metric Summary Strip -->
-    <v-row class="mb-4">
-      <v-col cols="12" sm="6" md="3">
-        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
-          <div class="d-flex align-center ga-3">
-            <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
-              <v-icon icon="mdi-package-variant-closed" />
-            </v-avatar>
-            <div>
-              <div class="text-caption text-medium-emphasis">Total products</div>
-              <div class="text-h6 font-weight-bold">{{ productTotal }}</div>
-            </div>
-          </div>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12" sm="6" md="3">
-        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
-          <div class="d-flex align-center ga-3">
-            <v-avatar color="secondary" variant="tonal" rounded="lg" size="40">
-              <v-icon icon="mdi-shape-outline" />
-            </v-avatar>
-            <div>
-              <div class="text-caption text-medium-emphasis">Categories</div>
-              <div class="text-h6 font-weight-bold">{{ apiCategories.length }}</div>
-            </div>
-          </div>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12" sm="6" md="3">
-        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
-          <div class="d-flex align-center ga-3">
-            <v-avatar color="warning" variant="tonal" rounded="lg" size="40">
-              <v-icon icon="mdi-alert-outline" />
-            </v-avatar>
-            <div>
-              <div class="text-caption text-medium-emphasis">Low stock</div>
-              <div class="text-h6 font-weight-bold">{{ lowStockCount }}</div>
-            </div>
-          </div>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12" sm="6" md="3">
-        <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
-          <div class="d-flex align-center ga-3">
-            <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
-              <v-icon icon="mdi-information-outline" />
-            </v-avatar>
-            <div>
-              <div class="text-caption text-medium-emphasis">Stock control</div>
-              <div class="text-body-2 font-weight-medium">Adjust via Inventory</div>
-            </div>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
+    <ProductSummaryCards
+      :product-total="productTotal"
+      :category-count="apiCategories.length"
+      :low-stock-count="lowStockCount"
+    />
 
     <ProductCatalogSection
       v-model:search="search"
@@ -212,6 +162,8 @@ const required = [
       :product-category-options="productCategoryOptions"
       :currency-code="displaySettings.currency_code"
       :required-rule="required"
+      @update:draft="updateDraft"
+      @clear-error="clearFieldError"
       @submit="saveProduct"
     />
   </v-container>

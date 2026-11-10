@@ -100,6 +100,15 @@ export function useSettings() {
   }
 
   /**
+   * Updates settings form state with new field values.
+   *
+   * @param {Object} nextForm - Updated settings values.
+   */
+  function updateForm(nextForm) {
+    Object.assign(form, nextForm);
+  }
+
+  /**
    * Clears validation error for a specific field.
    *
    * @param {string} fieldName - Field key to clear error for.
@@ -239,6 +248,7 @@ export function useSettings() {
     presets: CURRENCY_PRESETS,
     previewAmount,
     applyPreset,
+    updateForm,
     clearFieldError,
     revertSettings,
     handleSaveClick,

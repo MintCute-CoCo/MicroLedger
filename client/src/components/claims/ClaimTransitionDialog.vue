@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * Claim Lifecycle Transition Modal Dialog
  *
@@ -40,9 +40,22 @@ const props = defineProps({
 const emit = defineEmits([
   'update:open',
   'submit',
+  'update:change',
+  'clear-error',
 ]);
 
 const resolutionOptions = CLAIM_RESOLUTIONS;
+
+/**
+ * Emits updated change state and clears the field error through composables.
+ *
+ * @param {string} field - Field property name.
+ * @param {*} value - New field value.
+ */
+function updateField(field, value) {
+  emit('update:change', { ...props.change, [field]: value });
+  emit('clear-error', field);
+}
 </script>
 
 <template>
@@ -67,77 +80,80 @@ const resolutionOptions = CLAIM_RESOLUTIONS;
       </v-alert>
 
       <v-select
-        v-model="props.change.status"
+        :model-value="props.change.status"
         :items="props.availableTransitions(props.selected || {})"
         label="New status"
         :error-messages="props.fieldErrors.status"
         variant="outlined"
+        @update:model-value="updateField('status', $event)"
       />
 
       <v-select
         v-if="props.change.status === 'With Supplier'"
-        v-model="props.change.supplierId"
+        :model-value="props.change.supplierId"
         :items="props.suppliers"
         item-title="name"
         item-value="id"
         label="Supplier"
         :error-messages="props.fieldErrors.supplierId"
         variant="outlined"
-        @update:model-value="props.fieldErrors.supplierId = undefined"
+        @update:model-value="updateField('supplierId', $event)"
       />
       <v-text-field
         v-if="props.change.status === 'With Supplier'"
-        v-model="props.change.sentDate"
+        :model-value="props.change.sentDate"
         type="date"
         label="Sent date"
         :error-messages="props.fieldErrors.sentDate"
         variant="outlined"
-        @update:model-value="props.fieldErrors.sentDate = undefined"
+        @update:model-value="updateField('sentDate', $event)"
       />
       <v-text-field
         v-if="props.change.status === 'With Supplier'"
-        v-model="props.change.expectedReturnDate"
+        :model-value="props.change.expectedReturnDate"
         type="date"
         label="Expected return date"
         :error-messages="props.fieldErrors.expectedReturnDate"
         variant="outlined"
-        @update:model-value="props.fieldErrors.expectedReturnDate = undefined"
+        @update:model-value="updateField('expectedReturnDate', $event)"
       />
       <v-text-field
         v-if="props.change.status === 'Returned'"
-        v-model="props.change.actualReturnDate"
+        :model-value="props.change.actualReturnDate"
         type="date"
         label="Actual return date"
         :error-messages="props.fieldErrors.actualReturnDate"
         variant="outlined"
-        @update:model-value="props.fieldErrors.actualReturnDate = undefined"
+        @update:model-value="updateField('actualReturnDate', $event)"
       />
       <v-select
         v-if="['Returned', 'Ready for Customer'].includes(props.change.status)"
-        v-model="props.change.resolution"
+        :model-value="props.change.resolution"
         :items="resolutionOptions"
-        label="Resolution"
+        item-title="title"
+        item-value="value"
+        label="Resolution *"
         :error-messages="props.fieldErrors.resolution"
         variant="outlined"
-        @update:model-value="props.fieldErrors.resolution = undefined"
+        @update:model-value="updateField('resolution', $event)"
       />
       <v-text-field
         v-if="props.change.status === 'Completed'"
-        v-model="props.change.collectedDate"
+        :model-value="props.change.collectedDate"
         type="date"
         label="Collection date"
         :error-messages="props.fieldErrors.collectedDate"
         variant="outlined"
-        @update:model-value="props.fieldErrors.collectedDate = undefined"
+        @update:model-value="updateField('collectedDate', $event)"
       />
       <v-textarea
         v-if="['Rejected', 'Cancelled'].includes(props.change.status)"
-        v-model="props.change.reason"
+        :model-value="props.change.reason"
         label="Reason *"
         maxlength="255"
         :error-messages="props.fieldErrors.reason"
         variant="outlined"
-        @update:model-value="props.fieldErrors.reason = undefined"
+        @update:model-value="updateField('reason', $event)"
       />
 
       <div class="d-flex flex-wrap justify-end ga-2 mt-3">

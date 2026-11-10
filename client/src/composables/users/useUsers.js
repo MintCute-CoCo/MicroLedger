@@ -271,6 +271,26 @@ export function useUsers() {
 
   onMounted(loadUsers);
 
+  /**
+   * Updates user creation draft fields through the composable.
+   *
+   * @param {Object} nextDraft - Updated draft values.
+   */
+  function updateDraft(nextDraft) {
+    draft.value = { ...draft.value, ...nextDraft };
+  }
+
+  /**
+   * Clears field error through the composable.
+   *
+   * @param {string} field - Field identifier.
+   */
+  function clearFieldError(field) {
+    if (field && fieldErrors.value[field]) {
+      delete fieldErrors.value[field];
+    }
+  }
+
   return {
     users,
     loading,
@@ -293,6 +313,8 @@ export function useUsers() {
     toggleUserStatus,
     resetPassword,
     openReset,
+    updateDraft,
+    clearFieldError,
   };
 }
 

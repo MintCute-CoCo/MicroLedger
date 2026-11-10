@@ -26,8 +26,21 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:open',
+  'update:draft',
+  'clear-error',
   'save',
 ]);
+
+/**
+ * Emits updated draft state and clears field errors through composables.
+ *
+ * @param {string} field - Field property name.
+ * @param {*} value - New field value.
+ */
+function updateField(field, value) {
+  emit('update:draft', { ...props.draft, [field]: value });
+  emit('clear-error', field);
+}
 </script>
 
 <template>
@@ -52,24 +65,24 @@ const emit = defineEmits([
         </v-alert>
 
         <v-text-field
-          v-model="props.draft.name"
+          :model-value="props.draft.name"
           label="Category name"
           maxlength="100"
           :error-messages="props.fieldErrors.name"
           variant="outlined"
           autofocus
-          @update:model-value="props.fieldErrors.name = undefined"
+          @update:model-value="updateField('name', $event)"
         />
 
         <v-textarea
-          v-model="props.draft.description"
+          :model-value="props.draft.description"
           label="Description (optional)"
           maxlength="255"
           rows="2"
           auto-grow
           :error-messages="props.fieldErrors.description"
           variant="outlined"
-          @update:model-value="props.fieldErrors.description = undefined"
+          @update:model-value="updateField('description', $event)"
         />
       </v-card-text>
 

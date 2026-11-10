@@ -34,6 +34,7 @@ const {
   finalConfirmOpen,
   detailOpen,
   selected,
+  selectedClaim,
   detail,
   filters,
   form,
@@ -47,9 +48,13 @@ const {
   availableTransitions,
   create,
   openCreateClaim,
+  updateForm,
+  clearCreateError,
   startTransition,
   transition,
   requestTransition,
+  updateChange,
+  clearTransitionError,
   showDetail,
   exportFilteredClaims,
 } = useClaims();
@@ -127,6 +132,8 @@ const {
       :selected-warranty="selectedWarranty"
       :warranty-options="warrantyOptions"
       :customer-options="customerOptions"
+      @update:form="updateForm"
+      @clear-error="clearCreateError"
       @create="create"
     />
 
@@ -135,17 +142,19 @@ const {
       :busy="busy"
       :error="error"
       :field-errors="fieldErrors"
-      :selected="selected"
+      :selected="selectedClaim"
       :change="change"
       :suppliers="suppliers"
       :available-transitions="availableTransitions"
+      @update:change="updateChange"
+      @clear-error="clearTransitionError"
       @submit="requestTransition"
     />
 
     <ClaimFinalConfirmDialog
       v-model:open="finalConfirmOpen"
       :busy="busy"
-      :selected="selected"
+      :selected="selectedClaim"
       :change="change"
       @confirm="transition"
     />

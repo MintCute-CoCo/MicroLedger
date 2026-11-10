@@ -126,6 +126,8 @@ export function useProducts() {
     openEdit: productForm.openEdit,
     toggleProductStatus: productForm.toggleProductStatus,
     saveProduct: productForm.saveProduct,
+    updateDraft: productForm.updateDraft,
+    clearFieldError: productForm.clearFieldError,
 
     // Export
     exportFilteredProducts: exporter.exportFilteredProducts,

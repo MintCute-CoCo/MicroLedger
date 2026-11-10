@@ -378,6 +378,26 @@ export function useWarranties() {
     clearTimeout(customerTimer);
   });
 
+  /**
+   * Updates manual warranty form fields through the composable.
+   *
+   * @param {Object} nextForm - Updated form values.
+   */
+  function updateForm(nextForm) {
+    Object.assign(form, nextForm);
+  }
+
+  /**
+   * Clears field error through the composable.
+   *
+   * @param {string} field - Field identifier.
+   */
+  function clearFieldError(field) {
+    if (field && fieldErrors.value[field]) {
+      delete fieldErrors.value[field];
+    }
+  }
+
   return {
     isAdmin,
     rows,
@@ -404,6 +424,8 @@ export function useWarranties() {
     attach,
     onTableOptions,
     load,
+    updateForm,
+    clearFieldError,
   };
 }
 

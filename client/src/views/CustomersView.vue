@@ -28,6 +28,8 @@ const {
   openCreate,
   openEdit,
   saveCustomer,
+  updateDraft,
+  clearFieldError,
   auth,
   pageSize,
 } = useCustomers();
@@ -97,6 +99,8 @@ const {
       :field-errors="fieldErrors"
       :error="error"
       :saving="saving"
+      @update:draft="updateDraft"
+      @clear-error="clearFieldError"
       @submit="saveCustomer"
     />
   </v-container>

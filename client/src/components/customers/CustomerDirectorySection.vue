@@ -101,7 +101,7 @@ const emit = defineEmits([
               <div>
                 <div class="text-body-2 font-weight-medium">{{ item.name }}</div>
                 <div class="text-caption text-medium-emphasis">
-                  Customer since {{ item.createdAt ? new Date(item.createdAt).getFullYear() : 2026 }}
+                  {{ item.createdAt ? `Customer since ${new Date(item.createdAt).getFullYear()}` : 'Registered customer' }}
                 </div>
               </div>
             </div>

@@ -24,73 +24,67 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="summary-cards-row mb-4">
+  <v-row class="mb-4">
     <!-- Completed sales volume -->
-    <div class="summary-card">
-      <span class="summary-icon icon-blue">
-        <v-icon
-          icon="mdi-cash-multiple"
-          size="18"
-        />
-      </span>
-      <div>
-        <span class="text-caption text-medium-emphasis">Completed sales</span>
-        <strong class="text-h6 font-weight-bold">{{ props.financialSummary.units.toLocaleString() }}</strong>
-      </div>
-    </div>
+    <v-col cols="12" sm="6" lg="3">
+      <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+        <div class="d-flex align-center ga-3">
+          <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
+            <v-icon icon="mdi-cash-multiple" />
+          </v-avatar>
+          <div>
+            <div class="text-caption text-medium-emphasis">Completed sales</div>
+            <div class="text-h6 font-weight-bold">{{ props.financialSummary.units.toLocaleString() }}</div>
+          </div>
+        </div>
+      </v-card>
+    </v-col>
 
     <!-- Revenue -->
-    <div class="summary-card">
-      <span class="summary-icon icon-green">
-        <v-icon
-          icon="mdi-finance"
-          size="18"
-        />
-      </span>
-      <div>
-        <span class="text-caption text-medium-emphasis">Revenue</span>
-        <strong class="text-h6 font-weight-bold revenue-val">{{ formatMoney(props.financialSummary.totalCents) }}</strong>
-      </div>
-    </div>
+    <v-col cols="12" sm="6" lg="3">
+      <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+        <div class="d-flex align-center ga-3">
+          <v-avatar color="success" variant="tonal" rounded="lg" size="40">
+            <v-icon icon="mdi-finance" />
+          </v-avatar>
+          <div>
+            <div class="text-caption text-medium-emphasis">Revenue</div>
+            <div class="text-h6 font-weight-bold text-success">{{ formatMoney(props.financialSummary.totalCents) }}</div>
+          </div>
+        </div>
+      </v-card>
+    </v-col>
 
     <!-- Gross Subtotal -->
-    <div class="summary-card">
-      <span class="summary-icon icon-purple">
-        <v-icon
-          icon="mdi-calculator"
-          size="18"
-        />
-      </span>
-      <div>
-        <span class="text-caption text-medium-emphasis">Gross subtotal</span>
-        <strong class="text-h6 font-weight-bold">{{ formatMoney(props.financialSummary.subtotalCents) }}</strong>
-      </div>
-    </div>
+    <v-col cols="12" sm="6" lg="3">
+      <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+        <div class="d-flex align-center ga-3">
+          <v-avatar color="secondary" variant="tonal" rounded="lg" size="40">
+            <v-icon icon="mdi-calculator" />
+          </v-avatar>
+          <div>
+            <div class="text-caption text-medium-emphasis">Gross subtotal</div>
+            <div class="text-h6 font-weight-bold">{{ formatMoney(props.financialSummary.subtotalCents) }}</div>
+          </div>
+        </div>
+      </v-card>
+    </v-col>
 
     <!-- Voided sales -->
-    <div class="summary-card">
-      <span class="summary-icon icon-rose">
-        <v-icon
-          icon="mdi-cancel"
-          size="18"
-        />
-      </span>
-      <div>
-        <span class="text-caption text-medium-emphasis">Voided</span>
-        <strong class="text-h6 font-weight-bold voided-val">
-          {{ props.voidedSummary.count }} ({{ formatMoney(props.voidedSummary.totalCents) }})
-        </strong>
-      </div>
-    </div>
-  </div>
+    <v-col cols="12" sm="6" lg="3">
+      <v-card rounded="xl" variant="outlined" class="pa-4 h-100">
+        <div class="d-flex align-center ga-3">
+          <v-avatar color="error" variant="tonal" rounded="lg" size="40">
+            <v-icon icon="mdi-cancel" />
+          </v-avatar>
+          <div>
+            <div class="text-caption text-medium-emphasis">Voided</div>
+            <div class="text-h6 font-weight-bold text-error">
+              {{ props.voidedSummary.count }} ({{ formatMoney(props.voidedSummary.totalCents) }})
+            </div>
+          </div>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
-
-<style scoped>
-.summary-card > div strong.revenue-val {
-  color: #319276;
-}
-
-.summary-card > div strong.voided-val {
-  color: #bb7070;
-}
-</style>

@@ -31,6 +31,8 @@ const {
   resetPassword,
   openReset,
   loadUsers,
+  updateDraft,
+  clearFieldError,
 } = useUsers();
 </script>
 
@@ -87,6 +89,8 @@ const {
       :field-errors="fieldErrors"
       :error-message="error ? readableError(error) : ''"
       :saving="saving"
+      @update:draft="updateDraft"
+      @clear-error="clearFieldError"
       @create="createUser"
       @reset="resetPassword"
     />

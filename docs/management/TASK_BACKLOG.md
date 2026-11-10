@@ -24,10 +24,10 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E10 — Warranty & Claims** | Warranty records, 7-stage RMA machine, overdue calc | 11 | 11 / 11 | **Done** |
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 8 | 8 / 8 | **Done** |
-| **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 22 | 22 / 22 | **Done** |
-| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 15 | 14 / 15 | **In Progress** |
+| **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 24 | 20 / 24 | **In Progress** |
+| **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 18 | 17 / 18 | **In Progress** |
 | **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 7 | 7 / 7 | **Done** |
-| **Total** | **Full System Implementation Backlog** | **137** | **136 / 137** | **99% Complete** |
+| **Total** | **Full System Implementation Backlog** | **142** | **137 / 142** | **96% Complete** |
 
 ---
 
@@ -264,6 +264,11 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-136 | Align frontend logic and design rules | M | Must | T-123 | SRS-SET-01, SRS-UI-07, AGENTS §Quality, AI_CONTEXT §11 | Done |
 | T-137 | Split POS and sales register sections | M | Should | T-092, T-094 | AGENTS §Quality, AI_CONTEXT §3, §11 | Done |
 | T-138 | Display claim resolution status, badges and timeline notes | S | Must | T-095 | SRS-WAR-03, AC-038 | Done |
+| T-139 | Keep form state mutations in composables | M | Must | T-092 | AGENTS §Quality, AI_CONTEXT §3, §11 | Done |
+| T-140 | Align frontend CSS with design tokens | M | Must | T-093, T-102 | UI_UX §1, AI_CONTEXT §11 | Done |
+| T-141 | Extract view summary cards into components | S | Should | T-092 | AGENTS §Quality, AI_CONTEXT §3, §11 | Done |
+| T-142 | Remove fabricated customer date fallback | S | Must | T-092 | AGENTS §Quality, AI_CONTEXT §12 | Done |
+| T-143 | Ensure claim resolution visibility, history timeline metadata and transition target binding | S | Must | T-095 | SRS-CLM-04, AC-038 | Done |
 
 ---
 

@@ -62,25 +62,6 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.receipt-slip {
-  width: 100%;
-  max-width: 380px;
-  background: #ffffff;
-  padding: 24px 20px;
-  border-radius: 6px;
-  border: 1px solid #d4dce8;
-  color: #1e293b;
-}
-
-.receipt-divider-dashed {
-  border-top: 1px dashed #cbd5e1;
-  margin: 12px 0;
-}
-
-.letter-spacing-2 {
-  letter-spacing: 2px;
-}
-
 /* Print Mode Optimization (@media print per AI_CONTEXT.md §11 print exception) */
 @media print {
   @page {

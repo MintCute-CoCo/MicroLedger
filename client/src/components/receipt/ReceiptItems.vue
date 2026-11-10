@@ -60,13 +60,3 @@ const props = defineProps({
     </div>
   </div>
 </template>
-
-<style scoped>
-.receipt-col-qty {
-  width: 50px;
-}
-
-.receipt-col-total {
-  width: 100px;
-}
-</style>

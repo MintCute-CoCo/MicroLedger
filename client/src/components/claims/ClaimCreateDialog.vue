@@ -48,8 +48,21 @@ const emit = defineEmits([
   'update:open',
   'update:warrantySearch',
   'update:customerSearch',
+  'update:form',
+  'clear-error',
   'create',
 ]);
+
+/**
+ * Emits updated form state and clears field errors through composables.
+ *
+ * @param {string} field - Field property name.
+ * @param {*} value - New field value.
+ */
+function updateField(field, value) {
+  emit('update:form', { ...props.form, [field]: value });
+  emit('clear-error', field);
+}
 
 /**
  * Builds a searchable warranty option label for the claim form.
@@ -96,7 +109,7 @@ function formatWarrantyLabel(warranty) {
       </v-alert>
 
       <v-autocomplete
-        v-model="props.form.warrantyId"
+        :model-value="props.form.warrantyId"
         :search="props.warrantySearch"
         :items="props.warrantyOptions"
         :item-title="formatWarrantyLabel"
@@ -107,7 +120,7 @@ function formatWarrantyLabel(warranty) {
         no-filter
         variant="outlined"
         @update:search="emit('update:warrantySearch', $event)"
-        @update:model-value="props.fieldErrors.warrantyId = undefined"
+        @update:model-value="updateField('warrantyId', $event)"
       />
 
       <v-text-field
@@ -129,7 +142,7 @@ function formatWarrantyLabel(warranty) {
 
       <v-autocomplete
         v-else-if="props.selectedWarranty"
-        v-model="props.form.customerId"
+        :model-value="props.form.customerId"
         :search="props.customerSearch"
         :items="props.customerOptions"
         :item-title="(customer) => `${customer.name} · ${customer.phone}`"
@@ -140,25 +153,25 @@ function formatWarrantyLabel(warranty) {
         no-filter
         variant="outlined"
         @update:search="emit('update:customerSearch', $event)"
-        @update:model-value="props.fieldErrors.customerId = undefined"
+        @update:model-value="updateField('customerId', $event)"
       />
 
       <v-textarea
-        v-model="props.form.problem"
+        :model-value="props.form.problem"
         label="Problem description"
         maxlength="1000"
         :error-messages="props.fieldErrors.problem"
         variant="outlined"
-        @update:model-value="props.fieldErrors.problem = undefined"
+        @update:model-value="updateField('problem', $event)"
       />
 
       <v-textarea
         v-if="props.isAdmin && props.selectedWarranty?.validity === 'Expired'"
-        v-model="props.form.outOfWarrantyNote"
+        :model-value="props.form.outOfWarrantyNote"
         label="Admin note for expired warranty *"
         :error-messages="props.fieldErrors.outOfWarrantyNote"
         variant="outlined"
-        @update:model-value="props.fieldErrors.outOfWarrantyNote = undefined"
+        @update:model-value="updateField('outOfWarrantyNote', $event)"
       />
 
       <div class="d-flex flex-wrap justify-end ga-2 mt-3">

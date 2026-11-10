@@ -6,5 +6,6 @@
 @import './styles/auth.css';
 @import './styles/panels/users.css';
 @import './styles/shared/page-content.css';
+@import './styles/shared/receipt.css';
 @import './styles/shared/vuetify-overrides.css';
 @import './styles/responsive.css';

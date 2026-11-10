@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * Detailed Claim & Timeline History Modal Dialog
  *
@@ -51,11 +51,15 @@ const emit = defineEmits(['update:open']);
         <v-row dense class="py-3">
           <v-col cols="12" sm="6">
             <div class="text-caption text-medium-emphasis">Product</div>
-            <div class="text-body-2 font-weight-medium">{{ props.selected?.product_name }}</div>
+            <div class="text-body-2 font-weight-medium">
+              {{ props.detail.product_name || props.selected?.product_name }}
+            </div>
           </v-col>
           <v-col cols="12" sm="6">
             <div class="text-caption text-medium-emphasis">Customer</div>
-            <div class="text-body-2 font-weight-medium">{{ props.selected?.customer_name }}</div>
+            <div class="text-body-2 font-weight-medium">
+              {{ props.detail.customer_name || props.selected?.customer_name }}
+            </div>
           </v-col>
           <v-col cols="12" sm="6">
             <div class="text-caption text-medium-emphasis">Status</div>
@@ -65,20 +69,18 @@ const emit = defineEmits(['update:open']);
             <div class="text-caption text-medium-emphasis">Claim date</div>
             <div class="text-body-2 font-weight-medium">{{ formatDate(props.detail.claim_date) }}</div>
           </v-col>
-          <v-col
-            v-if="props.detail.resolution || props.selected?.resolution"
-            cols="12"
-            sm="6"
-          >
+          <v-col cols="12" sm="6">
             <div class="text-caption text-medium-emphasis">Resolution</div>
             <div class="text-body-2 font-weight-medium mt-1">
               <v-chip
+                v-if="props.detail.resolution || props.selected?.resolution"
                 :color="getResolutionColor(props.detail.resolution || props.selected?.resolution)"
                 variant="tonal"
                 size="small"
               >
                 {{ formatResolution(props.detail.resolution || props.selected?.resolution) }}
               </v-chip>
+              <span v-else class="text-medium-emphasis">Pending resolution</span>
             </div>
           </v-col>
           <v-col
@@ -94,7 +96,8 @@ const emit = defineEmits(['update:open']);
         </v-row>
 
         <v-divider />
-        <p class="text-body-2 py-3 text-pre-wrap">{{ props.detail.problem }}</p>
+        <div class="text-caption text-medium-emphasis mt-3">Problem description</div>
+        <p class="text-body-2 py-1 text-pre-wrap">{{ props.detail.problem }}</p>
         <h3 class="text-h6 font-weight-bold my-2">Status changes</h3>
         <v-timeline density="compact" side="end">
           <v-timeline-item
