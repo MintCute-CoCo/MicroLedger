@@ -114,5 +114,60 @@ describe('Database Operations: Backup, 7-Day Retention & Restore Drill (SRS-NFR-
       delete process.env.BACKUP_ENCRYPTION_KEY;
     }
   });
+
+  it('rejects unencrypted backup execution in production without BACKUP_ENCRYPTION_KEY (T-149)', async () => {
+    const originalEnv = process.env.NODE_ENV;
+    const originalKey = process.env.BACKUP_ENCRYPTION_KEY;
+    process.env.NODE_ENV = 'production';
+    delete process.env.BACKUP_ENCRYPTION_KEY;
+
+    try {
+      await assert.rejects(
+        async () => {
+          await runBackup();
+        },
+        /Refusing to create unencrypted backup in production/
+      );
+    } finally {
+      process.env.NODE_ENV = originalEnv;
+      if (originalKey) process.env.BACKUP_ENCRYPTION_KEY = originalKey;
+    }
+  });
+
+  it('pre-flight rejects tampered or corrupted snapshots before touching the database (T-148)', async () => {
+    const tamperedPath = './backups/test_tampered_snapshot.json';
+    const fakeData = {
+      timestamp: new Date().toISOString(),
+      tables: { settings: [] },
+      checksum: 'bad_invalid_checksum_00000000000000000000000000000000000000000000000',
+    };
+    await fs.writeFile(tamperedPath, JSON.stringify(fakeData), 'utf-8');
+
+    try {
+      await assert.rejects(
+        async () => {
+          await restoreFromBackup(tamperedPath);
+        },
+        /checksum verification failed/
+      );
+    } finally {
+      await fs.rm(tamperedPath, { force: true });
+    }
+  });
+
+  it('rejects destructive restore against remote or cloud database targets without flags (T-147)', async () => {
+    assert.ok(backupFile, 'Backup file must exist');
+    const remoteUrl = 'postgres://admin:secret@aws.rds.amazonaws.com:5432/microledger_prod';
+
+    await assert.rejects(
+      async () => {
+        await restoreFromBackup(backupFile, remoteUrl, {
+          targetSchema: 'public',
+          cleanTarget: true,
+        });
+      },
+      /Refusing to execute destructive database operation against remote or cloud database target/
+    );
+  });
 });
 

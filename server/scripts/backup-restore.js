@@ -22,6 +22,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import pg from 'pg';
+import { assertDestructiveOperationAllowed } from '../src/db/target-guard.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -116,12 +117,19 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
     const checksum = crypto.createHash('sha256').update(tablesPayload).digest('hex');
     backupData.checksum = checksum;
 
+    // Enforce encryption in production to protect customer PII, password hashes, and tokens at rest (SRS-NFR-11, T-149)
+    if (process.env.NODE_ENV === 'production' && !process.env.BACKUP_ENCRYPTION_KEY) {
+      throw new Error(
+        'Refusing to create unencrypted backup in production: BACKUP_ENCRYPTION_KEY is required to safeguard customer PII and credentials at rest.'
+      );
+    }
+
     const durationMs = Date.now() - startTime;
-    await fs.mkdir(outputDir, { recursive: true });
+    await fs.mkdir(outputDir, { recursive: true, mode: 0o700 });
     const filename = `backup_${Date.now()}.json`;
     const filePath = path.join(outputDir, filename);
 
-    // Optional AES-256-GCM encryption if key is configured
+    // Optional AES-256-GCM encryption if key is configured (mandatory in production)
     if (process.env.BACKUP_ENCRYPTION_KEY) {
       const key = crypto.createHash('sha256').update(process.env.BACKUP_ENCRYPTION_KEY).digest();
       const iv = crypto.randomBytes(12);
@@ -135,9 +143,9 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
         data: encrypted.toString('hex'),
         checksum,
       };
-      await fs.writeFile(filePath, JSON.stringify(envelope, null, 2), 'utf-8');
+      await fs.writeFile(filePath, JSON.stringify(envelope, null, 2), { encoding: 'utf-8', mode: 0o600 });
     } else {
-      await fs.writeFile(filePath, JSON.stringify(backupData, null, 2), 'utf-8');
+      await fs.writeFile(filePath, JSON.stringify(backupData, null, 2), { encoding: 'utf-8', mode: 0o600 });
     }
 
     // Enforce 7-day backup retention
@@ -157,15 +165,17 @@ export async function runBackup(connectionString = process.env.DATABASE_URL, out
 }
 
 /**
- * Reads and unpacks a backup snapshot file, decrypting if encrypted and verifying checksum.
+ * Reads and unpacks a backup snapshot file, decrypting if encrypted and verifying checksum integrity.
  *
  * @param {string} backupFilePath - Path to backup file.
+ * @param {boolean} [verifyChecksum=false] - Whether to enforce cryptographic checksum validation.
  * @returns {Promise<Object>} Decrypted / parsed backup data object.
  */
-export async function readBackupSnapshot(backupFilePath) {
+export async function readBackupSnapshot(backupFilePath, verifyChecksum = false) {
   const fileContent = await fs.readFile(backupFilePath, 'utf-8');
   const parsed = JSON.parse(fileContent);
 
+  let backupData;
   if (parsed.encrypted) {
     if (!process.env.BACKUP_ENCRYPTION_KEY) {
       throw new Error('BACKUP_ENCRYPTION_KEY is required to decrypt snapshot');
@@ -179,11 +189,26 @@ export async function readBackupSnapshot(backupFilePath) {
       decipher.update(Buffer.from(parsed.data, 'hex')),
       decipher.final(),
     ]);
-    const backupData = JSON.parse(decrypted.toString('utf-8'));
-    return backupData;
+    backupData = JSON.parse(decrypted.toString('utf-8'));
+  } else {
+    backupData = parsed;
   }
 
-  return parsed;
+  // Validate cryptographic checksum if requested or if checksum is present
+  if (verifyChecksum) {
+    if (!backupData.tables || typeof backupData.tables !== 'object') {
+      throw new Error('Corrupted backup snapshot: missing tables payload.');
+    }
+    const tablesPayload = JSON.stringify(backupData.tables);
+    const calculatedChecksum = crypto.createHash('sha256').update(tablesPayload).digest('hex');
+    if (!backupData.checksum || backupData.checksum !== calculatedChecksum) {
+      throw new Error(
+        `Backup snapshot checksum verification failed: snapshot checksum '${backupData.checksum}' does not match computed checksum '${calculatedChecksum}'. Snapshot may be corrupted or altered.`
+      );
+    }
+  }
+
+  return backupData;
 }
 
 /**
@@ -202,9 +227,25 @@ export async function restoreFromBackup(
   connectionString = process.env.DATABASE_URL,
   options = {}
 ) {
-  const backupData = await readBackupSnapshot(backupFilePath);
   const targetSchema = options.targetSchema || 'public';
   const cleanTarget = options.cleanTarget !== false;
+
+  // Guard destructive operations against remote or production databases (T-147)
+  if (targetSchema === 'public' && cleanTarget) {
+    assertDestructiveOperationAllowed(connectionString);
+  }
+
+  // Pre-flight verify snapshot integrity and SHA-256 checksum BEFORE database operations (T-148)
+  const backupData = await readBackupSnapshot(backupFilePath, true);
+  if (!backupData || !backupData.tables || typeof backupData.tables !== 'object') {
+    throw new Error('Corrupted or invalid backup snapshot: missing tables payload.');
+  }
+
+  for (const table of TABLES) {
+    if (!Array.isArray(backupData.tables[table])) {
+      throw new Error(`Corrupted backup file: table '${table}' data is missing or invalid.`);
+    }
+  }
 
   const client = new Client({ connectionString });
   await client.connect();

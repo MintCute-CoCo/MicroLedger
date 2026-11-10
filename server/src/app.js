@@ -59,7 +59,16 @@ app.get('/health', (_req, res) => {
 app.use('/api/v1', rateLimit({
   windowMs: 60_000,
   limit: 300,
-  skip: (req) => process.env.NODE_ENV === 'test' || req.headers['x-test-suite'] === 'true' || process.env.DISABLE_RATE_LIMIT === 'true',
+  skip: (req) => {
+    if (config.NODE_ENV === 'production') {
+      return false;
+    }
+    return (
+      process.env.NODE_ENV === 'test' ||
+      req.headers['x-test-suite'] === 'true' ||
+      process.env.DISABLE_RATE_LIMIT === 'true'
+    );
+  },
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   handler: (_req, res) => res.status(429).json({ code: 'RATE_LIMITED', message: 'Too many requests. Try again shortly.', details: null }),

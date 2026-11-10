@@ -78,7 +78,16 @@ function validateBody(schema) {
 const loginLimiter = rateLimit({
   windowMs: 60_000,
   limit: 10,
-  skip: (req) => process.env.NODE_ENV === 'test' || req.headers['x-test-suite'] === 'true' || process.env.DISABLE_RATE_LIMIT === 'true',
+  skip: (req) => {
+    if (process.env.NODE_ENV === 'production') {
+      return false;
+    }
+    return (
+      process.env.NODE_ENV === 'test' ||
+      req.headers['x-test-suite'] === 'true' ||
+      process.env.DISABLE_RATE_LIMIT === 'true'
+    );
+  },
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   handler: (_req, res) => {

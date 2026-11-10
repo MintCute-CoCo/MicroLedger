@@ -138,4 +138,32 @@ describe('F — Import and Export (AC-025 to AC-029)', () => {
     // Verify CSV is valid string with BOM or text
     assert.ok(typeof adminRes.data === 'string');
   });
+
+  it('rejects CSV imports exceeding 5,000 data rows during parsing (SRS-IMP-02, NFR-03, T-146)', async () => {
+    const adminToken = await getAdminToken();
+
+    // Generate CSV with header + 5,001 data rows
+    const lines = ['sku,name,category,selling_price,cost_price,unit,reorder_level,opening_stock,tracks_serial,warranty_months'];
+    for (let i = 1; i <= 5001; i++) {
+      lines.push(`SKU_${i},Product ${i},Storage,10.00,5.00,pcs,1,0,false,0`);
+    }
+    const csvContent = lines.join('\n');
+
+    const formData = new FormData();
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    formData.append('file', blob, 'oversized.csv');
+
+    const previewRes = await fetch('http://localhost:3000/api/v1/imports/preview', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${adminToken}`,
+        'x-bypass-rate-limit': '1',
+      },
+      body: formData,
+    });
+    const previewData = await previewRes.json();
+    assert.equal(previewRes.status, 422);
+    assert.equal(previewData.code, 'IMPORT_LIMIT_EXCEEDED');
+    assert.ok(previewData.message.includes('5,000 data rows'));
+  });
 });

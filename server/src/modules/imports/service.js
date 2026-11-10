@@ -156,6 +156,94 @@ function parseBoolean(value) {
 }
 
 /**
+ * Streaming RFC 4180 CSV parser that parses rows and enforces MAX_DATA_ROWS during parsing.
+ *
+ * @param {string} text - UTF-8 CSV content string.
+ * @param {number} maxDataRows - Maximum data rows allowed (excluding header).
+ * @returns {Array<Array<string>>} Parsed raw rows.
+ * @throws {HttpError} If data rows exceed maxDataRows during parsing.
+ */
+function parseCsvWithRowLimit(text, maxDataRows) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let inQuotes = false;
+  const maxTotalRows = maxDataRows + 1;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (inQuotes) {
+      if (char === '"') {
+        if (nextChar === '"') {
+          field += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        field += char;
+      }
+    } else {
+      if (char === '"') {
+        inQuotes = true;
+      } else if (char === ',') {
+        row.push(field);
+        field = '';
+      } else if (char === '\r') {
+        if (nextChar === '\n') {
+          i++;
+        }
+        row.push(field);
+        field = '';
+        if (row.length > 0) {
+          rows.push(row);
+          if (rows.length > maxTotalRows) {
+            throw new HttpError(
+              422,
+              'IMPORT_LIMIT_EXCEEDED',
+              'Files may contain at most 5,000 data rows.'
+            );
+          }
+          row = [];
+        }
+      } else if (char === '\n') {
+        row.push(field);
+        field = '';
+        if (row.length > 0) {
+          rows.push(row);
+          if (rows.length > maxTotalRows) {
+            throw new HttpError(
+              422,
+              'IMPORT_LIMIT_EXCEEDED',
+              'Files may contain at most 5,000 data rows.'
+            );
+          }
+          row = [];
+        }
+      } else {
+        field += char;
+      }
+    }
+  }
+
+  if (field !== '' || row.length > 0) {
+    row.push(field);
+    rows.push(row);
+    if (rows.length > maxTotalRows) {
+      throw new HttpError(
+        422,
+        'IMPORT_LIMIT_EXCEEDED',
+        'Files may contain at most 5,000 data rows.'
+      );
+    }
+  }
+
+  return rows;
+}
+
+/**
  * Reads and decodes an uploaded spreadsheet or CSV file buffer into structured row objects.
  * Validates file signature, row limits, header mapping, and mandatory columns.
  *
@@ -225,16 +313,8 @@ async function decodeFile(file, mapping = {}) {
       }
 
       const utf8Text = file.buffer.toString('utf8').replace(/^\uFEFF/, '');
-      const workbook = new ExcelJS.Workbook();
-      await workbook.csv.read(Readable.from([utf8Text]));
-
-      const firstSheet = workbook.worksheets[0];
-      if (firstSheet) {
-        firstSheet.eachRow((row) => {
-          const rowValues = row.values.slice(1).map(cellValue);
-          rawRows.push(rowValues);
-        });
-      }
+      const parsedCsvRows = parseCsvWithRowLimit(utf8Text, MAX_DATA_ROWS);
+      rawRows.push(...parsedCsvRows);
     }
   } catch (error) {
     if (error instanceof HttpError) {

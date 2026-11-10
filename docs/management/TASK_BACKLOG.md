@@ -17,17 +17,17 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | **E3 — Inventory** | Transactional ledger, stock-in, adjust, invariants | 7 | 7 / 7 | **Done** |
 | **E4 — Customers** | Customer directory & POS customer selector | 2 | 2 / 2 | **Done** |
 | **E5 — POS & Sales** | POS terminal, checkout, receipts, voids, idempotency | 10 | 10 / 10 | **Done** |
-| **E6 — Import & Export** | Excel streaming parser, CSV export, formula safety | 10 | 10 / 10 | **Done** |
+| **E6 — Import & Export** | Excel streaming parser, CSV export, formula safety | 11 | 11 / 11 | **Done** |
 | **E7 — Reports & Audit** | Dashboard KPIs, sales reports, audit trail view | 5 | 5 / 5 | **Done** |
 | **E8 — Hardening** | Append-only security, backup/restore, RBAC tests | 5 | 5 / 5 | **Done** |
 | **E9 — Low Stock & Suppliers** | Low stock alerts, supplier directory | 2 | 2 / 2 | **Done** |
 | **E10 — Warranty & Claims** | Warranty records, 7-stage RMA machine, overdue calc | 11 | 11 / 11 | **Done** |
 | **E11 — Serials & Filtering** | Serial capture, unified multidimensional filters | 4 | 4 / 4 | **Done** |
 | **E12 — UAT & Delivery** | 500-item catalog, SUS evaluation, final FYP report | 8 | 8 / 8 | **Done** |
-| **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 26 | 25 / 26 | **In Progress** |
+| **E13 — Frontend Quality** | Composables, Vuetify primitives, API-only client, anti-slop | 26 | 26 / 26 | **Done** |
 | **E14 — Backend Integration** | Express API, migrations, CI testing, deployment | 18 | 17 / 18 | **In Progress** |
-| **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 7 | 7 / 7 | **Done** |
-| **Total** | **Full System Implementation Backlog** | **144** | **142 / 144** | **99% Complete** |
+| **E15 — Security & Operations Audit** | Data safety, DB least privilege, backup recovery, production hardening, documentation accuracy | 11 | 11 / 11 | **Done** |
+| **Total** | **Full System Implementation Backlog** | **149** | **148 / 149** | **99% Complete** |
 
 ---
 
@@ -134,6 +134,7 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-055 | Export API & formula neutralization | L | Must | T-043 | SRS-EXP-01 to 05 | Done |
 | T-056 | Client import wizard & preview table | L | Must | T-053 | FR-016, FR-017 | Done |
 | T-057 | Client export action buttons | S | Must | T-055 | FR-018 | Done |
+| T-146 | Enforce CSV row limit while parsing | M | Must | T-050 | SRS-IMP-01, SRS-IMP-02, NFR-03 | Done |
 | T-058 | Import/export dataset test suite | L | Must | T-054 | NFR-03 | Done |
 
 ---
@@ -283,3 +284,7 @@ Requirement references link directly to [`docs/requirements/SRS.md`](../requirem
 | T-133 | Resolve uuid dependency advisory | S | Should | T-096 | NFR-11 | Done |
 | T-134 | Correct verification documentation claims | M | Must | T-129, T-130, T-131, T-132 | SRS, M1, M3, M4 | Done |
 | T-135 | Disaster recovery isolated schema safety, error log scrubbing & Vuetify flex layout parity | M | Must | T-131, T-132, T-093 | NFR-10, NFR-11, Rule 15 | Done |
+| T-145 | Close production rate-limit bypass | S | Must | T-097 | SRS-AUTH-03, NFR-05 | Done |
+| T-147 | Guard destructive restore targets | S | Must | T-131 | NFR-10 | Done |
+| T-148 | Verify snapshots before restore | S | Must | T-131 | NFR-10 | Done |
+| T-149 | Protect backup snapshots at rest | M | Must | T-131 | NFR-10, NFR-11 | Done |
