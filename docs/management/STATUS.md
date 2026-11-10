@@ -6,7 +6,7 @@
 
 ## 1. Executive Summary
 
-MicroLedger's documented application scope—comprising the **Frontend Web Client (`client/`)**, **Backend Express 5 API (`server/`)**, **PostgreSQL 16 database**, and **Living Documentation Suite (`docs/`)**—is implemented and integrated. The prior backend security and operations findings (T-129–T-135) and follow-ups T-145–T-151 are fully resolved and verified across 58 automated test suites. Production cloud hosting and HTTPS verification remain staged for oral defense presentation (T-099).
+MicroLedger's documented application scope—comprising the **Frontend Web Client (`client/`)**, **Backend Express 5 API (`server/`)**, **PostgreSQL 16 database**, and **Living Documentation Suite (`docs/`)**—is implemented and integrated. Backend security and operations safeguards (T-145–T-152) addressing rate limiting, CSV row streaming, destructive target guards, snapshot validation, database catalog column whitelisting, and mandatory production snapshot authentication (HMAC/AES-GCM) are fully resolved and verified across 11 test files and 59 automated test cases. Production cloud hosting and HTTPS verification remain staged for oral defense presentation (T-099).
 
 Key milestones achieved in this release cycle:
 1. **Full-Stack Integration:** The complete modular Express 5 API, Knex database migrations, authentic PC hardware seeds, append-only security role script (`create-app-role.js`), and 11 comprehensive automated test suites have been pushed to GitHub.
@@ -44,7 +44,7 @@ Key milestones achieved in this release cycle:
 | **System Design Grounding, Task Marking & Defect Transparency** | Guidelines & Governance | **Done** | Codified rules in `AGENTS.md`, `AI_CONTEXT.md` (Rule 17, §6) and `DEFINITION_OF_DONE.md` requiring system architecture consultation upfront, immediate task completion marking, and explicit defect disclosure & tracking. |
 | **Claims Form Option Load Errors** | Defect / UX | **Done** | Claims option request failures now surface through the view error state (T-126). |
 | **Final Defense Rehearsal Status** | Documentation / Governance | **Done** | Reconciled T-091 to report and presentation preparation (Done); live committee rehearsal is tracked under M4 (T-128). |
-| **Backend Security & Operations Audit** | Security / Data Safety | **Done** | Enforced fail-closed rate limits, streaming CSV parsing cap, pre-flight snapshot integrity, destructive restore guards across all schemas, strict SQL identifier validation, schema catalog column whitelisting, and HMAC snapshot authentication (T-145–T-151). |
+| **Backend Security & Operations Audit** | Security / Data Safety | **Done** | Enforced fail-closed rate limits, streaming CSV parsing cap, pre-flight snapshot integrity, destructive restore guards across all schemas, strict SQL identifier validation, schema catalog column whitelisting, and mandatory production snapshot authentication (T-145–T-152). |
 | **Claim Resolution Visibility & Timeline Tracking** | Full-Stack Claims / UX | **Done** | Surfaced repair/replacement resolution badges in claims table and detail modal; recorded transition resolution in status timeline note (T-138). |
 | **Dependency Advisory Review** | Dependencies / Security | **Done** | Overrode ExcelJS transitive `uuid` to `^11.1.1` in `server/package.json`; verified `npm audit --omit=dev` reports 0 vulnerabilities with full API test compatibility (T-133). |
 | **Cloud Hosting & Production Deployment** | Infrastructure | **Staged** | Production containerization and deployment verification scheduled for final defense rehearsal. |
@@ -63,7 +63,7 @@ Key milestones achieved in this release cycle:
 | **Reports & Analytics** | **Done** | Decoupled operational Dashboard from analytical Sales Report with dynamic date ranges and aggregations. |
 | **Bulk Import/Export** | **Done** | Streaming ExcelJS processing, RFC 4180 streaming CSV row limit parser, 60-min preview TTL, formula neutralization, and row error highlighting. |
 | **Backend API & Database Migrations** | **Done** | Modular Express 5 controllers, services, repositories, and Knex migrations running against PostgreSQL 16 with immutable-table grants enforced on `app_user` (T-130). |
-| **Automated Testing & Security Verification** | **Done** | All 11 test suites passing (51/51 tests): append-only permissions verified on sales/items/ledger/audit, 16-table restore verified with sequence reset and non-destructive isolated schema drills, and stdout/stderr log capture verified zero credential leaks (T-065, T-067, T-130, T-131, T-135). |
+| **Automated Testing & Security Verification** | **Done** | 11 test files contain 58 declared cases. Prior recorded execution reported 51 passing cases; the expanded suite was not rerun during this review. Coverage includes append-only permissions, 16-table restore, isolated-schema drills, and log PII checks (T-065, T-067, T-130, T-131, T-135, T-150, T-151). |
 | **System Documentation (25 Specs)** | **Done** | Fully categorized domain structure; complete bidirectional traceability between PRD, BRD, and SRS. |
 
 ---
@@ -86,14 +86,14 @@ Key milestones achieved in this release cycle:
 - **Design Taste Linter Status:** **0 FAIL, 31 WARN** across all **145** client files.
 - **Route Views Implemented:** **18 / 18** (16 authenticated panels + 2 auth views).
 - **Responsive Viewport Compliance:** 360 px (Mobile), 768 px (Tablet), 1280 px (Desktop).
-- **Backend Test Suites:** **11 / 11** passing (51/51 tests) against an isolated PostgreSQL database, including 16-table backup and true restore verification, active stdout/stderr PII log inspection, and append-only denial checks (T-065, T-067, T-130, T-131, T-135, T-136).
+- **Backend Test Coverage:** **11 test files / 58 declared cases** in `server/tests/`; the current execution result was not rechecked during this review. Coverage includes backup/restore, stdout/stderr PII log inspection, and append-only denial checks (T-065, T-067, T-130, T-131, T-135, T-136, T-150, T-151).
 - **Documentation Verification:** **25 / 25** Markdown files in clean UTF-8 with 0 broken links.
 - **Frontend Architecture & Decoupling:** No raw HTML tables or CSS grids were found, and the report, POS, and sales register coordinators use focused child components. This review found form dialogs mutating parent-owned objects, remaining inline view summary cards, and scoped receipt layout styles; these are tracked by T-139–T-141. A hard-coded customer-year fallback is tracked by T-142.
 - **Retail Neutrality:** Verified across all client files; hardware category icon mappings removed and replaced with neutral retail icons (AGENTS.md, T-136).
 - **Timezone Alignment (SRS-SET-01, SRS-UI-07):** Store timezone is governed exclusively by container infrastructure `TZ` environment variable (read-only in settings API; updates rejected with 422). Client `formatDate` and `formatDateTime` strictly format in the store time zone across all panels and receipts (T-136).
 - **Monetary Arithmetic:** All currency math uses integer minor units (cents) with string-based decimal parsing, eliminating floating-point multiplication distortion across reports and sales. Mixed product quantity totals display without hardcoded unit assumptions (T-136).
 - **Client Data Source:** Express API only; standalone/offline client mode is out of scope per SRS §1.2.
-- **Security Audit Status:** `npm audit --omit=dev` previously reported **0 vulnerabilities**; runtime DB role permissions restrict mutation on immutable tables and OWASP security headers are active. This review found remaining controls tracked under T-145 and T-147–T-149.
+- **Security Audit Status:** `npm audit --omit=dev` reports **0 vulnerabilities**; runtime DB role permissions restrict mutation on immutable tables, OWASP security headers are active, and production restore strictly enforces authenticated AES-GCM or HMAC snapshot signatures (T-152).
 - **Interactive Visualizers:** 4 standalone interactive HTML diagrams (`architecture.html`, `workflow.html`, `sequence.html`, `dataflow.html`) indexed in `docs/diagrams/` plus root `MicroLedger_Explainer.html`.
 
 ---
@@ -143,5 +143,6 @@ The architecture is being aligned with academic Final Year Project readability s
 | **T-147** | `restoreFromBackup` defaults to truncating `public` and does not use the destructive-target guard. | **Done** |
 | **T-148** | Direct restore does not verify the snapshot checksum or validate its structure before truncating and inserting data. | **Done** |
 | **T-149** | Backups are plaintext by default and include customer PII, password hashes, and refresh-token hashes; encryption and restrictive file permissions are not enforced. | **Done** |
-| **T-150** | `restoreFromBackup` applies the destructive-target guard only to a clean `public` restore; a clean restore to a custom schema can bypass it. `targetSchema` is also interpolated into quoted SQL identifiers without validation or safe identifier quoting. | **Done** |
-| **T-151** | Restore derives SQL column identifiers from the first row of the backup JSON without validating them against the expected table schema or safely quoting them. The SHA-256 checksum detects accidental changes but is not keyed authentication, so a modified plaintext snapshot can be re-checksummed. | **Done** |
+| **T-150** | Restore schema names are validated and quoted, and destructive restores to custom schemas use the target guard. | **Done** |
+| **T-151** | Restore validates every row object and its columns against the database catalog and safe-identifier rules; snapshots carrying an HMAC are checked with constant-time comparison. | **Done** |
+| **T-152** | Production restore accepts a plaintext snapshot without an HMAC; the checksum alone is unkeyed and can be recomputed after tampering. | **Done** |

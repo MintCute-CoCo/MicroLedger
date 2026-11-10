@@ -48,6 +48,7 @@
 - Completed frontend rule alignment: report calculations and view state now live in composables, product icons remain retail-neutral, and date formatting follows the store timezone (T-136).
 - Completed POS checkout and sales register component decomposition into focused sub-components (T-137).
 - Addressed all backend findings: guarded destructive scripts (`clean.js`, `reset.js`; T-129); enforced immutable grants on runtime role for `sales`, `sale_items`, `audit_logs`, `inventory_transactions` (T-130); verified 16-table backup, true restore drill, and 7-day retention (T-065, T-131); added OWASP security headers and fail-closed env validation (T-132); resolved uuid vulnerability advisory (T-133); corrected documentation claims in README, UAT script, and final report (T-134).
+- Closed the restore schema and row validation follow-ups (T-150, T-151), plus rate-limit, CSV row-cap, restore guard, snapshot integrity, and backup encryption controls (T-145–T-149). Enforced authenticated production snapshot verification rejecting unkeyed plaintext backups (T-152).
 
 ## 5. Dependencies (Resolved)
 

@@ -17,7 +17,7 @@ flowchart LR
 | **Web Client** | User interface presentation, routing, client-side input validation, responsive cart state, Vuetify 3 primitives. JWT access token held in memory only; refresh token managed via rotating `httpOnly` cookie. Enforces zero client-side business logic that the API does not independently validate. |
 | **API Server** | Authentication, role authorization, Zod schema validation, transactional domain services, streaming server-side Excel/CSV parsing and generation (ExcelJS), audit log writing, and reporting. |
 | **PostgreSQL 16** | Relational persistence, primary keys (`BIGINT GENERATED ALWAYS AS IDENTITY`), foreign key constraints, column CHECK constraints (`stock_qty >= 0`), trigram text search indexes (`pg_trgm`), and sequences for sale and claim numbering. |
-| **Backup Utility** | Scheduled 16-table deterministic JSON snapshots with SHA-256 checksums, optional AES-256-GCM encryption, 7-day retention pruning, and isolated-schema disaster recovery restore verification drills (SRS-NFR-10). |
+| **Backup Utility** | Scheduled 16-table deterministic JSON snapshots with SHA-256 checksums, AES-256-GCM encryption required in production, 7-day retention pruning, and isolated-schema disaster recovery restore verification drills (SRS-NFR-10). Keyed HMAC signatures are enforced during production restore (T-152). |
 
 > [!TIP]
 > **Interactive Standalone Visualizations & Deep-Dive Explainers:**
@@ -308,6 +308,6 @@ MicroLedger/
 
 #### 8. Disaster Recovery: Application-Level JSON Snapshots vs. Raw pg_dump / Cloud Backups
 - **Why Application-Level JSON Snapshots Were Chosen**:
-  The backup utility (`server/scripts/backup-restore.js`) extracts all 16 tables in deterministic foreign-key topological order. It produces self-contained, human-auditable JSON snapshots protected by SHA-256 tamper-evident checksums and optional AES-256-GCM encryption (`BACKUP_ENCRYPTION_KEY`). This architecture enables true non-destructive disaster recovery drills into temporary isolated sandbox schemas without truncating or locking live store tables.
+  The backup utility (`server/scripts/backup-restore.js`) extracts all 16 tables in deterministic foreign-key topological order. It produces self-contained JSON snapshots protected by SHA-256 checksums and AES-256-GCM encryption (`BACKUP_ENCRYPTION_KEY`), which is required for production backups. It also adds a keyed HMAC when a signing key is configured; production restore strictly rejects unauthenticated snapshots lacking verified HMAC signatures or AES-GCM encryption (T-152). This architecture enables isolated-schema disaster recovery drills without truncating or locking live store tables.
 - **Why Raw Cloud / Proprietary Dumps Were Rejected as Sole DR**:
   Raw `pg_dump` binary archives require PostgreSQL superuser access, external host binaries, and full database truncation to test recovery, preventing non-destructive restore drills during live store hours.

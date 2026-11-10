@@ -290,5 +290,80 @@ describe('Database Operations: Backup, 7-Day Retention & Restore Drill (SRS-NFR-
       await fs.rm(forgedHmacPath, { force: true });
     }
   });
+
+  it('requires authenticated backup snapshots during production restore (SRS-NFR-10, NFR-11, T-152)', async () => {
+    const originalEnv = process.env.NODE_ENV;
+    const originalKey = process.env.BACKUP_ENCRYPTION_KEY;
+    const originalJwtSecret = process.env.JWT_SECRET;
+    const originalAllowDestructive = process.env.ALLOW_DESTRUCTIVE_DB;
+
+    const fakeTables = {};
+    for (const t of TABLES) fakeTables[t] = [];
+    const fakePayload = JSON.stringify(fakeTables);
+    const checksum = crypto.createHash('sha256').update(fakePayload).digest('hex');
+
+    // 1. Plaintext snapshot without HMAC must be rejected in production mode
+    const unauthenticatedPath = './backups/test_unauthenticated_prod_snapshot.json';
+    await fs.writeFile(
+      unauthenticatedPath,
+      JSON.stringify({ timestamp: new Date().toISOString(), tables: fakeTables, checksum }),
+      'utf-8'
+    );
+
+    try {
+      process.env.NODE_ENV = 'production';
+      process.env.ALLOW_DESTRUCTIVE_DB = 'true';
+      await assert.rejects(
+        async () => {
+          await restoreFromBackup(unauthenticatedPath);
+        },
+        /Refusing to restore unauthenticated backup snapshot in production: unencrypted snapshot must carry a valid keyed HMAC signature/
+      );
+    } finally {
+      await fs.rm(unauthenticatedPath, { force: true });
+      process.env.NODE_ENV = originalEnv;
+      if (originalAllowDestructive) {
+        process.env.ALLOW_DESTRUCTIVE_DB = originalAllowDestructive;
+      } else {
+        delete process.env.ALLOW_DESTRUCTIVE_DB;
+      }
+    }
+
+    // 2. Plaintext snapshot with HMAC but missing signing key in production
+    const hmacSnapshotPath = './backups/test_hmac_no_key_snapshot.json';
+    await fs.writeFile(
+      hmacSnapshotPath,
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        tables: fakeTables,
+        checksum,
+        hmac: '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+      }),
+      'utf-8'
+    );
+
+    try {
+      process.env.NODE_ENV = 'production';
+      process.env.ALLOW_DESTRUCTIVE_DB = 'true';
+      delete process.env.BACKUP_ENCRYPTION_KEY;
+      delete process.env.JWT_SECRET;
+      await assert.rejects(
+        async () => {
+          await restoreFromBackup(hmacSnapshotPath);
+        },
+        /signing key .* is required to verify snapshot authenticity/
+      );
+    } finally {
+      await fs.rm(hmacSnapshotPath, { force: true });
+      process.env.NODE_ENV = originalEnv;
+      if (originalKey) process.env.BACKUP_ENCRYPTION_KEY = originalKey;
+      if (originalJwtSecret) process.env.JWT_SECRET = originalJwtSecret;
+      if (originalAllowDestructive) {
+        process.env.ALLOW_DESTRUCTIVE_DB = originalAllowDestructive;
+      } else {
+        delete process.env.ALLOW_DESTRUCTIVE_DB;
+      }
+    }
+  });
 });
 

@@ -239,9 +239,25 @@ export async function readBackupSnapshot(backupFilePath, verifyChecksum = false)
       );
     }
 
-    // Keyed HMAC signature validation if snapshot contains HMAC (T-151)
+    const signingKey = process.env.BACKUP_ENCRYPTION_KEY || process.env.JWT_SECRET;
+
+    // Enforce keyed authentication in production for all snapshots (SRS-NFR-10, NFR-11, T-152)
+    // Plaintext snapshots in production must strictly carry a verified HMAC signature.
+    if (process.env.NODE_ENV === 'production' && !parsed.encrypted) {
+      if (!backupData.hmac) {
+        throw new Error(
+          'Refusing to restore unauthenticated backup snapshot in production: unencrypted snapshot must carry a valid keyed HMAC signature (T-152).'
+        );
+      }
+      if (!signingKey) {
+        throw new Error(
+          'Refusing to restore backup snapshot in production: signing key (BACKUP_ENCRYPTION_KEY or JWT_SECRET) is required to verify snapshot authenticity (T-152).'
+        );
+      }
+    }
+
+    // Keyed HMAC signature validation if snapshot contains HMAC (T-151, T-152)
     if (backupData.hmac) {
-      const signingKey = process.env.BACKUP_ENCRYPTION_KEY || process.env.JWT_SECRET;
       if (!signingKey) {
         if (process.env.NODE_ENV === 'production') {
           throw new Error(
