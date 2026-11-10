@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * Inventory Stock-In & Stock Adjustment Modal Dialog
  *

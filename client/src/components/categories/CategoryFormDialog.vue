@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * Category Creation & Modification Modal Dialog
  *

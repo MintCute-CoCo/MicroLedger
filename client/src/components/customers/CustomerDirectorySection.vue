@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * Customer Directory Data Table & Search Toolbar Section
  *

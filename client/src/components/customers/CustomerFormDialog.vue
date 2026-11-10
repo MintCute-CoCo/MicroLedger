@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * Customer Creation & Editing Modal Dialog
  *

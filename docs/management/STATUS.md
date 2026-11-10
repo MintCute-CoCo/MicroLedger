@@ -55,7 +55,7 @@ Key milestones achieved in this release cycle:
 
 | Area | Status | Notes |
 |---|---|---|
-| **Frontend UI & Component Architecture** | **Done** | All 18 route views are implemented using thin container views, domain composables, and extracted domain components (T-139–T-143). |
+| **Frontend UI & Component Architecture** | **Done** | All 18 route views are implemented using thin containers and domain components with accurate resolution fallbacks across all claim states (T-139–T-144). |
 | **UI/UX Design & Anti-Slop Standardization** | **Done** | Flat achromatic ledger palette; zero rest shadows, zero radial gradients, zero decorative UI emojis; 0 FAIL on tasteskill linter. |
 | **Point of Sale (POS) Interface** | **Done** | Instant search, line merging, customer assignment, discounts, touch-friendly cart sheet, and receipt dialog. |
 | **Inventory & Transactional Ledger** | **Done** | Movement history table, stock-in modal, stock adjustment dialog with mandatory reason entry, and append-only invariants. |
@@ -132,3 +132,4 @@ The architecture is being aligned with academic Final Year Project readability s
 | **T-141** | Product, inventory, sales, and suppliers views still define summary metric cards inline. | **Done** |
 | **T-142** | Customer directory displays year 2026 when the creation date is missing, which can present a false date. | **Done** |
 | **T-143** | Claim resolution visibility, claim history detail join, and transition target binding. | **Done** |
+| **T-144** | “Pending resolution” currently appears for Rejected and Cancelled claims that may not have a resolution outcome. | **Done** |

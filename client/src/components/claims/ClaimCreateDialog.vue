@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 /**
  * New Warranty Claim Registration Modal Dialog
  *

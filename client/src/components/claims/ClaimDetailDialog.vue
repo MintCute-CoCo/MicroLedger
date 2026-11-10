@@ -80,6 +80,12 @@ const emit = defineEmits(['update:open']);
               >
                 {{ formatResolution(props.detail.resolution || props.selected?.resolution) }}
               </v-chip>
+              <span
+                v-else-if="['Rejected', 'Cancelled'].includes(props.detail.status || props.selected?.status)"
+                class="text-medium-emphasis"
+              >
+                Not applicable
+              </span>
               <span v-else class="text-medium-emphasis">Pending resolution</span>
             </div>
           </v-col>
@@ -98,6 +104,12 @@ const emit = defineEmits(['update:open']);
         <v-divider />
         <div class="text-caption text-medium-emphasis mt-3">Problem description</div>
         <p class="text-body-2 py-1 text-pre-wrap">{{ props.detail.problem }}</p>
+        <template v-if="props.detail.notes">
+          <div class="text-caption text-medium-emphasis mt-2">
+            {{ (props.detail.status || props.selected?.status) === 'Cancelled' ? 'Cancellation reason' : 'Rejection reason' }}
+          </div>
+          <p class="text-body-2 py-1 text-pre-wrap">{{ props.detail.notes }}</p>
+        </template>
         <h3 class="text-h6 font-weight-bold my-2">Status changes</h3>
         <v-timeline density="compact" side="end">
           <v-timeline-item
